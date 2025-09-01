@@ -1,0 +1,6 @@
+<!-- step4.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M7 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+  <path d="M14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+  <path fill-rule="evenodd" d="M14 14s-1-4-6-4-6 4-6 4 1 1 6 1 6-1 6-1z"/>
+</svg>

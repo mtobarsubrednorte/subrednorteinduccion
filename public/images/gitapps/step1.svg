@@ -1,0 +1,5 @@
+<!-- step1.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M3 2a1 1 0 0 0-1 1v1h1V3h10v10H3v-1H2v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3z"/>
+  <path d="M7.146 8.354a.5.5 0 0 1 0-.708L9.793 5H1.5a.5.5 0 0 1 0-1h8.293L7.146 2.354a.5.5 0 1 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708 0z"/>
+</svg>
