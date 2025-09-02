@@ -437,7 +437,7 @@
     </div>
     <div class="usuario">
       <i class="fas fa-user-circle"></i>
-      <span>NOMBRE DEL COLABORADOR</span>
+      <span>{{ Auth::user()->name }}</span>
     </div>
     <div>
       <form action="{{ route('logout') }}" method="POST">
@@ -476,32 +476,43 @@
 
     <!-- Contenido principal -->
     <main class="principal">
-      <p><strong>Inscripción a los cursos virtuales</strong> de la estrategia + <b>MAS Bienestar</b> para tu hogar</p>
+      <p><strong>Cursos virtuales</strong> de la estrategia + <b>MAS Bienestar</b> para tu hogar</p>
       
-      <div class="cursos">
-        <div class="curso-card">
-          <i class="fas fa-book-open"></i>
-          <h3>CURSO DE INDUCCIÓN</h3>
-          <p>Conoce los fundamentos de bienestar en el hogar</p>
+      
+      {{-- agrgar video de bienvenida --}}
+      <div class="mb-5" style="text-align:center;">
+        <video id="bienvenidaVideo" width="100%" controls style="max-width:800px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+          <source src="{{ asset('videos/MAS_Bienestar_video.mp4') }}" type="video/mp4">
+            Tu navegador no soporta el video.
+          </video>
         </div>
-        <div class="curso-card">
-          <i class="fas fa-heart"></i>
-          <h3>CURSO DE SALUD</h3>
-          <p>Aprende sobre cuidado preventivo y salud familiar</p>
+        
+        
+        <div class="cursos">
+          <div class="curso-card">
+            <i class="fas fa-book-open"></i>
+            <h3>CURSO DE INDUCCIÓN</h3>
+            <p>Conoce los fundamentos de bienestar en el hogar</p>
+          </div>
+          <div class="curso-card">
+            <i class="fas fa-heart"></i>
+            <h3>CURSO DE SALUD</h3>
+            <p>Aprende sobre cuidado preventivo y salud familiar</p>
+          </div>
+          <div class="curso-card">
+            <i class="fas fa-hand-holding-heart"></i>
+            <h3>CURSO DE BIENESTAR</h3>
+            <p>Mejora la calidad de vida de tu familia</p>
+          </div>
         </div>
-        <div class="curso-card">
-          <i class="fas fa-hand-holding-heart"></i>
-          <h3>CURSO DE BIENESTAR</h3>
-          <p>Mejora la calidad de vida de tu familia</p>
-        </div>
-      </div>
-
-      <div class="informacion">
-        <h2><i class="fas fa-info-circle"></i> Información importante</h2>
-        <p>
-          Los cursos de la estrategia MAS Bienestar para tu hogar están diseñados para brindarte herramientas 
-          prácticas que mejoren la calidad de vida de tu familia. Al inscribirte, tendrás acceso a materiales 
-          exclusivos, sesiones virtuales con expertos y una comunidad de apoyo. Nuestros programas se actualizan 
+        
+        
+        <div class="informacion">
+          <h2><i class="fas fa-info-circle"></i> Información importante</h2>
+          <p>
+            Los cursos de la estrategia MAS Bienestar para tu hogar están diseñados para brindarte herramientas 
+            prácticas que mejoren la calidad de vida de tu familia. Al inscribirte, tendrás acceso a materiales 
+            exclusivos, sesiones virtuales con expertos y una comunidad de apoyo. Nuestros programas se actualizan 
           constantemente para brindarte la información más relevante y útil para tu día a día.
         </p>
         <p style="margin-top: 15px;">
