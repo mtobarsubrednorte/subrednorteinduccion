@@ -1,3 +1,24 @@
+:root {
+    --primary: #1E90FF;
+    --primary-dark: #0b65c2;
+    --secondary: #2ecc71;
+    --dark: #2c3e50;
+    --light: #ecf0f1;
+    --danger: #e74c3c;
+    --gray: #95a5a6;
+}
+
+body{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+
 .category-menu {
     gap: 10px;
     flex-wrap: wrap;
