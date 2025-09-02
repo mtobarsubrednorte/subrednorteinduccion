@@ -17,6 +17,14 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/pages/home', function () {
         return view('pages.home');
     })->name('pages.home');
+
+    Route::get('/pages/perfil', function () {
+        return view('pages.perfil');
+    })->name('pages.perfil');
+
+    Route::get('modules/module1', function () {
+        return view('modules.module1');
+    })->name('modules.module1');
     // Módulos
     Route::get('/modules/bienvenida', [ModuleController::class, 'bienvenida'])->name('modules.bienvenida');
     Route::get('/modules/gestion-territorial', [ModuleController::class, 'gestionTerritorial'])->name('modules.gestion_territorial');
