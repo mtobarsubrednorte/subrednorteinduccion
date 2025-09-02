@@ -27,6 +27,6 @@ class HomeController extends Controller
     public function index()
     {
         // Redirige al módulo de Bienvenida al iniciar sesión
-        return redirect()->route('modules.bienvenida');
+        return redirect()->route('pages.home');
     }
 }

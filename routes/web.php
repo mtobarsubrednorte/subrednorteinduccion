@@ -7,13 +7,16 @@ use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\Admin\ReportController;
 
 Route::get('/', function () {
-    return view('pages/home');
+    return view('auth.login');
 });
 
 Auth::routes();
 
 // 🔒 Rutas protegidas por login
 Route::middleware(['auth'])->group(function() {
+    Route::get('/pages/home', function () {
+        return view('pages.home');
+    })->name('pages.home');
     // Módulos
     Route::get('/modules/bienvenida', [ModuleController::class, 'bienvenida'])->name('modules.bienvenida');
     Route::get('/modules/gestion-territorial', [ModuleController::class, 'gestionTerritorial'])->name('modules.gestion_territorial');

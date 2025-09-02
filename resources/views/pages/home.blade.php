@@ -439,6 +439,13 @@
       <i class="fas fa-user-circle"></i>
       <span>NOMBRE DEL COLABORADOR</span>
     </div>
+    <div>
+      <form action="{{ route('logout') }}" method="POST">
+          @csrf
+          <button type="submit" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:500;">Cerrar sesión <i class="fas fa-sign-out-alt"></i></button>
+      </form>
+
+    </div>
   </header>
 
   <div class="banner">
