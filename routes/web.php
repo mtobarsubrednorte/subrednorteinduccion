@@ -7,7 +7,7 @@ use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\Admin\ReportController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages/home');
 });
 
 Auth::routes();
