@@ -22,7 +22,7 @@
   </header>
 
   <div class="breadcrumb">
-    <a href="#">Inicio</a>
+    <a href="{{asset('pages/home')}}">Inicio</a>
     <span>/</span>
     <a href="#">Cursos</a>
     <span>/</span>
