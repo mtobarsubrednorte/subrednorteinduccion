@@ -12,9 +12,9 @@
             </button>
             <ul class="submenu-items">
                 <li><a href="{{ asset('modules/module1') }}">Modulo 1</a></li>
-                <li><a href="#">Modulo 2</a></li>
+                <li><a href="{{ asset('modules/module2') }}">Modulo 2</a></li>
                 <li><a href="#">Modulo 3</a></li>
-                <li><a href="#">Modulos 4</a></li>
+                <li><a href="{{ asset('modules/module4') }}">Modulo 4</a></li>
             </ul>
         </li>
     </ul>
