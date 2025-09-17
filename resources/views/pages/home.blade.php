@@ -52,6 +52,8 @@
     <!-- Navegación -->
     {{-- <x-navegacion :cursos="$cursos" /> --}}
     <x-navegacion />
+   
+
 
 
 
@@ -151,6 +153,6 @@
     </div>
   </footer>
 
-
+ <x-avatar />
 </body>
 </html>
