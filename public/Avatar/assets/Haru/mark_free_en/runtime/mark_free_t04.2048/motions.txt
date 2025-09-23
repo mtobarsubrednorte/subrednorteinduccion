@@ -1,0 +1,40 @@
+"DisplayInfo": "mark_free_t04.cdi3.json",
+		"Motions": {
+			"Idle": [
+				{
+					"File": "motion/mark_m01.motion3.json"
+				}
+			],
+			"Tap": [
+				{
+					"File": "motion/mark_m03.motion3.json"
+				},
+				{
+					"File": "motion/mark_m04.motion3.json"
+				},
+				{
+					"File": "motion/mark_m06.motion3.json"
+				}
+			],
+			"FlickDown": [
+				{
+					"File": "motion/mark_m02.motion3.json"
+				}
+			],
+			"FlickUp": [
+				{
+					"File": "motion/mark_m05.motion3.json"
+				}
+			],
+			"RaiseArms": [
+				{ 
+					"File": "motion/mark_m07.motion3.json"
+				}
+			],
+			"Saludar": [
+				{
+					"File": "motion/saludar.motion3.json"
+				}
+			]
+
+		}
