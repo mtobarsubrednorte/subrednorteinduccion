@@ -219,8 +219,9 @@
         @php
           $steps = [
             ['text' => 'Ingresa al sistema GTAPS con tu usuario correspondiente', 'icon' => 'fa-right-to-bracket', 'type'=>'image', 'file'=>'images/gitapps/INICIO_DE_SESION.png'],
-            ['text' => 'Verifica el estado del predio: debe estar en "Efectivo".', 'icon' => 'fa-building', 'type'=>'video', 'file'=>'videos/predios.mp4'],
-            ['text' => 'Revisa la caracterización previa y evita duplicidades en ADRES.', 'icon' => 'fa-magnifying-glass', 'type'=>'video', 'file'=>'videos/predios.mp4'],
+            ['text' => 'Verifica el estado del predio:Asegúrate de que el predio esté gestionado como "Efectivo" en el sistema.
+              Si el predio no se encuentra como efectivo, no se puede realizar la caracterización.', 'icon' => 'fa-building', 'type'=>'video', 'file'=>'videos/predios.mp4'],
+            ['text' => 'Revisa la caracterización previa y evita duplicidades en ADRES.', 'icon' => 'fa-magnifying-glass', 'type' => 'custom', 'file' => null],
             ['text' => 'Selecciona el módulo Crear Familia y registra datos de ubicación y contacto.', 'icon' => 'fa-house', 'type'=>'video', 'file'=>'videos/caracterizacion.mp4'],
             ['text' => 'Selecciona el módulo Crear Integrante Familia y valida en ADRES.', 'icon' => 'fa-user-plus', 'type'=>null, 'file'=>null],
             ['text' => 'Selecciona el módulo Crear Caracterización Familiar (obligatorio).', 'icon' => 'fa-people-roof', 'type'=>null, 'file'=>null],
@@ -352,7 +353,15 @@
             <source src="{{ asset($step['file']) }}" type="video/mp4">
             Tu navegador no soporta video.
           </video>
-        @endif
+        @elseif($step['type'] === 'custom')
+          <div class="descripcion-validar">
+            <p>• Verifica que no exista una caracterización previa creada dando click en el icono de la casita, si al darle click sale vacío puedes proceder a crear la familia en el icono +, de lo contrario verifica las familias creadas que no correspondan a la que estás abordando.</p>
+            <img src="{{ asset('images/gitapps/Verificacion_caratecterizacion.JPG') }}" alt="Verificación caracterización" class="validar-img">
+
+            <p>• Por medio del icono de la lupa que se encuentra en la parte superior, verifica que el integrante no esté creado anteriormente en el aplicativo. De estarlo, verifica en qué predio y solicita el traslado correspondiente.</p>
+            <img src="{{ asset('images/gitapps/Verificacion_usuario.PNG') }}" alt="Verificación usuario" class="validar-img">
+        </div>
+      @endif
 
         <div class="modal-footer">
           <button class="btn btn-secondary" onclick="closeModal({{ $i+1 }})">Cerrar</button>
