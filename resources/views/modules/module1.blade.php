@@ -36,7 +36,7 @@
     <aside class="navegacion-modulos">
       <h3><i class="fas fa-list-ol"></i> Contenido del Curso</h3>
       
-      <div class="modulo-item">
+      <div class="modulo-item" data-modulo="1">
         <div class="modulo-titulo">
           <i class="fas fa-folder-open"></i>
           Módulo 1: Introducción al bienestar
@@ -49,11 +49,10 @@
           <li class="clase-item">
             <i class="fas fa-play-circle"></i> Realizar Examen
           </li>
-          
         </ul>
       </div>
       
-      <div class="modulo-item">
+      <div class="modulo-item" data-modulo="2">
         <div class="modulo-titulo">
           <i class="fas fa-folder"></i>
           Módulo 2: Salud física
@@ -70,9 +69,24 @@
           </li>
         </ul>
       </div>
+
+      <div class="modulo-item" data-modulo="4">
+        <div class="modulo-titulo">
+          <i class="fas fa-folder"></i>
+          Módulo 4: Aplicativo GitApps
+        </div>
+        <ul class="clase-list">
+          <li class="clase-item">
+            <i class="fas fa-play-circle"></i> Escalera de pasos
+          </li>
+          <li class="clase-item">
+            <i class="fas fa-play-circle"></i> Acciones colectivas e individuales
+          </li>
+        </ul>
+      </div>
     </aside>
-    {{-- modulo dinamico para seleccionar las clases --}}
-    {{-- <x-modulo :cursos="$module" /> --}}
+
+    {{-- Contenido dinámico --}}
     <x-modulo />
 
   </div>
@@ -105,53 +119,57 @@
     </div>
   </footer>
 
-  <script>
-    // Funcionalidad para la navegación de clases
-    document.addEventListener('DOMContentLoaded', function() {
-      const claseItems = document.querySelectorAll('.clase-item');
-      
-      claseItems.forEach(item => {
-        item.addEventListener('click', () => {
-          // Remover clase active de todos los items
-          claseItems.forEach(i => i.classList.remove('active'));
-          
-          // Agregar clase active al item seleccionado
-          item.classList.add('active');
-          
-          // Aquí iría la lógica para cargar el contenido de la clase seleccionada
-          console.log('Clase seleccionada:', item.textContent);
-        });
+ <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const claseItems = document.querySelectorAll('.clase-item');
+    const modulos = document.querySelectorAll('.modulo-item');
+
+    // Clic en clase
+    claseItems.forEach(item => {
+      item.addEventListener('click', () => {
+        claseItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        console.log('Clase seleccionada:', item.textContent);
       });
-      
-      // Simular marcado de clase como completada
-      const completeBtn = document.querySelector('.nav-btn:not(.outline)');
+    });
+
+    // Clic en módulo → redirigir
+    modulos.forEach(modulo => {
+      modulo.querySelector('.modulo-titulo').addEventListener('click', () => {
+        const id = modulo.dataset.modulo;
+        if (id === "2") {
+          window.location.href = "http://127.0.0.1:8000/modules/module2";
+        } else if (id === "4") {
+          window.location.href = "http://127.0.0.1:8000/modules/module4";
+        } else if (id === "1") {
+          window.location.href = "http://127.0.0.1:8000/modules/module1";
+        }
+      });
+    });
+
+    // Botón marcar como completo
+    const completeBtn = document.querySelector('.nav-btn:not(.outline)');
+    if (completeBtn) {
       completeBtn.addEventListener('click', function() {
         const currentItem = document.querySelector('.clase-item.active');
         if (currentItem && !currentItem.querySelector('.fa-circle-check')) {
           const checkIcon = document.createElement('i');
           checkIcon.className = 'fas fa-circle-check';
           currentItem.appendChild(checkIcon);
-          
-          // Cambiar texto del botón
-          completeBtn.innerHTML = 'Completado <i class="fas fa-check-double"></i>';
-          completeBtn.style.background = 'var(--secondary)';
+        }
+
+        // Redirigir al siguiente módulo real
+        const currentModulo = currentItem.closest('.modulo-item');
+        const nextModulo = currentModulo.nextElementSibling;
+        if (nextModulo) {
+          const id = nextModulo.dataset.modulo;
+          if (id === "2") {
+            window.location.href = "http://127.0.0.1:8000/modules/module2";
+          } else if (id === "4") {
+            window.location.href = "http://127.0.0.1:8000/modules/module4";
+          }
         }
       });
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-        // Cargar Genially script
-        (function(d) {
-            var js, id = "genially-embed-js", ref = d.getElementsByTagName("script")[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement("script");
-            js.id = id;
-            js.async = true;
-            js.src = "https://view.genially.com/static/embed/embed.js";
-            ref.parentNode.insertBefore(js, ref);
-        }(document));
-    });
-
-  </script>
-</body>
-</html>
+    }
+  });
+</script>

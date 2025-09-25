@@ -18,7 +18,8 @@
     </div>
     <div class="usuario">
       <i class="fas fa-user-circle"></i>
-      <span>María Rodríguez</span>
+      <!-- Mostrar nombre del usuario logueado -->
+      <span>{{ Auth::user()->name }}</span>
     </div>
   </header>
 
@@ -38,7 +39,7 @@
     <aside class="navegacion-modulos">
       <h3><i class="fas fa-list-ol"></i> Contenido del Curso</h3>
       
-      <div class="modulo-item">
+      <div class="modulo-item" data-modulo="1">
         <div class="modulo-titulo">
           <i class="fas fa-folder"></i>
           Módulo 1: Introducción al bienestar
@@ -54,7 +55,7 @@
         </ul>
       </div>
       
-      <div class="modulo-item">
+      <div class="modulo-item active" data-modulo="2">
         <div class="modulo-titulo">
           <i class="fas fa-folder-open"></i>
           Módulo 2: Salud física
@@ -71,6 +72,13 @@
             <i class="fas fa-play-circle"></i> Actividad física
           </li>
         </ul>
+      </div>
+
+      <div class="modulo-item" data-modulo="4">
+        <div class="modulo-titulo">
+          <i class="fas fa-folder"></i>
+          Módulo 4: Eventos de interés en salud pública
+        </div>
       </div>
     </aside>
 
@@ -98,8 +106,8 @@
 
       <!-- Navegación de clases -->
       <div class="clase-navigation">
-        <button class="nav-btn outline"><i class="fas fa-arrow-left"></i> Anterior</button>
-        <button class="nav-btn">Siguiente <i class="fas fa-arrow-right"></i></button>
+        <button class="nav-btn outline" id="btn-anterior"><i class="fas fa-arrow-left"></i> Anterior</button>
+        <button class="nav-btn" id="btn-siguiente">Siguiente <i class="fas fa-arrow-right"></i></button>
       </div>
     </div>
   </div>
@@ -137,12 +145,34 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const claseItems = document.querySelectorAll('.clase-item');
-      
+      const btnAnterior = document.getElementById('btn-anterior');
+      const btnSiguiente = document.getElementById('btn-siguiente');
+
+      // Navegación de clases dentro del módulo
       claseItems.forEach(item => {
         item.addEventListener('click', () => {
           claseItems.forEach(i => i.classList.remove('active'));
           item.classList.add('active');
           console.log('Clase seleccionada:', item.textContent);
+        });
+      });
+
+      // Botón anterior -> redirige a módulo 1
+      btnAnterior.addEventListener('click', function() {
+        window.location.href = "http://127.0.0.1:8000/modules/module1";
+      });
+
+      // Botón siguiente -> redirige a módulo 4
+      btnSiguiente.addEventListener('click', function() {
+        window.location.href = "http://127.0.0.1:8000/modules/module4";
+      });
+
+      // Redirección al dar clic en los títulos de los módulos
+      const modulos = document.querySelectorAll('.modulo-item');
+      modulos.forEach(modulo => {
+        modulo.addEventListener('click', () => {
+          const numeroModulo = modulo.getAttribute('data-modulo');
+          window.location.href = `http://127.0.0.1:8000/modules/module${numeroModulo}`;
         });
       });
     });
