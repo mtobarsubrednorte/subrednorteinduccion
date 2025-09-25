@@ -79,6 +79,30 @@
       width:0%;
       transition:width .3s ease;
     }
+    /* estilos de secciones dinámicas */
+    .seccion-modulo { display:none; }
+    .seccion-modulo.active { display:block; }
+    .acciones-list ul { margin-left:20px; margin-bottom:10px; }
+    .acciones-list strong { color:#2563eb; }
+    .acciones-tabs { display:flex; gap:1rem; margin-bottom:1rem; }
+
+    /* estilo para la imagen de Validar_evento */
+    img.validar-img {
+      display: block;
+      margin: 0 auto 2rem auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+
+      .descripcion-validar {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 1rem;
+        text-align: justify;
+      }
+    }
   </style>
 </head>
 <body>
@@ -124,8 +148,11 @@
           Módulo 4: Aplicativo GitApps
         </div>
         <ul class="clase-list">
-          <li class="clase-item active">
+          <li class="clase-item active" onclick="mostrarSeccion('escalera', this)">
             <i class="fas fa-play-circle"></i> Escalera de pasos
+          </li>
+          <li class="clase-item" onclick="mostrarSeccion('acciones', this)">
+            <i class="fas fa-tasks"></i> Acciones colectivas e individuales
           </li>
         </ul>
       </div>
@@ -134,7 +161,7 @@
     <!-- Contenido dinámico -->
     <div class="modulo-contenido">
       
-      <!-- Cabecera del módulo (igual que en Módulo 1) -->
+      <!-- Cabecera del módulo -->
       <div class="modulo-header">
         <h2>Módulo 4: Aplicativo GitApps</h2>
         <p>Aprende a utilizar paso a paso el aplicativo GitApps dentro del entorno de MAS Bienestar.</p>
@@ -146,32 +173,127 @@
         </div>
       </div>
 
-      <h3>Escalera de pasos</h3>
-      <p>Completa los pasos en orden. Cada paso se desbloquea solo cuando completas el anterior.</p>
+      <!-- Sección Escalera -->
+      <div id="escalera" class="seccion-modulo active">
+        <h3>Escalera de pasos</h3>
+        <p>Completa los pasos en orden. Cada paso se desbloquea solo cuando completas el anterior.</p>
 
-      @php
-        $steps = [
-          ['text' => 'Ingresa al sistema GTAPS con tu usuario correspondiente', 'icon' => 'fa-right-to-bracket', 'type'=>'image', 'file'=>'images/gitapps/INICIO_DE_SESION.png'],
-          ['text' => 'Verifica el estado del predio: debe estar en "Efectivo".', 'icon' => 'fa-building', 'type'=>'video', 'file'=>'videos/predios.mp4'],
-          ['text' => 'Revisa la caracterización previa y evita duplicidades en ADRES.', 'icon' => 'fa-magnifying-glass', 'type'=>'video', 'file'=>'videos/CREACION_DE_FAMILIAS.mp4'],
-          ['text' => 'Selecciona el módulo Crear Familia y registra datos de ubicación y contacto.', 'icon' => 'fa-house', 'type'=>'video', 'file'=>'videos/caracterizacion.mp4'],
-          ['text' => 'Selecciona el módulo Crear Integrante Familia y valida en ADRES.', 'icon' => 'fa-user-plus', 'type'=>null, 'file'=>null],
-          ['text' => 'Selecciona el módulo Crear Caracterización Familiar (obligatorio).', 'icon' => 'fa-people-roof', 'type'=>null, 'file'=>null],
-          ['text' => 'Selecciona el módulo Crear Planes de Cuidado Familiar (obligatorio).', 'icon' => 'fa-notes-medical', 'type'=>'video', 'file'=>'videos/Plan_de_cuidaddo.mp4'],
-          ['text' => 'Selecciona el módulo Crear Compromisos Concertados (obligatorio).', 'icon' => 'fa-handshake', 'type'=>'video', 'file'=>'videos/Compromisos.mp4'],
-          ['text' => 'Diligencia los formularios: Signos, Alertas, Tamizaje Apgar.', 'icon' => 'fa-clipboard-list', 'type'=>null, 'file'=>null],
-          ['text' => 'Valida datos del usuario: Documento, Fecha de nacimiento, Sexo.', 'icon' => 'fa-id-card', 'type'=>null, 'file'=>null],
-        ];
-      @endphp
+        @php
+          $steps = [
+            ['text' => 'Ingresa al sistema GTAPS con tu usuario correspondiente', 'icon' => 'fa-right-to-bracket', 'type'=>'image', 'file'=>'images/gitapps/INICIO_DE_SESION.png'],
+            ['text' => 'Verifica el estado del predio: debe estar en "Efectivo".', 'icon' => 'fa-building', 'type'=>'video', 'file'=>'videos/predios.mp4'],
+            ['text' => 'Revisa la caracterización previa y evita duplicidades en ADRES.', 'icon' => 'fa-magnifying-glass', 'type'=>'video', 'file'=>'videos/predios.mp4'],
+            ['text' => 'Selecciona el módulo Crear Familia y registra datos de ubicación y contacto.', 'icon' => 'fa-house', 'type'=>'video', 'file'=>'videos/caracterizacion.mp4'],
+            ['text' => 'Selecciona el módulo Crear Integrante Familia y valida en ADRES.', 'icon' => 'fa-user-plus', 'type'=>null, 'file'=>null],
+            ['text' => 'Selecciona el módulo Crear Caracterización Familiar (obligatorio).', 'icon' => 'fa-people-roof', 'type'=>null, 'file'=>null],
+            ['text' => 'Selecciona el módulo Crear Planes de Cuidado Familiar (obligatorio).', 'icon' => 'fa-notes-medical', 'type'=>'video', 'file'=>'videos/Plan_de_cuidaddo.mp4'],
+            ['text' => 'Selecciona el módulo Crear Compromisos Concertados (obligatorio).', 'icon' => 'fa-handshake', 'type'=>'video', 'file'=>'videos/Compromisos.mp4'],
+            ['text' => 'Diligencia los formularios: Signos, Alertas, Tamizaje Apgar.', 'icon' => 'fa-clipboard-list', 'type'=>null, 'file'=>null],
+            ['text' => 'Valida datos del usuario: Documento, Fecha de nacimiento, Sexo.', 'icon' => 'fa-id-card', 'type'=>null, 'file'=>null],
+          ];
+        @endphp
 
-      <div class="staircase" id="staircase">
-        @foreach($steps as $i => $step)
-          <div class="step {{ $i > 0 ? 'locked' : '' }}" data-step="{{ $i+1 }}">
-            <div class="step-number">{{ $i+1 }}</div>
-            <i class="fas {{ $step['icon'] }} step-icon"></i>
-            <div class="step-desc">{{ $step['text'] }}</div>
-          </div>
-        @endforeach
+        <div class="staircase" id="staircase">
+          @foreach($steps as $i => $step)
+            <div class="step {{ $i > 0 ? 'locked' : '' }}" data-step="{{ $i+1 }}">
+              <div class="step-number">{{ $i+1 }}</div>
+              <i class="fas {{ $step['icon'] }} step-icon"></i>
+              <div class="step-desc">{{ $step['text'] }}</div>
+            </div>
+          @endforeach
+        </div>
+      </div>
+
+      <!-- Sección Acciones -->
+      <div id="acciones" class="seccion-modulo">
+        <h3>Acciones colectivas e individuales</h3>
+
+        <!-- Descripción antes de la imagen -->
+        <p class="descripcion-validar">
+          Los eventos de interés en salud pública (VSP) deben registrarse en el aplicativo GitApps conforme al perfil del colaborador que realizó la intervención. 
+          Para este fin se utiliza el ícono <strong>Validar Evento</strong>, el cual permite, según el usuario autenticado, visualizar y dar seguimiento a las acciones realizadas por los profesionales en cada intervención.
+        </p>
+
+        <!-- Imagen Validar_evento -->
+        <img src="{{ asset('images/gitapps/Validar_evento.jpg') }}" alt="Validar Evento" class="validar-img">
+
+        <!-- Botones -->
+        <div class="acciones-tabs">
+          <button class="btn btn-primary" onclick="mostrarAcciones('colectivas')">
+            <i class="fas fa-people-group"></i> Acciones Colectivas
+          </button>
+          <button class="btn btn-primary" onclick="mostrarAcciones('individuales')">
+            <i class="fas fa-user"></i> Acciones Individuales
+          </button>
+        </div>
+
+        <!-- Contenido Colectivas -->
+        <div id="acciones-colectivas" class="acciones-list acciones-tab">
+          <ul>
+            <li><strong>AMBIENTAL</strong>  
+              <ul><li>Otros casos priorizados</li></ul>
+            </li>
+            <li><strong>ENFERMERÍA</strong>
+              <ul>
+                <li>Bajo peso gestacional</li>
+                <li>BPN a término</li>
+                <li>BPN pretérmino</li>
+                <li>Cáncer infantil</li>
+                <li>Crónicos</li>
+                <li>DNT aguda, moderada o severa</li>
+                <li>ERA IRA</li>
+                <li>Familias con gestantes</li>
+                <li>Familias con menores de 5 años</li>
+                <li>HB gestacional</li>
+                <li>Maternas adolescentes</li>
+                <li>Menores con exceso de peso</li>
+                <li>Morbilidad materna extrema</li>
+                <li>Obesidad gestacional</li>
+                <li>Otros casos priorizados</li>
+                <li>Sífilis congénita</li>
+                <li>Sífilis gestacional</li>
+                <li>VIH gestacional</li>
+              </ul>
+            </li>
+            <li><strong>ODONTOLOGÍA</strong>
+              <ul><li>Salud oral</li></ul>
+            </li>
+            <li><strong>PSICLINICOS</strong>
+              <ul>
+                <li>Acompañamiento psicosocial</li>
+                <li>Apoyo psicológico en duelo</li>
+                <li>Conducta suicida (consumado)</li>
+                <li>Conducta suicida (ideación)</li>
+                <li>Conducta suicida (intento)</li>
+                <li>Violencia reiterada</li>
+              </ul>
+            </li>
+            <li><strong>PSICOLOGÍA</strong>
+              <ul>
+                <li>Acompañamiento psicosocial</li>
+                <li>Apoyo psicológico en duelo</li>
+                <li>Conducta suicida (amenaza)</li>
+                <li>Conducta suicida (consumado)</li>
+                <li>Conducta suicida (ideación)</li>
+                <li>Conducta suicida (intento)</li>
+                <li>Violencia en gestantes</li>
+                <li>Violencia reiterada</li>
+              </ul>
+            </li>
+            <li><strong>TERAPEUTA</strong>
+              <ul><li>Otros casos priorizados</li></ul>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Contenido Individuales -->
+        <div id="acciones-individuales" class="acciones-list acciones-tab" style="display:none;">
+          <ul>
+            <li>Atenciones</li>
+            <li>Sesiones Colectivas</li>
+            <li>Sesiones Grupales</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -232,15 +354,13 @@
 
   <!-- Scripts -->
   <script>
+    // Manejo de Escalera
     const steps = document.querySelectorAll('.step');
-
     steps.forEach(step => {
       step.addEventListener('click', () => {
         if (!step.classList.contains('locked')) {
           const stepNum = step.dataset.step;
           document.getElementById(`modal-${stepNum}`).classList.add('active');
-
-          // Si es un video, esperar que termine
           const video = document.getElementById(`video-${stepNum}`);
           if(video){
             video.currentTime = 0;
@@ -251,17 +371,29 @@
         }
       });
     });
-
     function closeModal(step) {
       document.getElementById(`modal-${step}`).classList.remove('active');
     }
-
     function completeStep(step) {
       const currentStep = document.querySelector(`.step[data-step="${step}"]`);
       currentStep.classList.add('done');
       closeModal(step);
       const nextStep = document.querySelector(`.step[data-step="${step+1}"]`);
       if (nextStep) nextStep.classList.remove('locked');
+    }
+
+    // Mostrar/Ocultar secciones dinámicas
+    function mostrarSeccion(id, elemento) {
+      document.querySelectorAll('.seccion-modulo').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.clase-item').forEach(item => item.classList.remove('active'));
+      elemento.classList.add('active');
+    }
+
+    // Mostrar acciones colectivas o individuales
+    function mostrarAcciones(tipo) {
+      document.querySelectorAll('.acciones-tab').forEach(tab => tab.style.display = 'none');
+      document.getElementById(`acciones-${tipo}`).style.display = 'block';
     }
   </script>
 </body>
