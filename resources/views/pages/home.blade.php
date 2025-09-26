@@ -49,7 +49,6 @@
           <source src="{{ asset('videos/MAS_Bienestar_video.mp4') }}" type="video/mp4">
           Tu navegador no soporta el video.
         </video>
-
       </div>
 
 
