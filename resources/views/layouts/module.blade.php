@@ -33,9 +33,9 @@
 <body>
 
     <x-header />
-    <x-banner />
 
-    <div class="contenido">
+
+    <div class="contenidoModulo">
         @yield('content')
     </div>
 

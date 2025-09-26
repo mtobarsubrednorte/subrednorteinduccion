@@ -75,3 +75,111 @@
    .usuario i {
        font-size: 1.2rem;
    }
+
+   .contenido {
+       display: flex;
+       padding: 30px 5%;
+       gap: 30px;
+       max-width: 1400px;
+       margin: 0 auto;
+   }
+
+
+   /* Footer */
+   footer {
+       background: var(--dark);
+       color: var(--white);
+       padding: 30px 5%;
+       margin-top: 50px;
+   }
+
+   .footer-content {
+       display: flex;
+       justify-content: space-between;
+       flex-wrap: wrap;
+       gap: 30px;
+       max-width: 1400px;
+       margin: 0 auto;
+   }
+
+   .footer-section {
+       flex: 1;
+       min-width: 250px;
+   }
+
+   .footer-section h3 {
+       font-size: 1.2rem;
+       margin-bottom: 20px;
+       color: var(--secondary);
+   }
+
+   .footer-section p,
+   .footer-section a {
+       color: #CCC;
+       margin-bottom: 10px;
+       display: block;
+       text-decoration: none;
+       transition: var(--transition);
+   }
+
+   .footer-section a:hover {
+       color: var(--white);
+   }
+
+   .copyright {
+       text-align: center;
+       margin-top: 30px;
+       padding-top: 20px;
+       border-top: 1px solid rgba(255, 255, 255, 0.1);
+       color: #AAA;
+       font-size: 0.9rem;
+   }
+
+   /* Responsive */
+   @media (max-width: 1024px) {
+       .contenido {
+           flex-wrap: wrap;
+       }
+
+       .navegacion,
+       .principal,
+       .lateral {
+           width: 100%;
+       }
+
+       .navegacion {
+           order: 1;
+       }
+
+       .principal {
+           order: 3;
+       }
+
+       .lateral {
+           order: 2;
+       }
+   }
+
+   @media (max-width: 768px) {
+       header {
+           flex-direction: column;
+           text-align: center;
+           gap: 10px;
+       }
+
+       .logo-container {
+           flex-direction: column;
+       }
+
+       .banner-content h2 {
+           font-size: 1.8rem;
+       }
+
+       .cursos {
+           flex-direction: column;
+       }
+
+       .curso-card {
+           min-width: 100%;
+       }
+   }
