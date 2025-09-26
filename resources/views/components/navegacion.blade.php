@@ -7,7 +7,7 @@
         <!-- Cursos con submenu tipo acordeón -->
         <li class="submenu">
             <button class="toggle">
-                <i class="fas fa-graduation-cap"></i> Cursos 
+                <i class="fas fa-graduation-cap"></i> Cursos
                 <i class="fas fa-chevron-down arrow"></i>
             </button>
             <ul class="submenu-items">
@@ -21,66 +21,63 @@
 </aside>
 
 <style>
+    .navegacion ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 
+    .navegacion ul li {
+        margin: 10px 0;
+    }
 
-.navegacion ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+    .navegacion a {
+        text-decoration: none;
+        color: #333;
+    }
 
-.navegacion ul li {
-    margin: 10px 0;
-}
+    .submenu .toggle {
+        width: 100%;
+        background: none;
+        border: none;
+        text-align: left;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: bold;
+    }
 
-.navegacion a {
-    text-decoration: none;
-    color: #333;
-}
+    .submenu-items {
+        display: none;
+        margin-left: 15px;
+    }
 
-.submenu .toggle {
-    width: 100%;
-    background: none;
-    border: none;
-    text-align: left;
-    font-size: 16px;
-    padding: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: bold;
-}
+    .submenu-items li {
+        margin: 6px 0;
+    }
 
-.submenu-items {
-    display: none;
-    margin-left: 15px;
-}
+    .submenu.open .submenu-items {
+        display: block;
+    }
 
-.submenu-items li {
-    margin: 6px 0;
-}
+    .submenu .arrow {
+        transition: transform 0.3s ease;
+    }
 
-.submenu.open .submenu-items {
-    display: block;
-}
-
-.submenu .arrow {
-    transition: transform 0.3s ease;
-}
-
-.submenu.open .arrow {
-    transform: rotate(180deg);
-}
+    .submenu.open .arrow {
+        transform: rotate(180deg);
+    }
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const toggle = document.querySelector(".submenu .toggle");
-    const submenu = document.querySelector(".submenu");
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.querySelector(".submenu .toggle");
+        const submenu = document.querySelector(".submenu");
 
-    toggle.addEventListener("click", function() {
-        submenu.classList.toggle("open");
+        toggle.addEventListener("click", function () {
+            submenu.classList.toggle("open");
+        });
     });
-});
 </script>

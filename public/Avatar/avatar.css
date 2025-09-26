@@ -7,7 +7,7 @@
     z-index: 1000;
 }
 
-button {
+#buttonAvatar {
     position: relative;
     margin: 20px;
     z-index: 1;
