@@ -82,7 +82,10 @@
       width:0%;
       transition:width .3s ease;
     }
+HEAD
 
+=======
+d9517458c75c5d9595ba0dceab97befa41f7e894
     /* estilos de secciones dinámicas */
     .seccion-modulo { display:none; }
     .seccion-modulo.active { display:block; }
@@ -98,6 +101,7 @@
       height: auto;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+HEAD
     }
     .descripcion-validar {
       font-size: 15px;
@@ -134,6 +138,17 @@
     .contenido-modulo { display:flex; gap:1.5rem; padding:1.5rem; }
     .navegacion-modulos { width:280px; }
     .modulo-contenido { flex:1; }
+
+
+      .descripcion-validar {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 1rem;
+        text-align: justify;
+      }
+    }
+d9517458c75c5d9595ba0dceab97befa41f7e894
   </style>
 </head>
 <body>
@@ -200,7 +215,11 @@
     <main class="modulo-contenido" role="main">
       
       <!-- Cabecera del módulo -->
+HEAD
       <div class="modulo-header" role="banner">
+
+      <div class="modulo-header">
+d9517458c75c5d9595ba0dceab97befa41f7e894
         <h2>Módulo 4: Aplicativo GitApps</h2>
         <p>Aprende a utilizar paso a paso el aplicativo GitApps dentro del entorno de MAS Bienestar.</p>
         <div class="progreso">
@@ -212,16 +231,27 @@
       </div>
 
       <!-- Sección Escalera -->
+HEAD
       <section id="escalera" class="seccion-modulo active" aria-labelledby="escalera-h">
         <h3 id="escalera-h">Escalera de pasos</h3>
         <p>Completa los pasos en orden. Cada paso se desbloquea al marcar el anterior como visto.</p>
 
+      <div id="escalera" class="seccion-modulo active">
+        <h3>Escalera de pasos</h3>
+        <p>Completa los pasos en orden. Cada paso se desbloquea solo cuando completas el anterior.</p>
+d9517458c75c5d9595ba0dceab97befa41f7e894
+
         @php
           $steps = [
             ['text' => 'Ingresa al sistema GTAPS con tu usuario correspondiente', 'icon' => 'fa-right-to-bracket', 'type'=>'image', 'file'=>'images/gitapps/INICIO_DE_SESION.png'],
+HEAD
             ['text' => 'Verifica el estado del predio:Asegúrate de que el predio esté gestionado como "Efectivo" en el sistema.
               Si el predio no se encuentra como efectivo, no se puede realizar la caracterización.', 'icon' => 'fa-building', 'type'=>'video', 'file'=>'videos/predios.mp4'],
             ['text' => 'Revisa la caracterización previa y evita duplicidades en ADRES.', 'icon' => 'fa-magnifying-glass', 'type' => 'custom', 'file' => null],
+
+            ['text' => 'Verifica el estado del predio: debe estar en "Efectivo".', 'icon' => 'fa-building', 'type'=>'video', 'file'=>'videos/predios.mp4'],
+            ['text' => 'Revisa la caracterización previa y evita duplicidades en ADRES.', 'icon' => 'fa-magnifying-glass', 'type'=>'video', 'file'=>'videos/predios.mp4'],
+d9517458c75c5d9595ba0dceab97befa41f7e894
             ['text' => 'Selecciona el módulo Crear Familia y registra datos de ubicación y contacto.', 'icon' => 'fa-house', 'type'=>'video', 'file'=>'videos/caracterizacion.mp4'],
             ['text' => 'Selecciona el módulo Crear Integrante Familia y valida en ADRES.', 'icon' => 'fa-user-plus', 'type'=>null, 'file'=>null],
             ['text' => 'Selecciona el módulo Crear Caracterización Familiar (obligatorio).', 'icon' => 'fa-people-roof', 'type'=>null, 'file'=>null],
@@ -236,11 +266,16 @@
           @foreach($steps as $i => $step)
             <div class="step {{ $i > 0 ? 'locked' : '' }}" data-step="{{ $i+1 }}">
               <div class="step-number">{{ $i+1 }}</div>
+HEAD
               <i class="fas {{ $step['icon'] }} step-icon" aria-hidden="true"></i>
+
+              <i class="fas {{ $step['icon'] }} step-icon"></i>
+d9517458c75c5d9595ba0dceab97befa41f7e894
               <div class="step-desc">{{ $step['text'] }}</div>
             </div>
           @endforeach
         </div>
+HEAD
 
         <!-- Navegación inferior (Anterior / Siguiente) -->
         <div class="clase-navigation" aria-hidden="false">
@@ -269,6 +304,39 @@
           <!-- contenido existente para colectivas -->
           <ul>
             <li><strong>AMBIENTAL</strong><ul><li>Otros casos priorizados</li></ul></li>
+
+      </div>
+
+      <!-- Sección Acciones -->
+      <div id="acciones" class="seccion-modulo">
+        <h3>Acciones colectivas e individuales</h3>
+
+        <!-- Descripción antes de la imagen -->
+        <p class="descripcion-validar">
+          Los eventos de interés en salud pública (VSP) deben registrarse en el aplicativo GitApps conforme al perfil del colaborador que realizó la intervención. 
+          Para este fin se utiliza el ícono <strong>Validar Evento</strong>, el cual permite, según el usuario autenticado, visualizar y dar seguimiento a las acciones realizadas por los profesionales en cada intervención.
+        </p>
+
+        <!-- Imagen Validar_evento -->
+        <img src="{{ asset('images/gitapps/Validar_evento.jpg') }}" alt="Validar Evento" class="validar-img">
+
+        <!-- Botones -->
+        <div class="acciones-tabs">
+          <button class="btn btn-primary" onclick="mostrarAcciones('colectivas')">
+            <i class="fas fa-people-group"></i> Acciones Colectivas
+          </button>
+          <button class="btn btn-primary" onclick="mostrarAcciones('individuales')">
+            <i class="fas fa-user"></i> Acciones Individuales
+          </button>
+        </div>
+
+        <!-- Contenido Colectivas -->
+        <div id="acciones-colectivas" class="acciones-list acciones-tab">
+          <ul>
+            <li><strong>AMBIENTAL</strong>  
+              <ul><li>Otros casos priorizados</li></ul>
+            </li>
+d9517458c75c5d9595ba0dceab97befa41f7e894
             <li><strong>ENFERMERÍA</strong>
               <ul>
                 <li>Bajo peso gestacional</li>
@@ -291,16 +359,31 @@
                 <li>VIH gestacional</li>
               </ul>
             </li>
+HEAD
             <li><strong>ODONTOLOGÍA</strong><ul><li>Salud oral</li></ul></li>
             <li><strong>PSICLINICOS</strong><ul>
+
+            <li><strong>ODONTOLOGÍA</strong>
+              <ul><li>Salud oral</li></ul>
+            </li>
+            <li><strong>PSICLINICOS</strong>
+              <ul>
+d9517458c75c5d9595ba0dceab97befa41f7e894
                 <li>Acompañamiento psicosocial</li>
                 <li>Apoyo psicológico en duelo</li>
                 <li>Conducta suicida (consumado)</li>
                 <li>Conducta suicida (ideación)</li>
                 <li>Conducta suicida (intento)</li>
                 <li>Violencia reiterada</li>
+HEAD
               </ul></li>
             <li><strong>PSICOLOGÍA</strong><ul>
+
+              </ul>
+            </li>
+            <li><strong>PSICOLOGÍA</strong>
+              <ul>
+d9517458c75c5d9595ba0dceab97befa41f7e894
                 <li>Acompañamiento psicosocial</li>
                 <li>Apoyo psicológico en duelo</li>
                 <li>Conducta suicida (amenaza)</li>
@@ -309,21 +392,39 @@
                 <li>Conducta suicida (intento)</li>
                 <li>Violencia en gestantes</li>
                 <li>Violencia reiterada</li>
+HEAD
               </ul></li>
             <li><strong>TERAPEUTA</strong><ul><li>Otros casos priorizados</li></ul></li>
           </ul>
         </div>
 
         <div id="acciones-individuales" class="acciones-list acciones-tab" style="display:none;" role="tabpanel">
+
+              </ul>
+            </li>
+            <li><strong>TERAPEUTA</strong>
+              <ul><li>Otros casos priorizados</li></ul>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Contenido Individuales -->
+        <div id="acciones-individuales" class="acciones-list acciones-tab" style="display:none;">
+d9517458c75c5d9595ba0dceab97befa41f7e894
           <ul>
             <li>Atenciones</li>
             <li>Sesiones Colectivas</li>
             <li>Sesiones Grupales</li>
           </ul>
         </div>
+HEAD
       </section>
 
     </main>
+
+      </div>
+    </div>
+d9517458c75c5d9595ba0dceab97befa41f7e894
   </div>
 
   <!-- Footer -->
@@ -377,6 +478,7 @@
 
   <!-- Scripts -->
   <script>
+HEAD
     document.addEventListener('DOMContentLoaded', function() {
       // Variables
       const steps = document.querySelectorAll('.step');
@@ -457,6 +559,21 @@
               // No hay siguiente módulo
               console.log('Módulo completado. No hay siguiente módulo en la lista.');
             }
+
+    // Manejo de Escalera
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(step => {
+      step.addEventListener('click', () => {
+        if (!step.classList.contains('locked')) {
+          const stepNum = step.dataset.step;
+          document.getElementById(`modal-${stepNum}`).classList.add('active');
+          const video = document.getElementById(`video-${stepNum}`);
+          if(video){
+            video.currentTime = 0;
+            video.addEventListener('ended', () => {
+              document.getElementById(`btn-complete-${stepNum}`).disabled = false;
+            }, { once: true });
+d9517458c75c5d9595ba0dceab97befa41f7e894
           }
         }
       };
@@ -497,6 +614,7 @@
           window.location.href = url;
         });
       });
+HEAD
 
       // Botones anterior/siguiente funcionales (buscan prev/next en DOM de sidebar)
       const btnAnterior = document.getElementById('btn-anterior');
@@ -535,6 +653,33 @@
       // Inicializar progreso si hay pasos ya marcados al cargar (opcional)
       updateProgress();
     }); // DOMContentLoaded
+
+    });
+    function closeModal(step) {
+      document.getElementById(`modal-${step}`).classList.remove('active');
+    }
+    function completeStep(step) {
+      const currentStep = document.querySelector(`.step[data-step="${step}"]`);
+      currentStep.classList.add('done');
+      closeModal(step);
+      const nextStep = document.querySelector(`.step[data-step="${step+1}"]`);
+      if (nextStep) nextStep.classList.remove('locked');
+    }
+
+    // Mostrar/Ocultar secciones dinámicas
+    function mostrarSeccion(id, elemento) {
+      document.querySelectorAll('.seccion-modulo').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.clase-item').forEach(item => item.classList.remove('active'));
+      elemento.classList.add('active');
+    }
+
+    // Mostrar acciones colectivas o individuales
+    function mostrarAcciones(tipo) {
+      document.querySelectorAll('.acciones-tab').forEach(tab => tab.style.display = 'none');
+      document.getElementById(`acciones-${tipo}`).style.display = 'block';
+    }
+d9517458c75c5d9595ba0dceab97befa41f7e894
   </script>
 </body>
 </html>
