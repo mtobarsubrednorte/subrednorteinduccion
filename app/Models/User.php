@@ -26,6 +26,7 @@ class User extends Authenticatable
         'profile_id',
         'gender',
         'subred',
+        'role',
     ];
 
     /**
@@ -50,4 +51,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Método helper para verificar si es admin
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
 }
