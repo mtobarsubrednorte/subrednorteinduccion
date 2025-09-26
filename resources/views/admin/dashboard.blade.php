@@ -1,28 +1,344 @@
-@extends('layouts.app')
-
-@section('title', 'Panel de Administración')
+@extends('layouts.admin.admin')
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
-
-
 @endsection
 
 @section('content')
 
-    <div class="admin-dashboard">
-        <h2>Bienvenido al Panel de Administración</h2>
-        <p>Desde aquí puedes gestionar usuarios, roles y permisos.</p>
 
-        <div class="admin-actions">
-            <a href="#" class="btn btn-primary">Gestionar Usuarios</a>
-            <a href="#" class="btn btn-secondary">Gestionar Roles</a>
-            <a href="#" class="btn btn-success">Gestionar Permisos</a>
-            <a href="#" class="btn btn-danger">Crear Cursos</a>
+    <div class="container">
+        <!-- Estadísticas rápidas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-number">1,247</div>
+                        <div class="stat-label">Usuarios Registrados</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Cursos Activos</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="stat-number">892</div>
+                        <div class="stat-label">Certificados Emitidos</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="icon-container">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-number">78%</div>
+                        <div class="stat-label">Tasa de Finalización</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Columna izquierda -->
+            <div class="col-md-8">
+                <!-- Gestión de usuarios -->
+                <div class="table-container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Gestión de Usuarios</h4>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" placeholder="Buscar usuario...">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Email</th>
+                                    <th>Curso</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-avatar me-2">M</div>
+                                            <div>María González</div>
+                                        </div>
+                                    </td>
+                                    <td>maria.gonzalez@email.com</td>
+                                    <td>Bienestar Familiar</td>
+                                    <td><span class="status-badge status-active">Activo</span></td>
+                                    <td>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-avatar me-2">J</div>
+                                            <div>Juan Pérez</div>
+                                        </div>
+                                    </td>
+                                    <td>juan.perez@email.com</td>
+                                    <td>Salud Mental</td>
+                                    <td><span class="status-badge status-inactive">Inactivo</span></td>
+                                    <td>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox">
+                                            <span class="slider"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-avatar me-2">A</div>
+                                            <div>Ana Rodríguez</div>
+                                        </div>
+                                    </td>
+                                    <td>ana.rodriguez@email.com</td>
+                                    <td>Nutrición Saludable</td>
+                                    <td><span class="status-badge status-active">Activo</span></td>
+                                    <td>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-avatar me-2">C</div>
+                                            <div>Carlos López</div>
+                                        </div>
+                                    </td>
+                                    <td>carlos.lopez@email.com</td>
+                                    <td>Ejercicio en Casa</td>
+                                    <td><span class="status-badge status-pending">Pendiente</span></td>
+                                    <td>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox">
+                                            <span class="slider"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>Mostrando 4 de 1247 usuarios</div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Gestión de cursos -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-book me-2"></i>Gestión de Cursos
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Bienestar Familiar</h5>
+                                        <p class="card-text">Curso integral para mejorar la convivencia y bienestar en
+                                            el hogar.</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-primary">125 inscritos</span>
+                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Salud Mental</h5>
+                                        <p class="card-text">Estrategias para mantener una salud mental equilibrada en
+                                            familia.</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-primary">89 inscritos</span>
+                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Nutrición Saludable</h5>
+                                        <p class="card-text">Aprende a preparar comidas nutritivas para toda la familia.
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-primary">203 inscritos</span>
+                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Ejercicio en Casa</h5>
+                                        <p class="card-text">Rutinas de ejercicio para realizar en familia sin salir de
+                                            casa.</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-primary">167 inscritos</span>
+                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Agregar Nuevo Curso</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div class="col-md-4">
+                <!-- Acciones rápidas -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-bolt me-2"></i>Acciones Rápidas
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary text-start">
+                                <i class="fas fa-user-plus me-2"></i>Agregar Usuario
+                            </button>
+                            <button class="btn btn-outline-primary text-start">
+                                <i class="fas fa-file-certificate me-2"></i>Generar Certificado
+                            </button>
+                            <button class="btn btn-outline-primary text-start">
+                                <i class="fas fa-chart-bar me-2"></i>Ver Reportes
+                            </button>
+                            <button class="btn btn-outline-primary text-start">
+                                <i class="fas fa-cog me-2"></i>Configuración del Sistema
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actividad reciente -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fas fa-history me-2"></i>Actividad Reciente
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-user-check text-success"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Nuevo usuario registrado</h6>
+                                    <p class="small text-muted mb-0">Laura Martínez se unió al curso de Bienestar
+                                        Familiar</p>
+                                    <span class="small text-muted">Hace 15 minutos</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-certificate text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Certificado emitido</h6>
+                                    <p class="small text-muted mb-0">Carlos Ruiz completó el curso de Salud Mental</p>
+                                    <span class="small text-muted">Hace 2 horas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-book text-info"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Nuevo contenido agregado</h6>
+                                    <p class="small text-muted mb-0">Se añadió módulo 5 al curso de Nutrición Saludable
+                                    </p>
+                                    <span class="small text-muted">Ayer a las 14:30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container text-center">
+            <h4>MAS Bienestar en tu hogar</h4>
+            <p class="mb-3">Bienestar integral para tu familia</p>
+            <div class="section-divider mx-auto" style="width: 50%;"></div>
+            <p class="mb-0">&copy; 2023 MAS Bienestar. Todos los derechos reservados.</p>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Funcionalidad para los interruptores de activar/desactivar usuarios
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleSwitches = document.querySelectorAll('.toggle-switch input');
 
+            toggleSwitches.forEach(switchEl => {
+                switchEl.addEventListener('change', function () {
+                    const statusBadge = this.closest('tr').querySelector('.status-badge');
+
+                    if (this.checked) {
+                        statusBadge.textContent = 'Activo';
+                        statusBadge.className = 'status-badge status-active';
+                    } else {
+                        statusBadge.textContent = 'Inactivo';
+                        statusBadge.className = 'status-badge status-inactive';
+                    }
+                });
+            });
+        });
+    </script>
 
 @endsection
