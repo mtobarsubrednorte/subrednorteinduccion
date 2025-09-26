@@ -1,15 +1,26 @@
     :root {
-      --primary: #2A6B7E;
-      --secondary: #4CAF50;
-      --accent: #FF9800;
-      --light: #F8F9FA;
-      --dark: #343A40;
+      --primary: #4BB9E7;
+      /* Azul celeste claro - Fondo principal */
+      --secondary: #2C9EC4;
+      /* Azul medio - Paneles intermedios */
+      --accent: #0079A7;
+      /* Azul oscuro - Detalles de contraste */
+      --deep: #006D92;
+      /* Azul profundo - Secciones sólidas */
+      --white: #FFFFFF;
+      /* Blanco - Texto y elementos destacados */
+
+      /* Extras que puedes mantener */
       --gray: #6C757D;
       --light-gray: #E9ECEF;
-      --white: #FFFFFF;
+      --dark: #343A40;
+      --light: #F8F9FA;
+
+      /* Sombra y transiciones */
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       --transition: all 0.3s ease;
     }
+
 
     * {
       margin: 0;
@@ -66,7 +77,7 @@
     }
 
     /* Banner */
-    
+
     .banner-content {
       max-width: 600px;
     }
@@ -114,7 +125,7 @@
       padding: 0;
     }
 
-    .navegacion > ul > li {
+    .navegacion>ul>li {
       margin: 12px 0;
       font-weight: 500;
       cursor: pointer;
@@ -123,7 +134,7 @@
       border-radius: 6px;
     }
 
-    .navegacion > ul > li:hover {
+    .navegacion>ul>li:hover {
       background-color: var(--light-gray);
       color: var(--primary);
     }
@@ -161,7 +172,7 @@
       width: 56%;
     }
 
-    .principal > p {
+    .principal>p {
       margin-bottom: 25px;
       font-size: 1.1rem;
       background: var(--white);
@@ -170,7 +181,7 @@
       box-shadow: var(--shadow);
     }
 
-    .principal > p strong {
+    .principal>p strong {
       color: var(--primary);
     }
 
@@ -340,7 +351,8 @@
       color: var(--secondary);
     }
 
-    .footer-section p, .footer-section a {
+    .footer-section p,
+    .footer-section a {
       color: #CCC;
       margin-bottom: 10px;
       display: block;
@@ -367,7 +379,9 @@
         flex-wrap: wrap;
       }
 
-      .navegacion, .principal, .lateral {
+      .navegacion,
+      .principal,
+      .lateral {
         width: 100%;
       }
 
