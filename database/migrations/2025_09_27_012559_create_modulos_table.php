@@ -12,16 +12,16 @@ return new class extends Migration {
     {
         Schema::create('modulos', function (Blueprint $table) {
             $table->id();
-            // title, description, duration, genilay_recursos_link1, genilay_recursos_link2, created_at, updated_at
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('duration'); // duration in minutes
             $table->text('genilay_recursos_link1')->nullable();
             $table->text('genilay_recursos_link2')->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable()->after('id');
+            $table->unsignedBigInteger('parent_id')->nullable(); // submódulo opcional
             $table->foreign('parent_id')->references('id')->on('modulos')->onDelete('cascade');
             $table->timestamps();
         });
+
     }
 
     /**

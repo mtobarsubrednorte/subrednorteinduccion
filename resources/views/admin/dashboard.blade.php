@@ -168,83 +168,20 @@
                         <div class="mt-3">
                             {{ $modulos->links() }}
                         </div>
+
+
+                        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarCurso">
+                            <i class="fas fa-plus"></i> Agregar Curso
+                        </button>
+
+
                     </div>
+
+
+
                 </div>
 
-                <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarCurso">
-                    <i class="fas fa-plus"></i> Agregar Curso
-                </button>
 
-                <div class="modal fade" id="modalAgregarCurso" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <form method="POST" action="{{ route('modulos.store') }}" enctype="multipart/form-data">
-                            @csrf
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Agregar Curso</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label>Título</label>
-                                        <input type="text" name="title" class="form-control" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Descripción</label>
-                                        <textarea name="description" class="form-control"></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Duración (minutos)</label>
-                                        <input type="number" name="duration" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Link Genially 1</label>
-                                        <input type="text" name="genilay_recursos_link1" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Link Genially 2</label>
-                                        <input type="text" name="genilay_recursos_link2" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Recursos (PDF/Word)</label>
-                                        <input type="file" name="recursos[]" class="form-control" multiple>
-                                    </div>
-
-                                    <div id="preguntas-container">
-                                        <label>Preguntas del Examen</label>
-                                        <div class="mb-2 d-flex">
-                                            <input type="text" name="preguntas[0][pregunta]" class="form-control me-2"
-                                                placeholder="Pregunta">
-                                            <input type="text" name="preguntas[0][respuesta]" class="form-control"
-                                                placeholder="Respuesta">
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="addPregunta">+
-                                        Agregar Pregunta</button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancelar</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <script>
-                    document.getElementById('addPregunta').addEventListener('click', function () {
-                        let container = document.getElementById('preguntas-container');
-                        let index = container.querySelectorAll('.d-flex').length;
-                        let div = document.createElement('div');
-                        div.classList.add('mb-2', 'd-flex');
-                        div.innerHTML = `
-            <input type="text" name="preguntas[${index}][pregunta]" class="form-control me-2" placeholder="Pregunta">
-            <input type="text" name="preguntas[${index}][respuesta]" class="form-control" placeholder="Respuesta">
-        `;
-                        container.appendChild(div);
-                    });
-                </script>
 
 
 
@@ -329,6 +266,127 @@
             <p class="mb-0">&copy; 2023 MAS Bienestar. Todos los derechos reservados.</p>
         </div>
     </div>
+
+    <div class="modal fade" id="modalAgregarCurso" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <form action="{{ route('modulos.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar Curso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Título</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Descripción</label>
+                            <textarea name="description" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>Duración (minutos)</label>
+                            <input type="number" name="duration" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label>Link Genially 1</label>
+                            <input type="text" name="genilay_recursos_link1" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label>Link Genially 2</label>
+                            <input type="text" name="genilay_recursos_link2" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label>Recursos (PDF/Word)</label>
+                            <input type="file" name="recursos[]" class="form-control" multiple>
+                        </div>
+
+                        <div id="preguntas-container">
+                            <label>Preguntas del Examen (Selección Múltiple)</label>
+                            <div class="pregunta mb-3" data-index="0">
+                                <input type="text" name="preguntas[0][pregunta]" class="form-control mb-2"
+                                    placeholder="Pregunta">
+                                <div class="opciones">
+                                    <div class="d-flex mb-1">
+                                        <input type="text" name="preguntas[0][opciones][]" class="form-control me-2"
+                                            placeholder="Opción">
+                                        <label><input type="checkbox" name="preguntas[0][respuestas_correctas][]" value="0">
+                                            Correcta</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary add-option">+
+                                    Agregar Opción</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="addPregunta">+
+                            Agregar Pregunta</button>
+
+                        <script>
+                            let preguntaIndex = 1;
+
+                            document.getElementById('addPregunta').addEventListener('click', function () {
+                                let container = document.getElementById('preguntas-container');
+                                let div = document.createElement('div');
+                                div.classList.add('pregunta', 'mb-3');
+                                div.setAttribute('data-index', preguntaIndex);
+
+                                div.innerHTML = `
+                                        <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
+                                        <div class="opciones">
+                                            <div class="d-flex mb-1">
+                                                <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                                <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
+                                    `;
+
+                                container.appendChild(div);
+                                preguntaIndex++;
+                            });
+
+                            document.addEventListener('click', function (e) {
+                                if (e.target && e.target.classList.contains('add-option')) {
+                                    let preguntaDiv = e.target.closest('.pregunta');
+                                    let index = preguntaDiv.getAttribute('data-index');
+                                    let opcionesDiv = preguntaDiv.querySelector('.opciones');
+                                    let optionIndex = opcionesDiv.querySelectorAll('.d-flex').length;
+
+                                    let optionDiv = document.createElement('div');
+                                    optionDiv.classList.add('d-flex', 'mb-1');
+                                    optionDiv.innerHTML = `
+                                            <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                            <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
+                                        `;
+                                    opcionesDiv.appendChild(optionDiv);
+                                }
+                            });
+                        </script>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('addPregunta').addEventListener('click', function () {
+            let container = document.getElementById('preguntas-container');
+            let index = container.querySelectorAll('.d-flex').length;
+            let div = document.createElement('div');
+            div.classList.add('mb-2', 'd-flex');
+            div.innerHTML = `
+                                            <input type="text" name="preguntas[${index}][pregunta]" class="form-control me-2" placeholder="Pregunta">
+                                            <input type="text" name="preguntas[${index}][respuesta]" class="form-control" placeholder="Respuesta">
+                                        `;
+            container.appendChild(div);
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('modulo_id');
             $table->string('pregunta');
-            $table->string('respuesta');
+            $table->json('opciones'); // guardará un array de opciones
+            $table->json('respuestas_correctas'); // array de índices de respuestas correctas
             $table->timestamps();
 
             $table->foreign('modulo_id')->references('id')->on('modulos')->onDelete('cascade');

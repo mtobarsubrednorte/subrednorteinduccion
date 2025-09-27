@@ -6,6 +6,7 @@ use App\Models\Modulos;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -70,20 +71,14 @@ class DashboardController extends Controller
 
     public function storeModulo(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration' => 'nullable|integer',
-            'genilay_recursos_link1' => 'nullable|string',
-            'genilay_recursos_link2' => 'nullable|string',
-            'recursos.*' => 'file|mimes:pdf,doc,docx|max:5120',
-            'preguntas.*.pregunta' => 'required|string',
-            'preguntas.*.respuesta' => 'required|string',
-            'parent_id' => 'nullable|exists:modulos,id'
-        ]);
+
+        Log::info('storeModulo iniciado', ['request' => $request->all()]);
+
+
+
 
         $modulo = Modulos::create($request->only(['title', 'description', 'duration', 'genilay_recursos_link1', 'genilay_recursos_link2', 'parent_id']));
-
+        Log::info('Módulo creado', ['modulo_id' => $modulo->id]);
         // Guardar recursos
         if ($request->hasFile('recursos')) {
             foreach ($request->file('recursos') as $file) {
@@ -98,9 +93,14 @@ class DashboardController extends Controller
         // Guardar preguntas
         if ($request->has('preguntas')) {
             foreach ($request->preguntas as $pregunta) {
-                $modulo->preguntas()->create($pregunta);
+                $modulo->preguntas()->create([
+                    'pregunta' => $pregunta['pregunta'],
+                    'opciones' => $pregunta['opciones'],
+                    'respuestas_correctas' => $pregunta['respuestas_correctas'] ?? [],
+                ]);
             }
         }
+
 
         return redirect()->back()->with('success', 'Curso creado exitosamente');
     }

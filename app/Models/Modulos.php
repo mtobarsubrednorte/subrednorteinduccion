@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-
-
-
 use Illuminate\Database\Eloquent\Model;
 
 class Modulos extends Model
@@ -19,11 +16,11 @@ class Modulos extends Model
 
     public function recursos()
     {
-        return $this->hasMany(Recurso::class);
+        return $this->hasMany(Recurso::class, 'modulo_id');
     }
 
     public function preguntas()
     {
-        return $this->hasMany(Pregunta::class);
+        return $this->hasMany(Pregunta::class, 'modulo_id');
     }
 }
