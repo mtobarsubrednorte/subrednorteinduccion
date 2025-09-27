@@ -183,12 +183,7 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary text-start">
-                                <i class="fas fa-user-plus me-2"></i>Agregar Usuario
-                            </button>
-                            <button class="btn btn-outline-primary text-start">
-                                <i class="fas fa-file-certificate me-2"></i>Generar Certificado
-                            </button>
+
                             <button class="btn btn-outline-primary text-start">
                                 <i class="fas fa-chart-bar me-2"></i>Ver Reportes
                             </button>
