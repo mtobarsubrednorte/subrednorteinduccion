@@ -5,7 +5,8 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\AdminController;
+
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -58,9 +59,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // Dashboard principal de administración
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
 
     // Reportes (ya tienes esta ruta comentada)
     Route::get('/reportes', [ReportController::class, 'index'])->name('admin.reportes');

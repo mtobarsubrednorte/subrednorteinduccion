@@ -24,8 +24,15 @@
             </ul>
             <div class="d-flex align-items-center">
                 <div class="user-avatar me-2">A</div>
-                <span class="text-white">Administrador</span>
+                <span class="text-white">{{ Auth::user()->name }} Administrador</span>
             </div>
+
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:500;">Cerrar
+                    sesión <i class="fas fa-sign-out-alt"></i></button>
+            </form>
         </div>
     </div>
 </nav>

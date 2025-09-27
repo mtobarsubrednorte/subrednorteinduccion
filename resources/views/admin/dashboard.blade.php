@@ -6,7 +6,6 @@
 
 @section('content')
 
-
     <div class="container">
         <!-- Estadísticas rápidas -->
         <div class="row mb-4">
@@ -16,7 +15,8 @@
                         <div class="icon-container">
                             <i class="fas fa-users"></i>
                         </div>
-                        <div class="stat-number">1,247</div>
+                        <div class="stat-number">{{ DB::table('users')->where('subred', Auth::user()->subred)->count() }}
+                        </div>
                         <div class="stat-label">Usuarios Registrados</div>
                     </div>
                 </div>
@@ -27,8 +27,8 @@
                         <div class="icon-container">
                             <i class="fas fa-book-open"></i>
                         </div>
-                        <div class="stat-number">24</div>
-                        <div class="stat-label">Cursos Activos</div>
+                        <div class="stat-number">{{ DB::table('modules')->count()  }}</div>
+                        <div class="stat-label">Cursos</div>
                     </div>
                 </div>
             </div>
@@ -75,9 +75,7 @@
                                 <tr>
                                     <th>Usuario</th>
                                     <th>Email</th>
-                                    <th>Curso</th>
                                     <th>Estado</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,66 +87,11 @@
                                         </div>
                                     </td>
                                     <td>maria.gonzalez@email.com</td>
-                                    <td>Bienestar Familiar</td>
+
                                     <td><span class="status-badge status-active">Activo</span></td>
-                                    <td>
-                                        <div class="toggle-switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </div>
-                                    </td>
+
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-avatar me-2">J</div>
-                                            <div>Juan Pérez</div>
-                                        </div>
-                                    </td>
-                                    <td>juan.perez@email.com</td>
-                                    <td>Salud Mental</td>
-                                    <td><span class="status-badge status-inactive">Inactivo</span></td>
-                                    <td>
-                                        <div class="toggle-switch">
-                                            <input type="checkbox">
-                                            <span class="slider"></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-avatar me-2">A</div>
-                                            <div>Ana Rodríguez</div>
-                                        </div>
-                                    </td>
-                                    <td>ana.rodriguez@email.com</td>
-                                    <td>Nutrición Saludable</td>
-                                    <td><span class="status-badge status-active">Activo</span></td>
-                                    <td>
-                                        <div class="toggle-switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-avatar me-2">C</div>
-                                            <div>Carlos López</div>
-                                        </div>
-                                    </td>
-                                    <td>carlos.lopez@email.com</td>
-                                    <td>Ejercicio en Casa</td>
-                                    <td><span class="status-badge status-pending">Pendiente</span></td>
-                                    <td>
-                                        <div class="toggle-switch">
-                                            <input type="checkbox">
-                                            <span class="slider"></span>
-                                        </div>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
