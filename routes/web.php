@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\Modules;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
-use App\Http\Controllers\QuizController;
-use App\Http\Controllers\CertificateController;
-use App\Http\Controllers\Admin\ReportController;
+
 
 use App\Http\Controllers\DashboardController;
 
@@ -27,9 +27,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('pages.perfil');
 
     // Módulos de aprendizaje
-    Route::get('modules/module1', function () {
-        return view('modules.module1');
-    })->name('modules.module1');
+    Route::get('modules/module1', [Modules::class, 'showModulos'])->name('modules.module1');
 
     Route::get('modules/module2', function () {
         return view('modules.module2');
@@ -46,6 +44,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/modules/{module}', [ModuleController::class, 'show'])->name('modules.show');
     Route::post('/modules/{module}/completar', [ModuleController::class, 'complete'])->name('modules.complete');
+
+    Route::post('/modulos/{modulo}/responder', [Modules::class, 'responder'])
+        ->name('modulo.responder');
 
     // Quiz
     // Route::get('/quiz/{quiz}', [QuizController::class, 'show'])->name('quiz.show');

@@ -10,6 +10,9 @@
 
 @section('content')
 
+
+
+
   <div class="breadcrumb">
     <a href="{{asset('pages/home')}}">Inicio</a>
     <span>/</span>
@@ -20,53 +23,74 @@
     <a href="#">Módulo 1: Introducción al bienestar</a>
   </div>
 
-  <div class="contenido-modulo">
+  <div class="contenido-modulo" x-data="{ moduloSeleccionado: {{ $modulos->first()->id ?? 'null' }} }">
     <!-- Navegación de módulos -->
     <aside class="navegacion-modulos">
       <h3><i class="fas fa-list-ol"></i> Contenido del Curso</h3>
 
-      <div class="modulo-item">
-        <div class="modulo-titulo">
-          <i class="fas fa-folder-open"></i>
-          Módulo 1: Introducción al bienestar
-        </div>
-        <ul class="clase-list">
-          <li class="clase-item active">
-            <i class="fas fa-play-circle"></i> Bienvenida al curso
-            <i class="fas fa-circle-check"></i>
-          </li>
-          <li class="clase-item">
-            <i class="fas fa-play-circle"></i> Realizar Examen
-          </li>
+      @foreach($modulos as $index => $modulo)
+        @php
+          $aprobadoAnterior = true;
 
-        </ul>
-      </div>
+          if ($index > 0) {
+            $anterior = $modulos[$index - 1];
+            $aprobadoAnterior = \DB::table('modulo_user')
+              ->where('user_id', auth()->id())
+              ->where('modulo_id', $anterior->id)
+              ->where('aprobado', true)
+              ->exists();
+          }
+        @endphp
 
-      <div class="modulo-item">
-        <div class="modulo-titulo">
-          <i class="fas fa-folder"></i>
-          Módulo 2: Salud física
+        <div class="modulo-item {{ !$aprobadoAnterior ? 'disabled' : '' }}">
+          <div class="modulo-titulo" @if($aprobadoAnterior) @click.stop="moduloSeleccionado = {{ $modulo->id }}" @else
+          style="opacity: 0.5; cursor: not-allowed;" @endif>
+            <i class="fas fa-folder{{ $index == 0 ? '-open' : '' }}"></i>
+            Módulo {{ $index + 1 }}: {{ $modulo->title }}
+          </div>
+
+          @if($aprobadoAnterior)
+            <ul class="clase-list">
+              @foreach($modulo->submodulos as $sub)
+                <li class="clase-item" @click.stop="moduloSeleccionado = {{ $sub->id }}">
+                  <i class="fas fa-play-circle"></i> {{ $sub->title }}
+                </li>
+              @endforeach
+
+              @if($modulo->preguntas->count() > 0)
+                <li class="clase-item" @click.stop="moduloSeleccionado = 'examen-{{ $modulo->id }}'">
+                  <i class="fas fa-play-circle"></i> Realizar Examen
+                </li>
+              @endif
+            </ul>
+          @endif
         </div>
-        <ul class="clase-list">
-          <li class="clase-item">
-            <i class="fas fa-play-circle"></i> Introducción
-          </li>
-          <li class="clase-item">
-            <i class="fas fa-play-circle"></i> Nutrición consciente
-          </li>
-          <li class="clase-item">
-            <i class="fas fa-play-circle"></i> Actividad física
-          </li>
-        </ul>
-      </div>
+      @endforeach
+
+      @php
+        $totalModulos = $modulos->count();
+        $aprobados = \DB::table('modulo_user')
+          ->where('user_id', auth()->id())
+          ->where('aprobado', true)
+          ->count();
+
+        $cursoAprobado = $totalModulos > 0 && $aprobados === $totalModulos;
+      @endphp
+
+      @if($cursoAprobado)
+        <div class="modulo-item certificado">
+          <div class="modulo-titulo text-success" @click.stop="moduloSeleccionado = 'certificado'">
+            <i class="fas fa-certificate"></i>
+            Descargar Certificado
+          </div>
+        </div>
+      @endif
+
     </aside>
-    {{-- modulo dinamico para seleccionar las clases --}}
-    {{-- <x-modulo :cursos="$module" /> --}}
-    <x-modulo />
 
+    <!-- componente: le pasamos los módulos (no hace falta pasar moduloId) -->
+    <x-modulo :modulos="$modulos" :link1="$modulo->genilay_recursos_link1" :link2="$modulo->genilay_recursos_link2" />
   </div>
-
-
 
   <script>
     // Funcionalidad para la navegación de clases
@@ -100,19 +124,6 @@
           completeBtn.style.background = 'var(--secondary)';
         }
       });
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      // Cargar Genially script
-      (function (d) {
-        var js, id = "genially-embed-js", ref = d.getElementsByTagName("script")[0];
-        if (d.getElementById(id)) { return; }
-        js = d.createElement("script");
-        js.id = id;
-        js.async = true;
-        js.src = "https://view.genially.com/static/embed/embed.js";
-        ref.parentNode.insertBefore(js, ref);
-      }(document));
     });
 
   </script>

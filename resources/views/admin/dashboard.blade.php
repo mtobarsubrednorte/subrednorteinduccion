@@ -332,15 +332,15 @@
                                 div.setAttribute('data-index', preguntaIndex);
 
                                 div.innerHTML = `
-                                        <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
-                                        <div class="opciones">
-                                            <div class="d-flex mb-1">
-                                                <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                                <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                                            <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
+                                            <div class="opciones">
+                                                <div class="d-flex mb-1">
+                                                    <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                                    <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
-                                    `;
+                                            <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
+                                        `;
 
                                 container.appendChild(div);
                                 preguntaIndex++;
@@ -356,9 +356,9 @@
                                     let optionDiv = document.createElement('div');
                                     optionDiv.classList.add('d-flex', 'mb-1');
                                     optionDiv.innerHTML = `
-                                            <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                            <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
-                                        `;
+                                                <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                                <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
+                                            `;
                                     opcionesDiv.appendChild(optionDiv);
                                 }
                             });
@@ -374,19 +374,7 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('addPregunta').addEventListener('click', function () {
-            let container = document.getElementById('preguntas-container');
-            let index = container.querySelectorAll('.d-flex').length;
-            let div = document.createElement('div');
-            div.classList.add('mb-2', 'd-flex');
-            div.innerHTML = `
-                                            <input type="text" name="preguntas[${index}][pregunta]" class="form-control me-2" placeholder="Pregunta">
-                                            <input type="text" name="preguntas[${index}][respuesta]" class="form-control" placeholder="Respuesta">
-                                        `;
-            container.appendChild(div);
-        });
-    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

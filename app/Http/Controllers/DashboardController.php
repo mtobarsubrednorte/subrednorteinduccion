@@ -85,7 +85,8 @@ class DashboardController extends Controller
                 $path = $file->store('recursos');
                 $modulo->recursos()->create([
                     'file_path' => $path,
-                    'file_type' => $file->extension()
+                    'file_type' => $file->extension(),
+                    'original_name' => $file->getClientOriginalName(),
                 ]);
             }
         }

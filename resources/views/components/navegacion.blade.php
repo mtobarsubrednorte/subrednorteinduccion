@@ -3,6 +3,8 @@
     <ul>
         <li><i class="fas fa-home"></i> <a href="{{ asset('pages/home') }}">Página Principal</a></li>
         <li><i class="fas fa-user"></i> <a href="{{ asset('pages/perfil') }}">Área personal</a></li>
+        <li><i class="fas fa-user"></i> <a href="{{ asset('modules/module1') }}">Cursos</a></li>
+
 
         <!-- Cursos con submenu tipo acordeón -->
         <li class="submenu">
@@ -11,12 +13,14 @@
                 <i class="fas fa-chevron-down arrow"></i>
             </button>
             <ul class="submenu-items">
-                <li><a href="{{ asset('modules/module1') }}">Modulo 1</a></li>
+                <li><a href="{{ asset('modules/module1') }}">Modulos</a></li>
                 <li><a href="{{ asset('modules/module2') }}">Modulo 2</a></li>
                 <li><a href="#">Modulo 3</a></li>
                 <li><a href="{{ asset('modules/module4') }}">Modulo 4</a></li>
             </ul>
         </li>
+
+
     </ul>
 </aside>
 
