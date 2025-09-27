@@ -1,41 +1,52 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Modulos;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
 use App\Models\User;
 
 class DashboardController extends Controller
 {
+    /**
+     * Datos comunes del dashboard para no repetir código.
+     */
+    private function getDashboardData()
+    {
+        return [
+            'usuarios' => User::count(),
+            'usuariosActivos' => User::where('is_active', 1)->count(),
+            'usuariosInactivos' => User::where('is_active', 0)->count(),
+            'modulos' => Modulos::paginate(6),
+        ];
+    }
+
     public function dashboard()
     {
-        $usuarios = User::count();
-        $usuariosActivos = User::where('is_active', 1)->count();
-        $usuariosInactivos = User::where('is_active', 0)->count();
+        $data = $this->getDashboardData();
 
-        // Traer la lista de usuarios
         $listaUsuarios = User::with('profile:id,name')
             ->select('id', 'name', 'email', 'is_active', 'profile_id')
             ->where('subred', Auth::user()->subred)
             ->paginate(10);
 
-
-        return view('admin.dashboard', compact('usuarios', 'usuariosActivos', 'usuariosInactivos', 'listaUsuarios'));
+        return view('admin.dashboard', array_merge($data, compact('listaUsuarios')));
     }
 
     public function toggleEstado($id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->is_active = !$usuario->is_active; // invierte el estado
+        $usuario->is_active = !$usuario->is_active;
         $usuario->save();
 
         return redirect()->back()->with('success', 'Estado del usuario actualizado correctamente.');
     }
 
-    public function index(Request $request)
+    public function searchUsuarios(Request $request)
     {
-        $query = User::query();
+        // Filtramos por subred desde el inicio
+        $query = User::where('subred', Auth::user()->subred);
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -46,12 +57,14 @@ class DashboardController extends Controller
             });
         }
 
-        $listaUsuarios = $query->paginate(10)->withQueryString();
+        $listaUsuarios = $query
+            ->with('profile:id,name')
+            ->select('id', 'name', 'email', 'is_active', 'profile_id')
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('admin.dashboard', compact('listaUsuarios'));
+        $data = $this->getDashboardData();
+
+        return view('admin.dashboard', array_merge($data, compact('listaUsuarios')));
     }
-
-
-
-
 }

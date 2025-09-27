@@ -62,7 +62,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Dashboard principal de administración
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
     Route::patch('/usuarios/{id}/toggle', [DashboardController::class, 'toggleEstado'])->name('usuarios.toggle');
-    Route::get('/usuarios', [DashboardController::class, 'index'])->name('usuarios.index');
+    Route::get('/usuarios', [DashboardController::class, 'searchUsuarios'])->name('usuarios.index');
+
+
 
 
 

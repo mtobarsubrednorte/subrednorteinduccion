@@ -150,64 +150,28 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Bienestar Familiar</h5>
-                                        <p class="card-text">Curso integral para mejorar la convivencia y bienestar en
-                                            el hogar.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="badge bg-primary">125 inscritos</span>
-                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
+                            @foreach($modulos as $curso)
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $curso->title }}</h5>
+                                            <p class="card-text">{{ $curso->description }}</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge bg-primary">{{ $curso->inscritos }} inscritos</span>
+                                                <button class="btn btn-outline-primary btn-sm">Gestionar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Salud Mental</h5>
-                                        <p class="card-text">Estrategias para mantener una salud mental equilibrada en
-                                            familia.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="badge bg-primary">89 inscritos</span>
-                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Nutrición Saludable</h5>
-                                        <p class="card-text">Aprende a preparar comidas nutritivas para toda la familia.
-                                        </p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="badge bg-primary">203 inscritos</span>
-                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Ejercicio en Casa</h5>
-                                        <p class="card-text">Rutinas de ejercicio para realizar en familia sin salir de
-                                            casa.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="badge bg-primary">167 inscritos</span>
-                                            <button class="btn btn-outline-primary btn-sm">Gestionar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
-                        <div class="text-center mt-3">
-                            <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Agregar Nuevo Curso</button>
+                        <div class="mt-3">
+                            {{ $modulos->links() }}
                         </div>
                     </div>
                 </div>
+
+
             </div>
 
             <!-- Columna derecha -->
