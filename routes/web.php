@@ -63,6 +63,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
     Route::patch('/usuarios/{id}/toggle', [DashboardController::class, 'toggleEstado'])->name('usuarios.toggle');
     Route::get('/usuarios', [DashboardController::class, 'searchUsuarios'])->name('usuarios.index');
+    Route::post('/admin/modulos', [DashboardController::class, 'storeModulo'])->name('modulos.store');
+
 
 
 

@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->integer('duration'); // duration in minutes
             $table->text('genilay_recursos_link1')->nullable();
             $table->text('genilay_recursos_link2')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable()->after('id');
+            $table->foreign('parent_id')->references('id')->on('modulos')->onDelete('cascade');
             $table->timestamps();
         });
     }

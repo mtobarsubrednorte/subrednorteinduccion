@@ -67,4 +67,42 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', array_merge($data, compact('listaUsuarios')));
     }
+
+    public function storeModulo(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration' => 'nullable|integer',
+            'genilay_recursos_link1' => 'nullable|string',
+            'genilay_recursos_link2' => 'nullable|string',
+            'recursos.*' => 'file|mimes:pdf,doc,docx|max:5120',
+            'preguntas.*.pregunta' => 'required|string',
+            'preguntas.*.respuesta' => 'required|string',
+            'parent_id' => 'nullable|exists:modulos,id'
+        ]);
+
+        $modulo = Modulos::create($request->only(['title', 'description', 'duration', 'genilay_recursos_link1', 'genilay_recursos_link2', 'parent_id']));
+
+        // Guardar recursos
+        if ($request->hasFile('recursos')) {
+            foreach ($request->file('recursos') as $file) {
+                $path = $file->store('recursos');
+                $modulo->recursos()->create([
+                    'file_path' => $path,
+                    'file_type' => $file->extension()
+                ]);
+            }
+        }
+
+        // Guardar preguntas
+        if ($request->has('preguntas')) {
+            foreach ($request->preguntas as $pregunta) {
+                $modulo->preguntas()->create($pregunta);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Curso creado exitosamente');
+    }
+
 }
