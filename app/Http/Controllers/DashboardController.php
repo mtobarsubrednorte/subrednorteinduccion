@@ -15,7 +15,11 @@ class DashboardController extends Controller
         $usuariosInactivos = User::where('is_active', 0)->count();
 
         // Traer la lista de usuarios
-        $listaUsuarios = User::select('id', 'name', 'email', 'is_active', 'role')->where('subred', Auth::user()->subred)->paginate(10);
+        $listaUsuarios = User::with('profile:id,name')
+            ->select('id', 'name', 'email', 'is_active', 'profile_id')
+            ->where('subred', Auth::user()->subred)
+            ->paginate(10);
+
 
         return view('admin.dashboard', compact('usuarios', 'usuariosActivos', 'usuariosInactivos', 'listaUsuarios'));
     }

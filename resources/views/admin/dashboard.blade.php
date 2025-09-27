@@ -103,7 +103,7 @@
                                             </div>
                                         </td>
                                         <td>{{ $usuario->email }}</td>
-                                        <td>{{ ucfirst($usuario->role) }}</td>
+                                        <td>{{ $usuario->profile->name ?? 'Sin perfil'}}</td>
                                         <td>
                                             @if($usuario->is_active)
                                                 <span class="status-badge status-active">Activo</span>
@@ -116,7 +116,7 @@
                                             @else
                                                 <span class="status-badge status-inactive">Inactivo</span>
                                                 <form action="{{ route('usuarios.toggle', $usuario->id) }}" method="POST"
-                                                    style="display:inline;">
+                                                    style="display:inline; margin-left: 12px;">
                                                     @csrf
                                                     @method('PATCH')
                                                     <button type="submit" class="btn btn-sm btn-success">Activar</button>
