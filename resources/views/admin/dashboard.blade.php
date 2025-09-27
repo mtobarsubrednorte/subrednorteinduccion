@@ -27,7 +27,7 @@
                         <div class="icon-container">
                             <i class="fas fa-book-open"></i>
                         </div>
-                        <div class="stat-number">{{ DB::table('modules')->count()  }}</div>
+                        <div class="stat-number">0</div>
                         <div class="stat-label">Cursos</div>
                     </div>
                 </div>
@@ -64,10 +64,22 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Gestión de Usuarios</h4>
                         <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" class="form-control" placeholder="Buscar usuario...">
+                            <form method="GET" action="{{ route('usuarios.index') }}">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Buscar usuario..."
+                                        value="{{ request('search') }}">
+                                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                                </div>
+                            </form>
                         </div>
                     </div>
+
+                    @if(session('success'))
+                        <div class="alert alert-success mt-2">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
 
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -75,39 +87,60 @@
                                 <tr>
                                     <th>Usuario</th>
                                     <th>Email</th>
+                                    <th>Rol</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="user-avatar me-2">M</div>
-                                            <div>María González</div>
-                                        </div>
-                                    </td>
-                                    <td>maria.gonzalez@email.com</td>
+                                @foreach ($listaUsuarios as $usuario)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="user-avatar me-2">
+                                                    {{ strtoupper(substr($usuario->name, 0, 1)) }}
+                                                </div>
+                                                <div>{{ $usuario->name }}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{ $usuario->email }}</td>
+                                        <td>{{ ucfirst($usuario->role) }}</td>
+                                        <td>
+                                            @if($usuario->is_active)
+                                                <span class="status-badge status-active">Activo</span>
+                                                <form action="{{ route('usuarios.toggle', $usuario->id) }}" method="POST"
+                                                    style="display:inline; margin-left: 12px;">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-sm btn-warning">Desactivar</button>
+                                                </form>
+                                            @else
+                                                <span class="status-badge status-inactive">Inactivo</span>
+                                                <form action="{{ route('usuarios.toggle', $usuario->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-sm btn-success">Activar</button>
+                                                </form>
+                                            @endif
+                                        </td>
 
-                                    <td><span class="status-badge status-active">Activo</span></td>
-
-                                </tr>
-
+                                    </tr>
+                                @endforeach
                             </tbody>
+
                         </table>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>Mostrando 4 de 1247 usuarios</div>
-                        <nav>
-                            <ul class="pagination mb-0">
-                                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-                            </ul>
-                        </nav>
+                        <div>
+                            Mostrando {{ $listaUsuarios->firstItem() }} - {{ $listaUsuarios->lastItem() }}
+                            de {{ $listaUsuarios->total() }} usuarios
+                        </div>
+                        <div>
+                            {{ $listaUsuarios->links() }}
+                        </div>
                     </div>
+
                 </div>
 
                 <!-- Gestión de cursos -->

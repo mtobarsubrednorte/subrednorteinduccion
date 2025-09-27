@@ -56,23 +56,18 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // 🔒 RUTAS EXCLUSIVAS PARA ADMINISTRADORES
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Dashboard principal de administración
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
+    Route::patch('/usuarios/{id}/toggle', [DashboardController::class, 'toggleEstado'])->name('usuarios.toggle');
+    Route::get('/usuarios', [DashboardController::class, 'index'])->name('usuarios.index');
 
-    // Reportes (ya tienes esta ruta comentada)
-    Route::get('/reportes', [ReportController::class, 'index'])->name('admin.reportes');
 
-    // Puedes agregar más rutas de admin aquí
-    Route::get('/usuarios', function () {
-        return view('admin.usuarios');
-    })->name('admin.usuarios');
 
-    Route::get('/estadisticas', function () {
-        return view('admin.estadisticas');
-    })->name('admin.estadisticas');
 });
+
 
 // Home (ruta por defecto de Laravel - puedes mantenerla o redirigirla)
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
