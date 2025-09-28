@@ -10,6 +10,8 @@
 
 @section('content')
 
+  <x-banner.banner />
+
   <div class="breadcrumb">
     <a href="{{asset('pages/home')}}">Inicio</a>
     <span>/</span>
