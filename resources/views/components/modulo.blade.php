@@ -53,6 +53,7 @@
         @endif
       @endif
 
+      {{-- Steps --}}
       @php
         $completedSteps = auth()->user()->completedSteps->pluck('id')->toArray();
         $lastCompletedIndex = -1;
@@ -63,6 +64,7 @@
           }
         }
       @endphp
+
 
       @foreach($modulo->steps as $i => $step)
         @php
@@ -83,7 +85,7 @@
           @foreach($modulo->images as $img)
             <div class="col-md-4 mb-3">
               <p>{{ $img->description }}</p>
-              <img src="{{ asset($img->image_path) }}" class="img-fluid rounded">
+              <img src="{{ asset('storage/' . $img->image_path) }}" class="img-fluid rounded">
 
             </div>
           @endforeach
@@ -166,28 +168,69 @@
 
       {{-- Mostrar aquí un botón para iniciar o el formulario del examen --}}
       <div class="clase-info">
-        <p>Este módulo tiene {{ $modulo->preguntas->count() }} preguntas.</p>
 
-        <form action="{{ route('modulo.responder', $modulo->id) }}" method="POST">
-          @csrf
+        <div class="exam-container">
+          <!-- Encabezado del examen -->
+          <div class=" text-center">
+            <h1 class="exam-title">{{ $modulo->nombre ?? 'Examen del Módulo' }}</h1>
+            <p class="exam-subtitle">Responde todas las preguntas antes de enviar el examen</p>
+            <p>Este módulo tiene {{ $modulo->preguntas->count() }} preguntas.</p>
 
-          @foreach($modulo->preguntas ?? [] as $pregunta)
-            <div class="pregunta mb-4">
-              <p><strong>{{ $pregunta->pregunta }} ?</strong></p>
+          </div>
 
-              @foreach($pregunta->opciones as $index => $opcion)
-                <div>
-                  <label>
-                    <input type="radio" name="respuestas[{{ $pregunta->id }}]" value="{{ $index }}">
-                    {{ $opcion }}
-                  </label>
-                </div>
-              @endforeach
+          <!-- Barra de progreso -->
+          <div class="progress-container">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Progreso del examen</span>
+              <span id="progress-text">0%</span>
             </div>
-          @endforeach
+            <div class="progress">
+              <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+            </div>
+          </div>
 
-          <button type="submit" class="btn btn-primary">Enviar Respuestas</button>
-        </form>
+          <!-- Temporizador -->
+          <div class="timer-container">
+            <div>
+              <i class="fas fa-clock me-2"></i>
+              <span class="timer" id="exam-timer">45:00</span>
+            </div>
+            <div class="question-counter">
+              <span id="current-question">1</span> de <span
+                id="total-questions">{{ count($modulo->preguntas ?? []) }}</span> preguntas
+            </div>
+          </div>
+
+
+
+          <form action="{{ route('modulo.responder', $modulo->id) }}" method="POST" id="exam-form">
+            @csrf
+
+            @foreach($modulo->preguntas ?? [] as $preguntaIndex => $pregunta)
+              <div class="question-card" id="question-{{ $preguntaIndex + 1 }}">
+                <div class="question-header">
+                  <div class="question-number">{{ $preguntaIndex + 1 }}</div>
+                  <h5 class="mb-0">Pregunta {{ $preguntaIndex + 1 }}</h5>
+                </div>
+                <div class="question-body">
+                  <p class="question-text">{{ $pregunta->pregunta }}</p>
+
+                  @foreach($pregunta->opciones as $index => $opcion)
+                    <div class="option-item" onclick="selectOption(this, {{ $pregunta->id }}, {{ $index }})">
+                      <input class="option-radio" type="radio" name="respuestas[{{ $pregunta->id }}]" value="{{ $index }}"
+                        id="opcion-{{ $pregunta->id }}-{{ $index }}">
+                      <label class="option-label" for="opcion-{{ $pregunta->id }}-{{ $index }}">{{ $opcion }}</label>
+                    </div>
+                  @endforeach
+                </div>
+              </div>
+            @endforeach
+
+            <button type="submit" class="btn submit-btn">
+              <i class="fas fa-paper-plane me-2"></i> Enviar Respuestas
+            </button>
+          </form>
+        </div>
 
         @if(session('success'))
           <div class="alert alert-success">{{ session('success') }}</div>
@@ -196,6 +239,32 @@
 
 
     </div>
+
+    @foreach($modulo->steps as $i => $step)
+      <div class="modal" id="modal-{{ $step->id }}">
+        <div class="modal-content">
+          <h2>Paso {{ $i + 1 }}</h2>
+          <p>{{ $step['text'] }}</p>
+
+          @if($step['type'] === 'image')
+            <img src="{{ asset('storage/' . $step['file']) }}" alt="Paso {{ $i + 1 }}">
+          @elseif($step['type'] === 'video')
+            <video id="video-{{ $step->id }}" controls>
+              <source src="{{ asset('storage/' . $step['file']) }}" type="video/mp4">
+              Tu navegador no soporta video.
+            </video>
+          @endif
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal({{ $step->id }})">Cerrar</button>
+            <button id="btn-complete-{{ $step->id }}" class="btn btn-primary" @if($step['type'] === 'video') disabled @endif
+              onclick="completeStep({{ $step->id }})">
+              Marcar como visto
+            </button>
+          </div>
+        </div>
+      </div>
+    @endforeach
   @endforeach
 
   <!-- vista certificado -->
@@ -212,36 +281,11 @@
         <i class="fas fa-certificate"></i> Descargar Certificado
       </a>
     </div>
+  </div>
 
 </main>
 
 <!-- Modales -->
-@foreach($modulo->steps as $i => $step)
-  <div class="modal" id="modal-{{ $i + 1 }}">
-    <div class="modal-content">
-      <h2>Paso {{ $i + 1 }}</h2>
-      <p>{{ $step['text'] }}</p>
-
-      @if($step['type'] === 'image')
-        <img src="{{ asset($step['file']) }}" alt="Paso {{ $i + 1 }}">
-      @elseif($step['type'] === 'video')
-        <video id="video-{{ $i + 1 }}" controls>
-          <source src="{{ asset($step['file']) }}" type="video/mp4">
-          Tu navegador no soporta video.
-        </video>
-      @endif
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal({{ $i + 1 }})">Cerrar</button>
-        <button id="btn-complete-{{ $i + 1 }}" class="btn btn-primary" @if($step['type'] === 'video') disabled @endif
-          onclick="completeStep({{ $i + 1 }})">
-          Marcar como visto
-        </button>
-      </div>
-    </div>
-  </div>
-@endforeach
-
 <script>
   // Manejo de Escalera
   const steps = document.querySelectorAll('.step');
@@ -249,7 +293,7 @@
     step.addEventListener('click', () => {
       if (!step.classList.contains('locked')) {
         const stepNum = step.dataset.step;
-        document.getElementById(`modal-${stepNum}`).classList.add('active');
+        document.getElementById(`modal-${stepNum}`).classList.add('active'); // ✅ CORREGIDO
         const video = document.getElementById(`video-${stepNum}`);
         if (video) {
           video.currentTime = 0;
@@ -260,9 +304,12 @@
       }
     });
   });
+
+
   function closeModal(step) {
     document.getElementById(`modal-${step}`).classList.remove('active');
   }
+
   function completeStep(stepId) {
     const currentStep = document.querySelector(`.step[data-step="${stepId}"]`);
     currentStep.classList.add('done');
@@ -281,6 +328,7 @@
     }).then(res => res.json())
       .then(data => console.log('Progreso guardado:', data));
   }
+
 
 
   // Mostrar/Ocultar secciones dinámicas
@@ -308,12 +356,9 @@
 
       const link2 = document.getElementById("input-genialy").value;
 
-
       const currentText = link2;
       // Comparar con el texto anterior
       if (currentText !== previousText) {
-        console.log("Texto cambió:", previousText, "→", currentText);
-
         // Guardar el nuevo texto como anterior para la próxima verificación
         previousText = currentText;
 
@@ -346,5 +391,80 @@
 
 
 
+  });
+</script>
+
+
+<script>
+  // Actualizar barra de progreso
+  function updateProgress() {
+    const totalQuestions = {{ count($modulo->preguntas ?? []) }};
+    const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+    const progress = (answeredQuestions / totalQuestions) * 100;
+
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+    document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
+
+    // Actualizar contador de preguntas respondidas
+    document.getElementById('current-question').textContent = answeredQuestions + 1;
+  }
+
+  // Seleccionar opción
+  function selectOption(element, questionId, optionIndex) {
+    // Desmarcar todas las opciones de esta pregunta
+    const questionElement = element.closest('.question-body');
+    const allOptions = questionElement.querySelectorAll('.option-item');
+    allOptions.forEach(opt => opt.classList.remove('selected'));
+
+    // Marcar la opción seleccionada
+    element.classList.add('selected');
+
+    // Marcar el radio button
+    const radio = element.querySelector('input[type="radio"]');
+    radio.checked = true;
+
+    // Actualizar progreso
+    updateProgress();
+  }
+
+  // Temporizador del examen (45 minutos)
+  let examTime = 45 * 60; // 45 minutos en segundos
+  const timerElement = document.getElementById('exam-timer');
+
+  function updateTimer() {
+    const minutes = Math.floor(examTime / 60);
+    const seconds = examTime % 60;
+
+    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    if (examTime <= 0) {
+      // Tiempo agotado, enviar formulario automáticamente
+      document.getElementById('exam-form').submit();
+    } else {
+      examTime--;
+    }
+  }
+
+  // Inicializar
+  document.addEventListener('DOMContentLoaded', function () {
+    updateProgress();
+    setInterval(updateTimer, 1000);
+
+    // Marcar opciones ya seleccionadas (si las hay)
+    document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+      radio.closest('.option-item').classList.add('selected');
+    });
+  });
+
+  // Confirmación al enviar
+  document.getElementById('exam-form').addEventListener('submit', function (e) {
+    const totalQuestions = {{ count($modulo->preguntas ?? []) }};
+    const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+
+    if (answeredQuestions < totalQuestions) {
+      if (!confirm(`Has respondido ${answeredQuestions} de ${totalQuestions} preguntas. ¿Estás seguro de que quieres enviar el examen?`)) {
+        e.preventDefault();
+      }
+    }
   });
 </script>

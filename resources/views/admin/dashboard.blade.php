@@ -169,21 +169,13 @@
                             {{ $modulos->links() }}
                         </div>
 
-
                         <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarCurso">
                             <i class="fas fa-plus"></i> Agregar Curso
                         </button>
 
-
                     </div>
 
-
-
                 </div>
-
-
-
-
 
             </div>
 
@@ -264,24 +256,9 @@
                         <button>Verificar ahora</button>
                     </div>
 
-
                 </div>
 
-
-
-
-
             </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <div class="container text-center">
-            <h4>MAS Bienestar en tu hogar</h4>
-            <p class="mb-3">Bienestar integral para tu familia</p>
-            <div class="section-divider mx-auto" style="width: 50%;"></div>
-            <p class="mb-0">&copy; 2023 MAS Bienestar. Todos los derechos reservados.</p>
         </div>
     </div>
 
@@ -392,16 +369,16 @@
             div.setAttribute('data-index', stepIndex);
 
             div.innerHTML = `
-                                                                                            <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
-                                                                                            <input type="text" name="steps[${stepIndex}][icon]" class="form-control mb-2" placeholder="Ícono (ej: fa-user)">
-                                                                                            <select name="steps[${stepIndex}][type]" class="form-control mb-2">
-                                                                                                <option value="">Sin archivo</option>
-                                                                                                <option value="image">Imagen</option>
-                                                                                                <option value="video">Video</option>
-                                                                                                <option value="text">Texto</option>
-                                                                                            </select>
-                                                                                            <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
-                                                                                        `;
+                    <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
+                    <input type="text" name="steps[${stepIndex}][icon]" class="form-control mb-2" placeholder="Ícono (ej: fa-user)">
+                    <select name="steps[${stepIndex}][type]" class="form-control mb-2">
+                        <option value="">Sin archivo</option>
+                        <option value="image">Imagen</option>
+                        <option value="video">Video</option>
+                        <option value="text">Texto</option>
+                    </select>
+                    <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
+                `;
 
             container.appendChild(div);
             stepIndex++;
@@ -440,9 +417,9 @@
             div.setAttribute('data-index', imagenIndex);
 
             div.innerHTML = `
-                                                                                    <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
-                                                                                    <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
-                                                                                `;
+                    <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
+                    <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
+                `;
             container.appendChild(div);
             imagenIndex++;
         });
@@ -458,15 +435,15 @@
             div.setAttribute('data-index', preguntaIndex);
 
             div.innerHTML = `
-                                                                                                                                        <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
-                                                                                                                                        <div class="opciones">
-                                                                                                                                            <div class="d-flex mb-1">
-                                                                                                                                                <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                                                                                                                                <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
-                                                                                                                                    `;
+                    <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
+                    <div class="opciones">
+                        <div class="d-flex mb-1">
+                            <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
+                            <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
+                `;
 
             container.appendChild(div);
             preguntaIndex++;
@@ -482,9 +459,9 @@
                 let optionDiv = document.createElement('div');
                 optionDiv.classList.add('d-flex', 'mb-1');
                 optionDiv.innerHTML = `
-                                                                                                                                            <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                                                                                                                            <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
-                                                                                                                                        `;
+                        <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
+                        <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
+                    `;
                 opcionesDiv.appendChild(optionDiv);
             }
         });
