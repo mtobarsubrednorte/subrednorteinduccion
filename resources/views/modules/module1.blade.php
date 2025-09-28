@@ -10,17 +10,13 @@
 
 @section('content')
 
-
-
-
   <div class="breadcrumb">
     <a href="{{asset('pages/home')}}">Inicio</a>
     <span>/</span>
     <a href="#">Cursos</a>
     <span>/</span>
-    <a href="#">Inducción Septiembre 2025</a>
-    <span>/</span>
-    <a href="#">Módulo 1: Introducción al bienestar</a>
+    <a href="#">Inducción Octubre 2025</a>
+    >
   </div>
 
   <div class="contenido-modulo" x-data="{ moduloSeleccionado: {{ $modulos->first()->id ?? 'null' }} }">
