@@ -29,6 +29,12 @@ class Modulos extends Model
         return $this->hasMany(Step::class, 'modulo_id');
     }
 
+    public function images()
+    {
+        return $this->hasMany(ModuloImage::class, 'modulo_id');
+    }
+
+
 
 
 

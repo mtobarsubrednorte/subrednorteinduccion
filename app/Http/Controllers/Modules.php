@@ -10,7 +10,7 @@ class Modules extends Controller
 {
     public function showModulos()
     {
-        $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps'])
+        $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
             ->whereNull('parent_id')
             ->get();
         return view('modules.module1', compact('modulos'));

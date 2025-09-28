@@ -273,7 +273,7 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Agregar Curso</h5>
+                        <h5 class="modal-title">Agregar Modulo</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
@@ -287,16 +287,20 @@
                         </div>
                         <div class="mb-3">
                             <label>Duración (minutos)</label>
-                            <input type="number" name="duration" class="form-control">
+                            <input type="number" name="duration" class="form-control" required>
                         </div>
-                        <div class="mb-3">
-                            <label>Link Genially 1</label>
-                            <input type="text" name="genilay_recursos_link1" class="form-control">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Link Genially 1</label>
+                                <input type="text" name="genilay_recursos_link1" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Link Genially 2</label>
+                                <input type="text" name="genilay_recursos_link2" class="form-control">
+                            </div>
+
                         </div>
-                        <div class="mb-3">
-                            <label>Link Genially 2</label>
-                            <input type="text" name="genilay_recursos_link2" class="form-control">
-                        </div>
+
                         <div class="mb-3">
                             <label>Recursos (PDF/Word)</label>
                             <input type="file" name="recursos[]" class="form-control" multiple>
@@ -320,8 +324,18 @@
                         </div>
                         <button type="button" class="btn btn-outline-secondary btn-sm" id="addStep">+ Agregar Paso</button>
 
+                        <div id="imagenes-container">
+                            <label>Imágenes del Módulo</label>
+                            <div class="imagen mb-3" data-index="0">
+                                <input type="file" name="imagenes[0][file]" class="form-control mb-2">
+                                <input type="text" name="imagenes[0][description]" class="form-control mb-2"
+                                    placeholder="Descripción de la imagen">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="addImagen">+ Agregar
+                            Imagen</button>
 
-                        <div id="preguntas-container mt-5">
+                        <div id="preguntas-container">
                             <label>Preguntas del Examen (Selección Múltiple)</label>
                             <div class="pregunta mb-3" data-index="0">
                                 <input type="text" name="preguntas[0][pregunta]" class="form-control mb-2"
@@ -341,75 +355,6 @@
                         <button type="button" class="btn btn-outline-secondary btn-sm" id="addPregunta">+
                             Agregar Pregunta</button>
 
-                        <script>
-                            let preguntaIndex = 1;
-
-                            document.getElementById('addPregunta').addEventListener('click', function () {
-                                let container = document.getElementById('preguntas-container');
-                                let div = document.createElement('div');
-                                div.classList.add('pregunta', 'mb-3');
-                                div.setAttribute('data-index', preguntaIndex);
-
-                                div.innerHTML = `
-                                                        <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
-                                                        <div class="opciones">
-                                                            <div class="d-flex mb-1">
-                                                                <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                                                <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
-                                                    `;
-
-                                container.appendChild(div);
-                                preguntaIndex++;
-                            });
-
-                            document.addEventListener('click', function (e) {
-                                if (e.target && e.target.classList.contains('add-option')) {
-                                    let preguntaDiv = e.target.closest('.pregunta');
-                                    let index = preguntaDiv.getAttribute('data-index');
-                                    let opcionesDiv = preguntaDiv.querySelector('.opciones');
-                                    let optionIndex = opcionesDiv.querySelectorAll('.d-flex').length;
-
-                                    let optionDiv = document.createElement('div');
-                                    optionDiv.classList.add('d-flex', 'mb-1');
-                                    optionDiv.innerHTML = `
-                                                            <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                                            <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
-                                                        `;
-                                    opcionesDiv.appendChild(optionDiv);
-                                }
-                            });
-                        </script>
-
-                        <script>
-                            let stepIndex = 1;
-
-                            document.getElementById('addStep').addEventListener('click', function () {
-                                let container = document.getElementById('steps-container');
-                                let div = document.createElement('div');
-                                div.classList.add('step', 'mb-3');
-                                div.setAttribute('data-index', stepIndex);
-
-                                div.innerHTML = `
-            <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
-            <input type="text" name="steps[${stepIndex}][icon]" class="form-control mb-2" placeholder="Ícono (ej: fa-user)">
-            <select name="steps[${stepIndex}][type]" class="form-control mb-2">
-                <option value="">Sin archivo</option>
-                <option value="image">Imagen</option>
-                <option value="video">Video</option>
-                <option value="text">Texto</option>
-            </select>
-            <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
-        `;
-
-                                container.appendChild(div);
-                                stepIndex++;
-                            });
-                        </script>
-
-
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Guardar</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -419,7 +364,31 @@
         </div>
     </div>
 
+    <script>
+        let stepIndex = 1;
 
+        document.getElementById('addStep').addEventListener('click', function () {
+            let container = document.getElementById('steps-container');
+            let div = document.createElement('div');
+            div.classList.add('step', 'mb-3');
+            div.setAttribute('data-index', stepIndex);
+
+            div.innerHTML = `
+                                                <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
+                                                <input type="text" name="steps[${stepIndex}][icon]" class="form-control mb-2" placeholder="Ícono (ej: fa-user)">
+                                                <select name="steps[${stepIndex}][type]" class="form-control mb-2">
+                                                    <option value="">Sin archivo</option>
+                                                    <option value="image">Imagen</option>
+                                                    <option value="video">Video</option>
+                                                    <option value="text">Texto</option>
+                                                </select>
+                                                <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
+                                            `;
+
+            container.appendChild(div);
+            stepIndex++;
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -440,6 +409,66 @@
                     }
                 });
             });
+        });
+    </script>
+
+    <script>
+        let imagenIndex = 1;
+
+        document.getElementById('addImagen').addEventListener('click', function () {
+            let container = document.getElementById('imagenes-container');
+            let div = document.createElement('div');
+            div.classList.add('imagen', 'mb-3');
+            div.setAttribute('data-index', imagenIndex);
+
+            div.innerHTML = `
+                                        <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
+                                        <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
+                                    `;
+            container.appendChild(div);
+            imagenIndex++;
+        });
+    </script>
+
+    <script>
+        let preguntaIndex = 1;
+
+        document.getElementById('addPregunta').addEventListener('click', function () {
+            let container = document.getElementById('preguntas-container');
+            let div = document.createElement('div');
+            div.classList.add('pregunta', 'mb-3');
+            div.setAttribute('data-index', preguntaIndex);
+
+            div.innerHTML = `
+                                                                                            <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
+                                                                                            <div class="opciones">
+                                                                                                <div class="d-flex mb-1">
+                                                                                                    <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                                                                                    <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
+                                                                                        `;
+
+            container.appendChild(div);
+            preguntaIndex++;
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('add-option')) {
+                let preguntaDiv = e.target.closest('.pregunta');
+                let index = preguntaDiv.getAttribute('data-index');
+                let opcionesDiv = preguntaDiv.querySelector('.opciones');
+                let optionIndex = opcionesDiv.querySelectorAll('.d-flex').length;
+
+                let optionDiv = document.createElement('div');
+                optionDiv.classList.add('d-flex', 'mb-1');
+                optionDiv.innerHTML = `
+                                                                                                <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                                                                                <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
+                                                                                            `;
+                opcionesDiv.appendChild(optionDiv);
+            }
         });
     </script>
 

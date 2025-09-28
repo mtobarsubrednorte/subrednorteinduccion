@@ -93,19 +93,25 @@ class DashboardController extends Controller
 
         if ($request->has('steps')) {
             foreach ($request->steps as $step) {
+                // Saltar steps vacíos (cuando el usuario no llenó nada)
+                if (empty($step['text']) && empty($step['icon']) && empty($step['file'])) {
+                    continue;
+                }
+
                 $filePath = null;
                 if (isset($step['file']) && $step['file']) {
                     $filePath = $step['file']->store('steps', 'public');
                 }
 
                 $modulo->steps()->create([
-                    'text' => $step['text'],
+                    'text' => $step['text'] ?? '',
                     'icon' => $step['icon'] ?? null,
                     'type' => $step['type'] ?? null,
                     'file' => $filePath,
                 ]);
             }
         }
+
 
         // Guardar preguntas
         if ($request->has('preguntas')) {
@@ -118,6 +124,17 @@ class DashboardController extends Controller
             }
         }
 
+        if ($request->has('imagenes')) {
+            foreach ($request->imagenes as $imagenData) {
+                if (isset($imagenData['file'])) {
+                    $path = $imagenData['file']->store('modulos/imagenes', 'public');
+                    $modulo->images()->create([
+                        'image_path' => $path,
+                        'description' => $imagenData['description'] ?? null,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->back()->with('success', 'Curso creado exitosamente');
     }

@@ -78,6 +78,17 @@
         </div>
       @endforeach
 
+      @if($modulo->images->count())
+        <div class="row">
+          @foreach($modulo->images as $img)
+            <div class="col-md-4 mb-3">
+              <p>{{ $img->description }}</p>
+              <img src="{{ asset($img->image_path) }}" class="img-fluid rounded">
+
+            </div>
+          @endforeach
+        </div>
+      @endif
 
       {{-- Recursos --}}
       <div class="recursos">

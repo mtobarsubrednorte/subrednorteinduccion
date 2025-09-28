@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('steps', function (Blueprint $table) {
             $table->id();
             $table->foreignId('modulo_id')->constrained('modulos')->onDelete('cascade');
-            $table->string('text');
+            $table->string('text')->nullable();
             $table->string('icon')->nullable();
             $table->enum('type', ['image', 'video', 'text'])->nullable();
             $table->string('file')->nullable(); // ruta al archivo (imagen/video)

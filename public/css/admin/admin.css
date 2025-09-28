@@ -19,7 +19,23 @@
      /* Sombra y transiciones */
      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
      --transition: all 0.3s ease;
+
+
+     --primary-color: #4BB9E7;
+     --secondary-color: #2C9EC4;
+     --accent-color: #0079A7;
+     --light-color: #f8f9fa;
+     --dark-color: #006D92;
+     --success-color: #4bb543;
+     --border-radius: 8px;
+     --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+     --transition: all 0.3s ease;
  }
+
+
+
+
+
 
 
  body {
@@ -272,4 +288,196 @@
      justify-content: center;
      color: white;
      font-weight: 600;
+ }
+
+
+
+ .modal-content {
+     border: none;
+     border-radius: var(--border-radius);
+     box-shadow: var(--box-shadow);
+     overflow: hidden;
+ }
+
+ .modal-header {
+     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+     color: white;
+     padding: 1.5rem;
+     border-bottom: none;
+ }
+
+ .modal-title {
+     font-weight: 600;
+     font-size: 1.4rem;
+ }
+
+ .btn-close {
+     filter: invert(1);
+     opacity: 0.8;
+     transition: var(--transition);
+ }
+
+ .btn-close:hover {
+     opacity: 1;
+     transform: scale(1.1);
+ }
+
+ .modal-body {
+     padding: 2rem;
+     max-height: 70vh;
+     overflow-y: auto;
+ }
+
+ .modal-footer {
+     border-top: 1px solid #e9ecef;
+     padding: 1.5rem;
+     background-color: #f8f9fa;
+ }
+
+ .form-label {
+     font-weight: 500;
+     margin-bottom: 0.5rem;
+     color: var(--dark-color);
+ }
+
+ .form-control {
+     border-radius: var(--border-radius);
+     border: 1px solid #ddd;
+     padding: 0.75rem 1rem;
+     transition: var(--transition);
+ }
+
+ .form-control:focus {
+     border-color: var(--accent-color);
+     box-shadow: 0 0 0 0.2rem rgba(76, 201, 240, 0.25);
+ }
+
+ .btn {
+     border-radius: var(--border-radius);
+     padding: 0.6rem 1.5rem;
+     font-weight: 500;
+     transition: var(--transition);
+ }
+
+ .btn-primary {
+     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+     border: none;
+ }
+
+ .btn-primary:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+ }
+
+ .btn-outline-secondary {
+     border-color: #ddd;
+     color: #6c757d;
+ }
+
+ .btn-outline-secondary:hover {
+     background-color: #f8f9fa;
+     border-color: var(--primary-color);
+     color: var(--primary-color);
+ }
+
+ .btn-sm {
+     padding: 0.4rem 1rem;
+     font-size: 0.875rem;
+ }
+
+ .section-title {
+     font-size: 1.1rem;
+     font-weight: 600;
+     margin-top: 1.5rem;
+     margin-bottom: 1rem;
+     padding-bottom: 0.5rem;
+     border-bottom: 2px solid #f0f0f0;
+     color: var(--secondary-color);
+ }
+
+ .step,
+ .imagen,
+ .pregunta {
+     background-color: #f9f9f9;
+     padding: 1.2rem;
+     border-radius: var(--border-radius);
+     margin-bottom: 1rem;
+     border-left: 4px solid var(--accent-color);
+     transition: var(--transition);
+ }
+
+ .step:hover,
+ .imagen:hover,
+ .pregunta:hover {
+     background-color: #f0f7ff;
+     transform: translateX(5px);
+ }
+
+ .opciones .d-flex {
+     align-items: center;
+     margin-bottom: 0.5rem;
+ }
+
+ .opciones input[type="checkbox"] {
+     margin-left: 0.5rem;
+ }
+
+ .add-option,
+ #addStep,
+ #addImagen,
+ #addPregunta {
+     margin-top: 0.5rem;
+ }
+
+ /* Scrollbar personalizado */
+ .modal-body::-webkit-scrollbar {
+     width: 6px;
+ }
+
+ .modal-body::-webkit-scrollbar-track {
+     background: #f1f1f1;
+     border-radius: 10px;
+ }
+
+ .modal-body::-webkit-scrollbar-thumb {
+     background: var(--primary-color);
+     border-radius: 10px;
+ }
+
+ .modal-body::-webkit-scrollbar-thumb:hover {
+     background: var(--secondary-color);
+ }
+
+ /* Animación de entrada del modal */
+ @keyframes modalEnter {
+     from {
+         opacity: 0;
+         transform: translateY(-50px) scale(0.9);
+     }
+
+     to {
+         opacity: 1;
+         transform: translateY(0) scale(1);
+     }
+ }
+
+ .modal.fade .modal-dialog {
+     animation: modalEnter 0.3s ease-out;
+ }
+
+ /* Responsive */
+ @media (max-width: 768px) {
+     .modal-dialog {
+         margin: 1rem;
+     }
+
+     .modal-body {
+         padding: 1.5rem;
+     }
+
+     .step,
+     .imagen,
+     .pregunta {
+         padding: 1rem;
+     }
  }
