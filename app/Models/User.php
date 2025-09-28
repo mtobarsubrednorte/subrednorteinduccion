@@ -65,5 +65,12 @@ class User extends Authenticatable
         return $this->belongsTo(Profile::class, 'profile_id');
     }
 
+    public function completedSteps()
+    {
+        return $this->belongsToMany(Step::class, 'step_user')
+            ->withPivot('completed_at')
+            ->withTimestamps();
+    }
+
 
 }

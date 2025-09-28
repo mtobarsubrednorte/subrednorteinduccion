@@ -48,6 +48,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/modulos/{modulo}/responder', [Modules::class, 'responder'])
         ->name('modulo.responder');
 
+    Route::post('/steps/complete', [Modules::class, 'markComplete'])
+        ->middleware('auth')
+        ->name('steps.complete');
+
+
+
     // Quiz
     // Route::get('/quiz/{quiz}', [QuizController::class, 'show'])->name('quiz.show');
     // Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');

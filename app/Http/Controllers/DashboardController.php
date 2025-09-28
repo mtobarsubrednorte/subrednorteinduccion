@@ -91,6 +91,22 @@ class DashboardController extends Controller
             }
         }
 
+        if ($request->has('steps')) {
+            foreach ($request->steps as $step) {
+                $filePath = null;
+                if (isset($step['file']) && $step['file']) {
+                    $filePath = $step['file']->store('steps', 'public');
+                }
+
+                $modulo->steps()->create([
+                    'text' => $step['text'],
+                    'icon' => $step['icon'] ?? null,
+                    'type' => $step['type'] ?? null,
+                    'file' => $filePath,
+                ]);
+            }
+        }
+
         // Guardar preguntas
         if ($request->has('preguntas')) {
             foreach ($request->preguntas as $pregunta) {
@@ -105,5 +121,7 @@ class DashboardController extends Controller
 
         return redirect()->back()->with('success', 'Curso creado exitosamente');
     }
+
+
 
 }

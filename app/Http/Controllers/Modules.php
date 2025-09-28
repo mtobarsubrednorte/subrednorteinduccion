@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Modulos;
 use Illuminate\Http\Request;
+use App\Models\Step;
 
 class Modules extends Controller
 {
     public function showModulos()
     {
-        $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas'])
+        $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps'])
             ->whereNull('parent_id')
             ->get();
         return view('modules.module1', compact('modulos'));
@@ -55,5 +56,24 @@ class Modules extends Controller
             'resultado' => $resultado
         ]);
     }
+
+    public function markComplete(Request $request)
+    {
+        $user = auth()->user();
+
+        $stepId = $request->input('step_id');
+
+        // Verifica que el step exista
+        $step = Step::findOrFail($stepId);
+
+        // Relación many-to-many (usuarios ↔ steps)
+        $user->completedSteps()->syncWithoutDetaching([
+            $step->id => ['completed_at' => now()]
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+
 
 }

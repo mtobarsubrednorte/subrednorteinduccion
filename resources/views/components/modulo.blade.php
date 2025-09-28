@@ -1,7 +1,6 @@
 @props(['modulos', 'link1' => null, 'link2' => null])
 
 
-
 <main class="contenido-principal-modulo">
   {{-- Recorremos módulos principales --}}
   @foreach($modulos as $modulo)
@@ -12,7 +11,6 @@
       </div>
 
       <div class="clase-info">
-        <h3>{{ $modulo->title }}</h3>
         <div class="clase-meta">
           <div class="meta-item"><i class="far fa-clock"></i> Duración: {{ $modulo->duration ?? 'N/A' }} min</div>
         </div>
@@ -24,36 +22,6 @@
           <div class="alert alert-success">{{ session('success') }}</div>
         @endif
       </div>
-
-      @if ($modulo->id == 5)
-        @php
-          $steps = [
-            ['text' => 'Ingresa al sistema GTAPS con tu usuario correspondiente', 'icon' => 'fa-right-to-bracket', 'type' => 'image', 'file' => 'images/gitapps/INICIO_DE_SESION.png'],
-            ['text' => 'Verifica el estado del predio: debe estar en "Efectivo".', 'icon' => 'fa-building', 'type' => 'video', 'file' => 'videos/predios.mp4'],
-            ['text' => 'Revisa la caracterización previa y evita duplicidades en ADRES.', 'icon' => 'fa-magnifying-glass', 'type' => 'video', 'file' => 'videos/predios.mp4'],
-            ['text' => 'Selecciona el módulo Crear Familia y registra datos de ubicación y contacto.', 'icon' => 'fa-house', 'type' => 'video', 'file' => 'videos/caracterizacion.mp4'],
-            ['text' => 'Selecciona el módulo Crear Integrante Familia y valida en ADRES.', 'icon' => 'fa-user-plus', 'type' => null, 'file' => null],
-            ['text' => 'Selecciona el módulo Crear Caracterización Familiar (obligatorio).', 'icon' => 'fa-people-roof', 'type' => null, 'file' => null],
-            ['text' => 'Selecciona el módulo Crear Planes de Cuidado Familiar (obligatorio).', 'icon' => 'fa-notes-medical', 'type' => 'video', 'file' => 'videos/Plan_de_cuidaddo.mp4'],
-            ['text' => 'Selecciona el módulo Crear Compromisos Concertados (obligatorio).', 'icon' => 'fa-handshake', 'type' => 'video', 'file' => 'videos/Compromisos.mp4'],
-            ['text' => 'Diligencia los formularios: Signos, Alertas, Tamizaje Apgar.', 'icon' => 'fa-clipboard-list', 'type' => null, 'file' => null],
-            ['text' => 'Valida datos del usuario: Documento, Fecha de nacimiento, Sexo.', 'icon' => 'fa-id-card', 'type' => null, 'file' => null],
-          ];
-        @endphp
-
-        <div class="staircase my-5" id="staircase">
-          @foreach($steps as $i => $step)
-            <div class="step {{ $i > 0 ? 'locked' : '' }}" data-step="{{ $i + 1 }}">
-              <div class="step-number">{{ $i + 1 }}</div>
-              <i class="fas {{ $step['icon'] }} step-icon"></i>
-              <div class="step-desc">{{ $step['text'] }}</div>
-            </div>
-          @endforeach
-        </div>
-
-
-      @endif
-
 
       {{-- Genially si existe --}}
       @if($modulo->genilay_recursos_link1)
@@ -84,6 +52,32 @@
           </div>
         @endif
       @endif
+
+      @php
+        $completedSteps = auth()->user()->completedSteps->pluck('id')->toArray();
+        $lastCompletedIndex = -1;
+
+        foreach ($modulo->steps as $index => $step) {
+          if (in_array($step->id, $completedSteps)) {
+            $lastCompletedIndex = $index;
+          }
+        }
+      @endphp
+
+      @foreach($modulo->steps as $i => $step)
+        @php
+          $completed = in_array($step->id, $completedSteps);
+          // desbloquea si ya está completado o si es el siguiente al último completado
+          $unlocked = $completed || $i === $lastCompletedIndex + 1;
+        @endphp
+
+        <div class="step {{ !$unlocked ? 'locked' : '' }} {{ $completed ? 'done' : '' }}" data-step="{{ $step->id }}">
+          <div class="step-number">{{ $i + 1 }}</div>
+          <i class="fas {{ $step->icon }} step-icon"></i>
+          <div class="step-desc">{{ $step->text }}</div>
+        </div>
+      @endforeach
+
 
       {{-- Recursos --}}
       <div class="recursos">
@@ -208,13 +202,10 @@
       </a>
     </div>
 
-
-
 </main>
 
-
 <!-- Modales -->
-@foreach($steps as $i => $step)
+@foreach($modulo->steps as $i => $step)
   <div class="modal" id="modal-{{ $i + 1 }}">
     <div class="modal-content">
       <h2>Paso {{ $i + 1 }}</h2>
@@ -261,13 +252,25 @@
   function closeModal(step) {
     document.getElementById(`modal-${step}`).classList.remove('active');
   }
-  function completeStep(step) {
-    const currentStep = document.querySelector(`.step[data-step="${step}"]`);
+  function completeStep(stepId) {
+    const currentStep = document.querySelector(`.step[data-step="${stepId}"]`);
     currentStep.classList.add('done');
-    closeModal(step);
-    const nextStep = document.querySelector(`.step[data-step="${step + 1}"]`);
+    closeModal(stepId);
+    const nextStep = document.querySelector(`.step[data-step="${stepId + 1}"]`);
     if (nextStep) nextStep.classList.remove('locked');
+
+    // Llamada al backend para guardar el progreso
+    fetch('/steps/complete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ step_id: stepId })
+    }).then(res => res.json())
+      .then(data => console.log('Progreso guardado:', data));
   }
+
 
   // Mostrar/Ocultar secciones dinámicas
   function mostrarSeccion(id, elemento) {

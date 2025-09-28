@@ -23,4 +23,13 @@ class Modulos extends Model
     {
         return $this->hasMany(Pregunta::class, 'modulo_id');
     }
+
+    public function steps()
+    {
+        return $this->hasMany(Step::class, 'modulo_id');
+    }
+
+
+
+
 }

@@ -399,9 +399,6 @@ footer {
   }
 }
 
-
-
-
 .staircase {
   display: flex;
   flex-direction: column;
@@ -422,6 +419,7 @@ footer {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   margin-left: 40px;
   margin-right: 40px;
+  margin-top: 10px;
 }
 
 .step:hover:not(.locked) {
