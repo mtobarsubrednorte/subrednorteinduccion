@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modulos;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -20,6 +21,7 @@ class DashboardController extends Controller
             'usuariosActivos' => User::where('is_active', 1)->count(),
             'usuariosInactivos' => User::where('is_active', 0)->count(),
             'modulos' => Modulos::paginate(6),
+            'perfiles' => Profile::get(),
         ];
     }
 

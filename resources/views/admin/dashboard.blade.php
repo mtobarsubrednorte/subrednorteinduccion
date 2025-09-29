@@ -258,6 +258,22 @@
 
                 </div>
 
+                <div>
+                    <form action="#" type="POST">
+                        <label for="perfil">Perfil</label>
+                        <select name="perfiles" id="">
+                            @foreach ( $perfiles as $perfil )
+                                <option value="{{ $perfil->id }}">{{ $perfil->name }}</option>
+                            @endforeach
+                        </select>
+
+                        <label for="description">Description</label>
+                        <input type="text" class="form-contol">
+
+                        <button>Guardar</button>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>
