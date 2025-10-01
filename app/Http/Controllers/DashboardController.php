@@ -133,6 +133,7 @@ class DashboardController extends Controller
                     $modulo->images()->create([
                         'image_path' => $path,
                         'description' => $imagenData['description'] ?? null,
+                        'tipe' => $imagenData['tipe']
                     ]);
                 }
             }

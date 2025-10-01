@@ -4,9 +4,7 @@
 
 @section('styles')
   <link rel="stylesheet" href="{{ asset('css/modulos.css') }}">
-
 @endsection
-
 
 @section('content')
 
@@ -86,7 +84,7 @@
 
     </aside>
 
-    <!-- componente: le pasamos los módulos (no hace falta pasar moduloId) -->
+    <!-- componente: le pasamos los módulos -->
     <x-modulo :modulos="$modulos" :link1="$modulo->genilay_recursos_link1" :link2="$modulo->genilay_recursos_link2" />
   </div>
 
@@ -97,18 +95,12 @@
 
       claseItems.forEach(item => {
         item.addEventListener('click', () => {
-          // Remover clase active de todos los items
           claseItems.forEach(i => i.classList.remove('active'));
-
-          // Agregar clase active al item seleccionado
           item.classList.add('active');
-
-          // Aquí iría la lógica para cargar el contenido de la clase seleccionada
           console.log('Clase seleccionada:', item.textContent);
         });
       });
 
-      // Simular marcado de clase como completada
       const completeBtn = document.querySelector('.nav-btn:not(.outline)');
       completeBtn.addEventListener('click', function () {
         const currentItem = document.querySelector('.clase-item.active');
@@ -117,14 +109,11 @@
           checkIcon.className = 'fas fa-circle-check';
           currentItem.appendChild(checkIcon);
 
-          // Cambiar texto del botón
           completeBtn.innerHTML = 'Completado <i class="fas fa-check-double"></i>';
           completeBtn.style.background = 'var(--secondary)';
         }
       });
     });
-
   </script>
-
 
 @endsection

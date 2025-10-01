@@ -94,14 +94,13 @@
       height: auto;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-
-      .descripcion-validar {
-        font-size: 15px;
-        line-height: 1.6;
-        color: #333;
-        margin-bottom: 1rem;
-        text-align: justify;
-      }
+    }
+    .descripcion-validar {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 1rem;
+      text-align: justify;
     }
   </style>
 </head>
@@ -134,28 +133,11 @@
     <!-- Navegación lateral -->
     <aside class="navegacion-modulos">
       <h3><i class="fas fa-list-ol"></i> Contenido del Curso</h3>
-      
-      <div class="modulo-item">
-        <div class="modulo-titulo">
-          <i class="fas fa-folder"></i>
-          Módulo 1: Introducción al bienestar
-        </div>
-      </div>
-      
-      <div class="modulo-item">
-        <div class="modulo-titulo">
-          <i class="fas fa-folder-open"></i>
-          Módulo 4: Aplicativo GitApps
-        </div>
-        <ul class="clase-list">
-          <li class="clase-item active" onclick="mostrarSeccion('escalera', this)">
-            <i class="fas fa-play-circle"></i> Escalera de pasos
-          </li>
-          <li class="clase-item" onclick="mostrarSeccion('acciones', this)">
-            <i class="fas fa-tasks"></i> Acciones colectivas e individuales
-          </li>
-        </ul>
-      </div>
+      <ul>
+        <li><a href="{{ url('/modules/module1') }}"><i class="fas fa-folder"></i> Módulo 1: Introducción al bienestar</a></li>
+        <li><a href="{{ url('/modules/module2') }}"><i class="fas fa-folder"></i> Módulo 2: Estrategias de intervención</a></li>
+        <li class="active"><a href="{{ url('/modules/module4') }}"><i class="fas fa-folder-open"></i> Módulo 4: Aplicativo GitApps</a></li>
+      </ul>
     </aside>
 
     <!-- Contenido dinámico -->
@@ -354,47 +336,61 @@
 
   <!-- Scripts -->
   <script>
-    // Manejo de Escalera
-    const steps = document.querySelectorAll('.step');
-    steps.forEach(step => {
-      step.addEventListener('click', () => {
-        if (!step.classList.contains('locked')) {
-          const stepNum = step.dataset.step;
-          document.getElementById(`modal-${stepNum}`).classList.add('active');
-          const video = document.getElementById(`video-${stepNum}`);
-          if(video){
-            video.currentTime = 0;
-            video.addEventListener('ended', () => {
-              document.getElementById(`btn-complete-${stepNum}`).disabled = false;
-            }, { once: true });
+    document.addEventListener("DOMContentLoaded", () => {
+      // Manejo de Escalera
+      const steps = document.querySelectorAll('.step');
+      steps.forEach(step => {
+        step.addEventListener('click', () => {
+          if (!step.classList.contains('locked')) {
+            const stepNum = step.dataset.step;
+            document.getElementById(`modal-${stepNum}`).classList.add('active');
+            const video = document.getElementById(`video-${stepNum}`);
+            if(video){
+              video.currentTime = 0;
+              video.addEventListener('ended', () => {
+                document.getElementById(`btn-complete-${stepNum}`).disabled = false;
+              }, { once: true });
+            }
           }
-        }
+        });
       });
+
+      window.closeModal = function(step) {
+        document.getElementById(`modal-${step}`).classList.remove('active');
+      }
+
+      window.completeStep = function(step) {
+        const currentStep = document.querySelector(`.step[data-step="${step}"]`);
+        currentStep.classList.add('done');
+        closeModal(step);
+        const nextStep = document.querySelector(`.step[data-step="${parseInt(step)+1}"]`);
+        if(nextStep) nextStep.classList.remove('locked');
+        const done = document.querySelectorAll('.step.done').length;
+        const total = document.querySelectorAll('.step').length;
+        const percent = Math.round((done/total)*100);
+        document.querySelector('.progreso span').innerText = `Progreso del módulo: ${percent}%`;
+        document.querySelector('.barra-progreso').style.width = `${percent}%`;
+      }
+
+      // Cambio de secciones
+      window.mostrarSeccion = function(id, elemento) {
+        document.querySelectorAll('.seccion-modulo').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        elemento.classList.add('active');
+      }
+
+      // Cambio de acciones
+      window.mostrarAcciones = function(tipo) {
+        if(tipo === 'colectivas') {
+          document.getElementById('acciones-colectivas').style.display = 'block';
+          document.getElementById('acciones-individuales').style.display = 'none';
+        } else {
+          document.getElementById('acciones-colectivas').style.display = 'none';
+          document.getElementById('acciones-individuales').style.display = 'block';
+        }
+      }
     });
-    function closeModal(step) {
-      document.getElementById(`modal-${step}`).classList.remove('active');
-    }
-    function completeStep(step) {
-      const currentStep = document.querySelector(`.step[data-step="${step}"]`);
-      currentStep.classList.add('done');
-      closeModal(step);
-      const nextStep = document.querySelector(`.step[data-step="${step+1}"]`);
-      if (nextStep) nextStep.classList.remove('locked');
-    }
-
-    // Mostrar/Ocultar secciones dinámicas
-    function mostrarSeccion(id, elemento) {
-      document.querySelectorAll('.seccion-modulo').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.clase-item').forEach(item => item.classList.remove('active'));
-      elemento.classList.add('active');
-    }
-
-    // Mostrar acciones colectivas o individuales
-    function mostrarAcciones(tipo) {
-      document.querySelectorAll('.acciones-tab').forEach(tab => tab.style.display = 'none');
-      document.getElementById(`acciones-${tipo}`).style.display = 'block';
-    }
   </script>
 </body>
 </html>

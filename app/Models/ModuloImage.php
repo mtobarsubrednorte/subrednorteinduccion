@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ModuloImage extends Model
 {
-    protected $fillable = ['modulo_id', 'image_path', 'description'];
+    protected $fillable = ['modulo_id', 'image_path', 'description','tipe'];
 
     public function modulo()
     {

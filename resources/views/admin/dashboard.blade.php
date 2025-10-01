@@ -387,11 +387,19 @@
                         <div class="modulos-modal-seccion">
                             <div id="imagenes-container">
                                 <div class="title-modal-seccion">
-                                    <label>Imágenes del Módulo</label>
+                                    <label>Imágenes o videos del Módulo</label>
                                 </div>
 
                                 <div class="imagen mb-3" data-index="0">
-                                    <input type="file" name="imagenes[0][file]" class="form-control mb-2">
+                                    <select name="tipe" id="tipe" class="form-control mb-2">
+                                        <option value="">Seleccione el tipo de archivo</option>
+                                        <option value="1">Imagen</option>
+                                        <option value="2">Videos</option>
+                                        <option value="3">link</option>
+                                    </select>
+                                    <input type="text"id="link" class="form-control mb-2" style="display:none">
+
+                                    <input type="file"id="file" name="imagenes[0][file]"  style="display:none" class="form-control mb-2">
                                     <input type="text" name="imagenes[0][description]" class="form-control mb-2"
                                         placeholder="Descripción de la imagen">
                                 </div>
@@ -576,6 +584,22 @@
             }
         });
     </script>
+<script>
+    document.getElementById('tipe').addEventListener('change', function () {
+        let valor = this.value 
+        let link = document.getElementById('link')
+        let file = document.getElementById('file')
+        if(valor==1 ){
+            file.style.display="block"; 
+        }else if(valor==2){
+            file.style.display="block"; 
+        }else if(valor==3){
+            file.style.display="none"; 
+            link.style.display="block"
+        }
+        console.log(valor)
 
+    })
+</script>
 
 @endsection
