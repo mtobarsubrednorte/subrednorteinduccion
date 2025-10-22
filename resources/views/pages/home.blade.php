@@ -25,28 +25,6 @@
       </video>
     </div>
 
-
-    <div class="cursos">
-      <div class="curso-card">
-        <a class=" category-link " href="{{ asset('modules/bienvenida') }}">
-          <i class="fas fa-book-open"></i>
-          <h3>MODULO DE BIENVENIDA</h3>
-          <p>Conoce los fundamentos de bienestar en el hogar</p>
-        </a>
-      </div>
-
-      <div class="curso-card">
-        <i class="fas fa-heart"></i>
-        <h3>CURSO DE SALUD</h3>
-        <p>Aprende sobre cuidado preventivo y salud familiar</p>
-      </div>
-      <div class="curso-card">
-        <i class="fas fa-hand-holding-heart"></i>
-        <h3>CURSO DE BIENESTAR</h3>
-        <p>Mejora la calidad de vida de tu familia</p>
-      </div>
-    </div>
-
     <div class="informacion">
       <h2><i class="fas fa-info-circle"></i> Información importante</h2>
       <p>

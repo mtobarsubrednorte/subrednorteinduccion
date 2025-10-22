@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 
 class DashboardController extends Controller
 {
@@ -20,7 +22,8 @@ class DashboardController extends Controller
             'usuarios' => User::count(),
             'usuariosActivos' => User::where('is_active', 1)->count(),
             'usuariosInactivos' => User::where('is_active', 0)->count(),
-            'modulos' => Modulos::paginate(6),
+            'modulos' => Modulos::with(['recursos', 'preguntas', 'steps', 'images'])->paginate(6),
+
             'perfiles' => Profile::get(),
         ];
     }
@@ -73,18 +76,35 @@ class DashboardController extends Controller
 
     public function storeModulo(Request $request)
     {
+        // ✅ Crear o editar
+        if ($request->has('id') && !empty($request->id)) {
+            $modulo = Modulos::find($request->id);
+            if (!$modulo) return back()->with('error', 'El módulo no existe');
 
-        Log::info('storeModulo iniciado', ['request' => $request->all()]);
+            $modulo->update($request->only([
+                'title', 'description', 'duration',
+                'genilay_recursos_link1', 'genilay_recursos_link2', 'parent_id'
+            ]));
+        } else {
+            $modulo = Modulos::create($request->only([
+                'title', 'description', 'duration',
+                'genilay_recursos_link1', 'genilay_recursos_link2', 'parent_id'
+            ]));
+        }
 
+        // ✅ ELIMINAR recursos marcados
+        if ($request->filled('delete_recursos')) {
+            $idsToDelete = $request->delete_recursos;
+            foreach ($modulo->recursos()->whereIn('id', $idsToDelete)->get() as $recurso) {
+                Storage::disk('public')->delete($recurso->file_path);
+                $recurso->delete();
+            }
+        }
 
-
-
-        $modulo = Modulos::create($request->only(['title', 'description', 'duration', 'genilay_recursos_link1', 'genilay_recursos_link2', 'parent_id']));
-        Log::info('Módulo creado', ['modulo_id' => $modulo->id]);
-        // Guardar recursos
+        // ✅ AGREGAR nuevos recursos
         if ($request->hasFile('recursos')) {
             foreach ($request->file('recursos') as $file) {
-                $path = $file->store('recursos');
+                $path = $file->store('recursos', 'public');
                 $modulo->recursos()->create([
                     'file_path' => $path,
                     'file_type' => $file->extension(),
@@ -93,42 +113,95 @@ class DashboardController extends Controller
             }
         }
 
+        // ✅ Pasos (puedes mejorarlo luego para edición individual)
         if ($request->has('steps')) {
-            foreach ($request->steps as $step) {
-                // Saltar steps vacíos (cuando el usuario no llenó nada)
-                if (empty($step['text']) && empty($step['icon']) && empty($step['file'])) {
-                    continue;
-                }
+            $stepIdsInRequest = [];
 
-                $filePath = null;
-                if (isset($step['file']) && $step['file']) {
-                    $filePath = $step['file']->store('steps', 'public');
-                }
+            foreach ($request->steps as $stepData) {
+                // Si el paso tiene ID → actualizar
+                if (!empty($stepData['id'])) {
+                    $step = $modulo->steps()->find($stepData['id']);
+                    if ($step) {
+                        // Si hay un nuevo archivo, reemplazarlo
+                        if (isset($stepData['file']) && $stepData['file']) {
+                            // Borra el archivo anterior si existe
+                            if ($step->file && Storage::disk('public')->exists($step->file)) {
+                                Storage::disk('public')->delete($step->file);
+                            }
+                            $filePath = $stepData['file']->store('steps', 'public');
+                            $stepData['file'] = $filePath;
+                        } else {
+                            $stepData['file'] = $step->file; // mantiene el archivo anterior
+                        }
 
-                $modulo->steps()->create([
-                    'text' => $step['text'] ?? '',
-                    'icon' => $step['icon'] ?? null,
-                    'type' => $step['type'] ?? null,
-                    'file' => $filePath,
-                ]);
+                        $step->update([
+                            'text' => $stepData['text'] ?? '',
+                            'icon' => $stepData['icon'] ?? null,
+                            'type' => $stepData['type'] ?? null,
+                            'file' => $stepData['file'],
+                        ]);
+                        $stepIdsInRequest[] = $step->id;
+                    }
+                }
+                // Si no tiene ID → crear nuevo
+                else {
+                    $filePath = null;
+                    if (isset($stepData['file']) && $stepData['file']) {
+                        $filePath = $stepData['file']->store('steps', 'public');
+                    }
+                    $newStep = $modulo->steps()->create([
+                        'text' => $stepData['text'] ?? '',
+                        'icon' => $stepData['icon'] ?? null,
+                        'type' => $stepData['type'] ?? null,
+                        'file' => $filePath,
+                    ]);
+                    $stepIdsInRequest[] = $newStep->id;
+                }
             }
+
+            // ✅ Eliminar los pasos que no vinieron en la solicitud (fueron quitados)
+            $modulo->steps()
+                ->whereNotIn('id', $stepIdsInRequest)
+                ->get()
+                ->each(function ($step) {
+                    if ($step->file && Storage::disk('public')->exists($step->file)) {
+                        Storage::disk('public')->delete($step->file);
+                    }
+                    $step->delete();
+                });
         }
 
 
-        // Guardar preguntas
+        // ✅ Preguntas (reemplazo total)
         if ($request->has('preguntas')) {
+            $modulo->preguntas()->delete();
             foreach ($request->preguntas as $pregunta) {
                 $modulo->preguntas()->create([
                     'pregunta' => $pregunta['pregunta'],
-                    'opciones' => $pregunta['opciones'],
+                    'opciones' => $pregunta['opciones'] ?? [],
                     'respuestas_correctas' => $pregunta['respuestas_correctas'] ?? [],
                 ]);
             }
         }
 
+        // ✅ Imágenes: conservar, borrar las eliminadas y agregar nuevas
         if ($request->has('imagenes')) {
+            $imagenesIdsExistentes = $modulo->images->pluck('id')->toArray();
+            $imagenesIdsEnRequest = [];
+
             foreach ($request->imagenes as $imagenData) {
-                if (isset($imagenData['file'])) {
+                // Si la imagen ya existe (tiene ID), actualizamos la descripción
+                if (!empty($imagenData['id'])) {
+                    $imagenesIdsEnRequest[] = $imagenData['id'];
+                    $imagen = $modulo->images()->find($imagenData['id']);
+                    if ($imagen) {
+                        $imagen->update([
+                            'description' => $imagenData['description'] ?? $imagen->description,
+                        ]);
+                    }
+                }
+                // Si es una nueva imagen (tiene archivo nuevo)
+                elseif (isset($imagenData['file']) && $imagenData['file']) {
                     $path = $imagenData['file']->store('modulos/imagenes', 'public');
                     $modulo->images()->create([
                         'image_path' => $path,
@@ -136,10 +209,19 @@ class DashboardController extends Controller
                     ]);
                 }
             }
+
+            // 🔥 Borrar imágenes que ya no están en el request
+            $imagenesAEliminar = array_diff($imagenesIdsExistentes, $imagenesIdsEnRequest);
+            foreach ($modulo->images()->whereIn('id', $imagenesAEliminar)->get() as $img) {
+                Storage::disk('public')->delete($img->image_path);
+                $img->delete();
+            }
         }
 
-        return redirect()->back()->with('success', 'Curso creado exitosamente');
+        $accion = $request->has('id') ? 'actualizado' : 'creado';
+        return redirect()->back()->with('success', "Módulo {$accion} exitosamente.");
     }
+
 
 
 

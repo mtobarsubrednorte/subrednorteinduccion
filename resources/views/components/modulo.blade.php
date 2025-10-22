@@ -26,31 +26,15 @@
       {{-- Genially si existe --}}
       @if($modulo->genilay_recursos_link1)
 
-        @if($modulo->id != 2)
-
-          <input type="text" id="input-genialy" value="{{ $modulo->genilay_recursos_link2 }}" hidden>
-
-          <div class="genially-container">
-            <video class="loader-genially" autoplay loop playsinline muted
-              style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; margin-bottom: 10%;">
-              <source src="{{ $link1 }}" type="video/mp4" />
-              Tu navegador no soporta el video.
-            </video>
-            <div id="68913d5fcb9d97c53e1192d6" class="genially-embed"
-              style="margin: 0 auto; position: relative; height: auto; width: 100%;"></div>
-
-          </div>
-
-        @else
           <!-- Contenido Genially -->
           <div class="genially-container">
-            <iframe title="Gestión Territorial" frameborder="0" width="1200px" height="675px"
-              style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-              src="https://view.genially.com/6893e9fda1dcf302e7411d14" type="text/html" allowscriptaccess="always"
-              allowfullscreen="true" scrolling="yes" allownetworking="all">
-            </iframe>
+            <iframe title=".." frameborder="0" width="1200px" height="675px"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+          src="{{ $modulo->genilay_recursos_link1 }}"
+          type="text/html" allowscriptaccess="always" allowfullscreen="true" scrolling="yes" allownetworking="all">
+        </iframe>
           </div>
-        @endif
+       
       @endif
 
       {{-- Steps --}}
@@ -84,11 +68,23 @@
       @if($modulo->images->count())
         <div class="row">
           @foreach($modulo->images as $img)
+          
+
+          @if($img->tipe =='video')  
+            <div class="col-md-4 mb-3 w-100">
+              <p>{{ $img->description }}</p>
+              <video src="{{ asset('storage/' . $img->image_path) }}" controls></video>
+            </div>
+          @endif
+
+          @if($img->tipe =='imagen')
             <div class="col-md-4 mb-3">
               <p>{{ $img->description }}</p>
               <img src="{{ asset('storage/' . $img->image_path) }}" class="img-fluid rounded">
 
-            </div>
+            </div>          
+          @endif
+
           @endforeach
         </div>
       @endif
