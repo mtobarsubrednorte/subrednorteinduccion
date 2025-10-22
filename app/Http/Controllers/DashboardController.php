@@ -184,39 +184,61 @@ class DashboardController extends Controller
             }
         }
 
-        // ✅ Imágenes: conservar, borrar las eliminadas y agregar nuevas
-        if ($request->has('imagenes')) {
-            $imagenesIdsExistentes = $modulo->images->pluck('id')->toArray();
-            $imagenesIdsEnRequest = [];
-
-            foreach ($request->imagenes as $imagenData) {
-                // Si la imagen ya existe (tiene ID), actualizamos la descripción
-                if (!empty($imagenData['id'])) {
-                    $imagenesIdsEnRequest[] = $imagenData['id'];
-                    $imagen = $modulo->images()->find($imagenData['id']);
-                    if ($imagen) {
-                        $imagen->update([
-                            'description' => $imagenData['description'] ?? $imagen->description,
-                        ]);
-                    }
+        // -------------------------
+        // IMÁGENES: eliminar, actualizar, crear
+        // -------------------------
+        // 1) Eliminar imágenes marcadas por el usuario aunque no venga 'imagenes'
+        if ($request->filled('delete_imagenes')) {
+            $idsToDelete = (array) $request->input('delete_imagenes', []);
+            foreach ($modulo->images()->whereIn('id', $idsToDelete)->get() as $img) {
+                // eliminar archivo físico si existe
+                if ($img->image_path && Storage::disk('public')->exists($img->image_path)) {
+                    Storage::disk('public')->delete($img->image_path);
                 }
-                // Si es una nueva imagen (tiene archivo nuevo)
-                elseif (isset($imagenData['file']) && $imagenData['file']) {
-                    $path = $imagenData['file']->store('modulos/imagenes', 'public');
-                    $modulo->images()->create([
-                        'image_path' => $path,
-                        'description' => $imagenData['description'] ?? null,
-                    ]);
-                }
-            }
-
-            // 🔥 Borrar imágenes que ya no están en el request
-            $imagenesAEliminar = array_diff($imagenesIdsExistentes, $imagenesIdsEnRequest);
-            foreach ($modulo->images()->whereIn('id', $imagenesAEliminar)->get() as $img) {
-                Storage::disk('public')->delete($img->image_path);
                 $img->delete();
             }
         }
+
+        // 2) Procesar imágenes enviadas (actualizar existentes / crear nuevas / reemplazar archivo)
+        if ($request->has('imagenes')) {
+            // recorrer con índice para poder leer $request->file("imagenes.$index.file")
+            foreach ($request->imagenes as $index => $imagenData) {
+                // Si trae id -> es imagen existente: actualizar descripción y opcionalmente reemplazar archivo
+                if (!empty($imagenData['id'])) {
+                    $imagen = $modulo->images()->find($imagenData['id']);
+                    if (!$imagen) continue;
+
+                    // actualizar descripción si viene
+                    $imagen->description = $imagenData['description'] ?? $imagen->description;
+
+                    // verificar si en este índice llegó un archivo para reemplazar
+                    $uploaded = $request->file("imagenes.$index.file");
+                    if ($uploaded) {
+                        // borrar archivo anterior si existe
+                        if ($imagen->image_path && Storage::disk('public')->exists($imagen->image_path)) {
+                            Storage::disk('public')->delete($imagen->image_path);
+                        }
+                        $path = $uploaded->store('modulos/imagenes', 'public');
+                        $imagen->image_path = $path;
+                    }
+
+                    $imagen->save();
+                }
+                // Si no trae id pero trae archivo -> crear nueva imagen
+                else {
+                    $uploaded = $request->file("imagenes.$index.file");
+                    if ($uploaded) {
+                        $path = $uploaded->store('modulos/imagenes', 'public');
+                        $modulo->images()->create([
+                            'image_path' => $path,
+                            'description' => $imagenData['description'] ?? null,
+                        ]);
+                    }
+                    // Si no hay file y no hay id, ignorar (campo vacío del formulario)
+                }
+            }
+        }
+
 
         $accion = $request->has('id') ? 'actualizado' : 'creado';
         return redirect()->back()->with('success', "Módulo {$accion} exitosamente.");

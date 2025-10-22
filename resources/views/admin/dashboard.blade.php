@@ -557,7 +557,17 @@
                     <select name="steps[${index}][type]" class="form-control mb-2">
                         <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
                     </select>
-                    ${img.image_path ? `<img src="/storage/${img.image_path}" class="img-thumbnail mb-2" style="max-width:120px;">` : ''}
+                    ${step.type == 'image' 
+                        ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
+                        : ''
+                        }
+
+                        ${step.type == 'video' 
+                        ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
+                        : ''
+                        }
+
+
                 </div>`;
             stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
         });
@@ -589,7 +599,7 @@
                     <input type="hidden" name="imagenes[${index}][id]" value="${img.id}">
                     <input type="text" name="imagenes[${index}][description]" class="form-control mb-2" value="${img.description || ''}">
                     ${img.image_path ? `<img src="/storage/${img.image_path}" class="img-thumbnail mb-2" style="max-width:120px;">` : ''}
-                    <input type="file" name="imagenes[${index}][file]" class="form-control mb-2" accept="image/*" hidden>
+                    <input type="file" name="imagenes[${index}][file]" class="form-control mb-2" accept="image/*" >
 
 
                 </div>`;
@@ -615,24 +625,38 @@
     // =====================
     if (info.preguntas && info.preguntas.length) {
         info.preguntas.forEach((p, index) => {
-            const opcionesHTML = p.opciones.map((op, i) => `
-                <div class="d-flex mb-1">
-                    <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" value="${op}">
-                    <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${i}" ${p.respuestas_correctas.includes(i) ? 'checked' : ''}> Correcta</label>
-                </div>`).join('');
+
+            // normalizamos respuestas_correctas a strings para comparar sin problemas
+            const corrects = (p.respuestas_correctas || []).map(x => String(x));
+
+            const opcionesHTML = (p.opciones || []).map((op, i) => {
+                const checked = corrects.includes(String(i)) ? 'checked' : '';
+                return `
+                    <div class="d-flex mb-1 align-items-center">
+                        <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" value="${op}">
+                        <label class="mb-0">
+                            <input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${i}" ${checked}>
+                            Correcta
+                        </label>
+                    </div>`;
+            }).join('');
+
+            // incluir id oculto para identificar la pregunta en el backend (si existe)
+            const preguntaIdHidden = p.id ? `<input type="hidden" name="preguntas[${index}][id]" value="${p.id}">` : '';
 
             const preguntaHTML = `
                 <div class="pregunta mb-3 p-2 border rounded position-relative" data-index="${index}">
                     <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-pregunta" data-id="${p.id}">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
+                    ${preguntaIdHidden}
                     <input type="text" name="preguntas[${index}][pregunta]" class="form-control mb-2" value="${p.pregunta}">
                     <div class="opciones">${opcionesHTML}</div>
                 </div>`;
             preguntasContainer.insertAdjacentHTML('beforeend', preguntaHTML);
         });
 
-        // 🔥 Evento eliminar pregunta
+        // 🔥 Evento eliminar pregunta (igual que antes)
         preguntasContainer.querySelectorAll('.btn-remove-pregunta').forEach(btn => {
             btn.addEventListener('click', () => {
                 const preguntaId = btn.getAttribute('data-id');
@@ -645,6 +669,7 @@
             });
         });
     }
+
 }
 
     document.getElementById('modalAgregarCurso').addEventListener('hidden.bs.modal', function () {
