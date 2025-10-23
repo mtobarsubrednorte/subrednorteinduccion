@@ -684,7 +684,6 @@
     </script>
 
 
-
     <script>
         let stepIndex = 1;
 
@@ -695,49 +694,49 @@
             div.setAttribute('data-index', stepIndex);
 
             div.innerHTML = `
-                                    <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
+                <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
 
-                                    <select name="steps[${stepIndex}][icon]" class="form-control mb-2 icon-select">
-                                                    <option value="">Selecciona un ícono</option>
-                                                    <option value="fa-right-to-bracket" data-icon="fa-right-to-bracket">
-                                                        🔑 Ingreso
-                                                    </option>
-                                                    <option value="fa-building" data-icon="fa-building">
-                                                        🏢 Predio
-                                                    </option>
-                                                    <option value="fa-magnifying-glass" data-icon="fa-magnifying-glass">
-                                                        🔍 Buscar
-                                                    </option>
-                                                    <option value="fa-house" data-icon="fa-house">
-                                                        🏠 Casa
-                                                    </option>
-                                                    <option value="fa-user-plus" data-icon="fa-user-plus">
-                                                        👤➕ Usuario
-                                                    </option>
-                                                    <option value="fa-people-roof" data-icon="fa-people-roof">
-                                                        👨‍👩‍👧 Familia
-                                                    </option>
-                                                    <option value="fa-notes-medical" data-icon="fa-notes-medical">
-                                                        📝 Salud
-                                                    </option>
-                                                    <option value="fa-handshake" data-icon="fa-handshake">
-                                                        🤝 Acuerdo
-                                                    </option>
-                                                    <option value="fa-clipboard-list" data-icon="fa-clipboard-list">
-                                                        📋 Lista
-                                                    </option>
-                                                    <option value="fa-id-card" data-icon="fa-id-card">
-                                                        🪪 Documento
-                                                    </option>
-                                                </select>
-                                    <select name="steps[${stepIndex}][type]" class="form-control mb-2">
-                                        <option value="">Sin archivo</option>
-                                        <option value="image">Imagen</option>
-                                        <option value="video">Video</option>
-                                        <option value="text">Texto</option>
-                                    </select>
-                                    <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
-                                `;
+                <select name="steps[${stepIndex}][icon]" class="form-control mb-2 icon-select">
+                                <option value="">Selecciona un ícono</option>
+                                <option value="fa-right-to-bracket" data-icon="fa-right-to-bracket">
+                                    🔑 Ingreso
+                                </option>
+                                <option value="fa-building" data-icon="fa-building">
+                                    🏢 Predio
+                                </option>
+                                <option value="fa-magnifying-glass" data-icon="fa-magnifying-glass">
+                                    🔍 Buscar
+                                </option>
+                                <option value="fa-house" data-icon="fa-house">
+                                    🏠 Casa
+                                </option>
+                                <option value="fa-user-plus" data-icon="fa-user-plus">
+                                    👤➕ Usuario
+                                </option>
+                                <option value="fa-people-roof" data-icon="fa-people-roof">
+                                    👨‍👩‍👧 Familia
+                                </option>
+                                <option value="fa-notes-medical" data-icon="fa-notes-medical">
+                                    📝 Salud
+                                </option>
+                                <option value="fa-handshake" data-icon="fa-handshake">
+                                    🤝 Acuerdo
+                                </option>
+                                <option value="fa-clipboard-list" data-icon="fa-clipboard-list">
+                                    📋 Lista
+                                </option>
+                                <option value="fa-id-card" data-icon="fa-id-card">
+                                    🪪 Documento
+                                </option>
+                            </select>
+                <select name="steps[${stepIndex}][type]" class="form-control mb-2">
+                    <option value="">Sin archivo</option>
+                    <option value="image">Imagen</option>
+                    <option value="video">Video</option>
+                    <option value="text">Texto</option>
+                </select>
+                <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
+            `;
 
             container.appendChild(div);
             stepIndex++;
