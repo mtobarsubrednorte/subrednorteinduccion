@@ -65,26 +65,17 @@
         </div>
       @endforeach
 
+
       @if($modulo->images->count())
-        <div class="row">
+        <div class="recursos">
+  
           @foreach($modulo->images as $img)
-          
-
-          @if($img->tipe =='video')  
-            <div class="col-md-4 mb-3 w-100">
-              <p>{{ $img->description }}</p>
-              <video src="{{ asset('storage/' . $img->image_path) }}" controls></video>
-            </div>
-          @endif
-
-          @if($img->tipe =='imagen')
-            <div class="col-md-4 mb-3">
-              <p>{{ $img->description }}</p>
-              <img src="{{ asset('storage/' . $img->image_path) }}" class="img-fluid rounded">
-
-            </div>          
-          @endif
-
+            
+              <div class="col-md-4 m-3">
+                <p class="descripcion_img">{{ $img->description }}</p>
+                <img src="{{ asset('storage/' . $img->image_path) }}" class="img_description">
+              </div>    
+                
           @endforeach
         </div>
       @endif
