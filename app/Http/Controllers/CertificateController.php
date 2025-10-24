@@ -28,7 +28,7 @@ class CertificateController extends Controller
         $htmlContent = view('components.certificate', $data)->render();
 
         Browsershot::html($htmlContent)
-            ->paperSize(1120, 663, 'px') // Tamaño carta horizontal en píxeles
+            ->paperSize(900, 663, 'px') // Tamaño carta horizontal en píxeles
             ->save(storage_path('app/public/certificado_'.$user->name.'.pdf'));
         
 
