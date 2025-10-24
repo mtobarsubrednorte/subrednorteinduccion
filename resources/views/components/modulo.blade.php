@@ -262,17 +262,28 @@
     </div>
 
     <div class="clase-info">
-      <p>¡Felicidades! Has completado todos los módulos del curso.</p>
-      <p>Puedes descargar tu certificado de finalización haciendo clic en el botón a continuación.</p>
+      <div class="certifivado-text">
+        <p>¡Felicidades! Has completado todos los módulos del curso.</p>
+        <p>Puedes descargar tu certificado de finalización haciendo clic en el botón a continuación.</p>
+      </div>
+      
 
-      <a href="#" class="btn btn-success">
-        <i class="fas fa-certificate"></i> Descargar Certificado
+      <div class="certificate-preview">
+        <x-certificate
+          name="{{ auth()->user()->name }}"
+          event="Curso de Inducción Subred Norte"
+          date="{{ date('d/m/Y') }}"
+        />
+
+      </div>
+      
+      <a href="{{ route('certificate.download') }}" class="btn btn-primary mt-3 btn-certifycate">
+          Descargar Certificado PDF
       </a>
+
     </div>
   </div>
-
 </main>
-
 <!-- Modales -->
 <script>
   // Manejo de Escalera

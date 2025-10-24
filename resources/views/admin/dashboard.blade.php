@@ -111,7 +111,7 @@
                                                     @csrf
                                                     @method('PATCH')
                                                     <button type="submit"
-                                                        class="btn btn-sm btn-warning">Desactivar</button>
+                                                        class="btn btn-sm btn-warning"><i class="fa-solid fa-xmark"></i></button>
                                                 </form>
                                             @else
                                                 <span class="status-badge status-inactive">Inactivo</span>
@@ -144,28 +144,23 @@
                 </div>
 
                 <!-- Gestión de cursos -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="cursos-panel">
+                    <div class="cursos-panel-header">
                         <i class="fas fa-book me-2"></i>Gestión de Cursos
                     </div>
-                    <div class="card-body">
-                        <div class="row">
+                    <div class="cursos-panel-body">
+                        <div class="modulos-grid-container row">
                             @foreach ($modulos as $curso)
-                                <div class="col-md-6 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ $curso->title }}</h5>
-                                            <p class="card-text">{{ $curso->description }}</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <button 
-                                                    class="btn btn-warning btn-editar-curso"
-                                                    data-info='@json($curso)'
-                                                >
+                                <div class="modulo-item-wrapper col-md-6">
+                                    <div class="modulo-card">
+                                        <div class="modulo-content-wrapper">
+                                            <h5 class="modulo-title">{{ $curso->title }}</h5>
+                                            <p class="modulo-description">{{ $curso->description }}</p>
+                                            <div class="modulo-actions-container d-flex justify-content-between align-items-center">
+                                                <button class="btn-modulo-edit btn-editar-curso"
+                                                    data-info='@json($curso)'>
                                                     Editar
                                                 </button>
-
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -173,15 +168,15 @@
                             @endforeach
                         </div>
                         <div class="mt-3">
-                            {{ $modulos->links() }}
+                            <div class="pagination-modulos">
+                                {{ $modulos->links() }}
+                            </div>
                         </div>
 
-                        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarCurso">
+                        <button class="btn-add-modulo btn mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarCurso">
                             <i class="fas fa-plus"></i> Agregar Curso
                         </button>
-
                     </div>
-
                 </div>
 
             </div>
@@ -189,6 +184,19 @@
             <!-- Columna derecha -->
             <div class="col-md-4">
                 <!-- Acciones rápidas -->
+
+                <div class="card ">
+                    <div class="card-header">
+                        <h3><i class="fas fa-certificate"></i> Verificar certificado</h3>
+                    </div>
+                    <div class="card-body">
+                        <label for="doc">Número de documento</label>
+                        <input class="form-control mb-2" type="text" id="doc" name="doc" placeholder="Ej: 12345678">
+                        <button class="btn btn-info text-white">Verificar ahora</button>
+                    </div>
+
+                </div>
+
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-bolt me-2"></i>Acciones Rápidas
@@ -252,35 +260,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h3><i class="fas fa-certificate"></i> Verificar certificado</h3>
-                    </div>
-                    <div class="card-body">
-                        <label for="doc">Número de documento</label>
-                        <input type="text" id="doc" name="doc" placeholder="Ej: 12345678">
-                        <button>Verificar ahora</button>
-                    </div>
-
-                </div>
-
-                <div>
-                    <form action="#" type="POST">
-                        <label for="perfil">Perfil</label>
-                        <select name="perfiles" id="">
-                            @foreach ($perfiles as $perfil)
-                                <option value="{{ $perfil->id }}">{{ $perfil->name }}</option>
-                            @endforeach
-                        </select>
-
-                        <label for="description">Description</label>
-                        <input type="text" class="form-contol">
-
-                        <button>Guardar</button>
-                    </form>
-                </div>
-
+               
             </div>
         </div>
     </div>
@@ -344,7 +324,7 @@
                             </div>
 
                             <div id="steps-container">
-                                
+
                                 <div class="step mb-3" data-index="0">
                                     <input type="text" name="steps[0][text]" class="form-control mb-2"
                                         placeholder="Descripción del paso">
@@ -443,7 +423,8 @@
                                 </div>
                             </div>
                             <button type="button" class="btn btn-outline-primary btn-sm" id="addPregunta">+
-                                Agregar Pregunta</button>
+                                Agregar Pregunta
+                            </button>
 
                         </div>
 
@@ -469,43 +450,43 @@
 
 
         function abrirModalEditar(info) {
-    console.log(info);
-    const modal = new bootstrap.Modal(document.getElementById('modalAgregarCurso'));
-    modal.show();
+            console.log(info);
+            const modal = new bootstrap.Modal(document.getElementById('modalAgregarCurso'));
+            modal.show();
 
-    // Campos básicos
-    document.getElementById('id_modulo').value = info.id || '';
-    document.getElementById('titulo_modal').textContent = 'Editar Módulo';
-    document.querySelector('[name="title"]').value = info.title || '';
-    document.querySelector('[name="description"]').value = info.description || '';
-    document.querySelector('[name="duration"]').value = info.duration || '';
-    document.querySelector('[name="genilay_recursos_link1"]').value = info.genilay_recursos_link1 || '';
-    document.querySelector('[name="genilay_recursos_link2"]').value = info.genilay_recursos_link2 || '';
+            // Campos básicos
+            document.getElementById('id_modulo').value = info.id || '';
+            document.getElementById('titulo_modal').textContent = 'Editar Módulo';
+            document.querySelector('[name="title"]').value = info.title || '';
+            document.querySelector('[name="description"]').value = info.description || '';
+            document.querySelector('[name="duration"]').value = info.duration || '';
+            document.querySelector('[name="genilay_recursos_link1"]').value = info.genilay_recursos_link1 || '';
+            document.querySelector('[name="genilay_recursos_link2"]').value = info.genilay_recursos_link2 || '';
 
-    // Limpiar contenedores dinámicos
-    const stepsContainer = document.getElementById('steps-container');
-    const imgContainer = document.getElementById('imagenes-container');
-    const preguntasContainer = document.getElementById('preguntas-container');
-    const recursosContainer = document.getElementById('recursos-container');
+            // Limpiar contenedores dinámicos
+            const stepsContainer = document.getElementById('steps-container');
+            const imgContainer = document.getElementById('imagenes-container');
+            const preguntasContainer = document.getElementById('preguntas-container');
+            const recursosContainer = document.getElementById('recursos-container');
 
-    stepsContainer.innerHTML = '';
-    imgContainer.innerHTML = '';
-    preguntasContainer.innerHTML = '';
-    recursosContainer.innerHTML = '';
+            stepsContainer.innerHTML = '';
+            imgContainer.innerHTML = '';
+            preguntasContainer.innerHTML = '';
+            recursosContainer.innerHTML = '';
 
-    // =====================
-    // 🧩 Recursos actuales
-    // =====================
-    if (info.recursos && info.recursos.length) {
-        info.recursos.forEach((recurso) => {
-            const extension = recurso.original_name.split('.').pop().toLowerCase();
-            const iconClass = extension === 'pdf'
-                ? 'fa-file-pdf text-danger'
-                : (extension === 'doc' || extension === 'docx')
-                    ? 'fa-file-word text-primary'
-                    : 'fa-file text-secondary';
+            // =====================
+            // 🧩 Recursos actuales
+            // =====================
+            if (info.recursos && info.recursos.length) {
+                info.recursos.forEach((recurso) => {
+                    const extension = recurso.original_name.split('.').pop().toLowerCase();
+                    const iconClass = extension === 'pdf' ?
+                        'fa-file-pdf text-danger' :
+                        (extension === 'doc' || extension === 'docx') ?
+                        'fa-file-word text-primary' :
+                        'fa-file text-secondary';
 
-            const recursoHTML = `
+                    const recursoHTML = `
                 <div class="card shadow-sm recurso-card position-relative" style="width: 150px; border-radius: 10px;">
                     <div class="card-body text-center p-2">
                         <i class="fa-solid ${iconClass}" style="font-size: 2.5rem;"></i>
@@ -521,29 +502,29 @@
                     </div>
                 </div>
             `;
-            recursosContainer.insertAdjacentHTML('beforeend', recursoHTML);
-        });
+                    recursosContainer.insertAdjacentHTML('beforeend', recursoHTML);
+                });
 
-        // 🔥 Evento eliminar recurso
-        recursosContainer.querySelectorAll('.btn-remove-recurso').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const recursoId = btn.getAttribute('data-id');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'delete_recursos[]';
-                input.value = recursoId;
-                recursosContainer.appendChild(input);
-                btn.closest('.recurso-card').remove();
-            });
-        });
-    }
+                // 🔥 Evento eliminar recurso
+                recursosContainer.querySelectorAll('.btn-remove-recurso').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const recursoId = btn.getAttribute('data-id');
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'delete_recursos[]';
+                        input.value = recursoId;
+                        recursosContainer.appendChild(input);
+                        btn.closest('.recurso-card').remove();
+                    });
+                });
+            }
 
-    // =====================
-    // 1️⃣ Pasos
-    // =====================
-    if (info.steps && info.steps.length) {
-        info.steps.forEach((step, index) => {
-            const stepHTML = `
+            // =====================
+            // 1️⃣ Pasos
+            // =====================
+            if (info.steps && info.steps.length) {
+                info.steps.forEach((step, index) => {
+                    const stepHTML = `
                 <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
                     <input type="hidden" name="steps[${index}][id]" value="${step.id}">
 
@@ -569,29 +550,29 @@
 
 
                 </div>`;
-            stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
-        });
+                    stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
+                });
 
-        // 🔥 Evento eliminar paso
-        stepsContainer.querySelectorAll('.btn-remove-step').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const stepId = btn.getAttribute('data-id');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'delete_steps[]';
-                input.value = stepId;
-                stepsContainer.appendChild(input);
-                btn.closest('.step').remove();
-            });
-        });
-    }
+                // 🔥 Evento eliminar paso
+                stepsContainer.querySelectorAll('.btn-remove-step').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const stepId = btn.getAttribute('data-id');
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'delete_steps[]';
+                        input.value = stepId;
+                        stepsContainer.appendChild(input);
+                        btn.closest('.step').remove();
+                    });
+                });
+            }
 
-    // =====================
-    // 2️⃣ Imágenes
-    // =====================
-    if (info.images && info.images.length) {
-        info.images.forEach((img, index) => {
-            const imgHTML = `
+            // =====================
+            // 2️⃣ Imágenes
+            // =====================
+            if (info.images && info.images.length) {
+                info.images.forEach((img, index) => {
+                    const imgHTML = `
                 <div class="imagen mb-3 p-2 border rounded position-relative" data-index="${index}">
                     <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-img" data-id="${img.id}">
                         <i class="fa-solid fa-xmark"></i>
@@ -603,35 +584,35 @@
 
 
                 </div>`;
-            imgContainer.insertAdjacentHTML('beforeend', imgHTML);
-        });
+                    imgContainer.insertAdjacentHTML('beforeend', imgHTML);
+                });
 
-        // 🔥 Evento eliminar imagen
-        imgContainer.querySelectorAll('.btn-remove-img').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const imgId = btn.getAttribute('data-id');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'delete_imagenes[]';
-                input.value = imgId;
-                imgContainer.appendChild(input);
-                btn.closest('.imagen').remove();
-            });
-        });
-    }
+                // 🔥 Evento eliminar imagen
+                imgContainer.querySelectorAll('.btn-remove-img').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const imgId = btn.getAttribute('data-id');
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'delete_imagenes[]';
+                        input.value = imgId;
+                        imgContainer.appendChild(input);
+                        btn.closest('.imagen').remove();
+                    });
+                });
+            }
 
-    // =====================
-    // 3️⃣ Preguntas
-    // =====================
-    if (info.preguntas && info.preguntas.length) {
-        info.preguntas.forEach((p, index) => {
+            // =====================
+            // 3️⃣ Preguntas
+            // =====================
+            if (info.preguntas && info.preguntas.length) {
+                info.preguntas.forEach((p, index) => {
 
-            // normalizamos respuestas_correctas a strings para comparar sin problemas
-            const corrects = (p.respuestas_correctas || []).map(x => String(x));
+                    // normalizamos respuestas_correctas a strings para comparar sin problemas
+                    const corrects = (p.respuestas_correctas || []).map(x => String(x));
 
-            const opcionesHTML = (p.opciones || []).map((op, i) => {
-                const checked = corrects.includes(String(i)) ? 'checked' : '';
-                return `
+                    const opcionesHTML = (p.opciones || []).map((op, i) => {
+                        const checked = corrects.includes(String(i)) ? 'checked' : '';
+                        return `
                     <div class="d-flex mb-1 align-items-center">
                         <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" value="${op}">
                         <label class="mb-0">
@@ -639,12 +620,13 @@
                             Correcta
                         </label>
                     </div>`;
-            }).join('');
+                    }).join('');
 
-            // incluir id oculto para identificar la pregunta en el backend (si existe)
-            const preguntaIdHidden = p.id ? `<input type="hidden" name="preguntas[${index}][id]" value="${p.id}">` : '';
+                    // incluir id oculto para identificar la pregunta en el backend (si existe)
+                    const preguntaIdHidden = p.id ?
+                        `<input type="hidden" name="preguntas[${index}][id]" value="${p.id}">` : '';
 
-            const preguntaHTML = `
+                    const preguntaHTML = `
                 <div class="pregunta mb-3 p-2 border rounded position-relative" data-index="${index}">
                     <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-pregunta" data-id="${p.id}">
                         <i class="fa-solid fa-xmark"></i>
@@ -653,34 +635,32 @@
                     <input type="text" name="preguntas[${index}][pregunta]" class="form-control mb-2" value="${p.pregunta}">
                     <div class="opciones">${opcionesHTML}</div>
                 </div>`;
-            preguntasContainer.insertAdjacentHTML('beforeend', preguntaHTML);
+                    preguntasContainer.insertAdjacentHTML('beforeend', preguntaHTML);
+                });
+
+                // 🔥 Evento eliminar pregunta (igual que antes)
+                preguntasContainer.querySelectorAll('.btn-remove-pregunta').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const preguntaId = btn.getAttribute('data-id');
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'delete_preguntas[]';
+                        input.value = preguntaId;
+                        preguntasContainer.appendChild(input);
+                        btn.closest('.pregunta').remove();
+                    });
+                });
+            }
+
+        }
+
+        document.getElementById('modalAgregarCurso').addEventListener('hidden.bs.modal', function() {
+            this.querySelector('form').reset();
+            document.getElementById('steps-container').innerHTML = '';
+            document.getElementById('imagenes-container').innerHTML = '';
+            document.getElementById('preguntas-container').innerHTML = '';
+            document.getElementById('recursos-container').innerHTML = '';
         });
-
-        // 🔥 Evento eliminar pregunta (igual que antes)
-        preguntasContainer.querySelectorAll('.btn-remove-pregunta').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const preguntaId = btn.getAttribute('data-id');
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'delete_preguntas[]';
-                input.value = preguntaId;
-                preguntasContainer.appendChild(input);
-                btn.closest('.pregunta').remove();
-            });
-        });
-    }
-
-}
-
-    document.getElementById('modalAgregarCurso').addEventListener('hidden.bs.modal', function () {
-        this.querySelector('form').reset();
-        document.getElementById('steps-container').innerHTML = '';
-        document.getElementById('imagenes-container').innerHTML = '';
-        document.getElementById('preguntas-container').innerHTML = '';
-        document.getElementById('recursos-container').innerHTML = '';
-    });
-
-
     </script>
 
 
@@ -775,9 +755,9 @@
             div.setAttribute('data-index', imagenIndex);
 
             div.innerHTML = `
-                                        <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
-                                        <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
-                                    `;
+                <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
+                <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
+            `;
             container.appendChild(div);
             imagenIndex++;
         });
@@ -793,15 +773,15 @@
             div.setAttribute('data-index', preguntaIndex);
 
             div.innerHTML = `
-                                            <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
-                                            <div class="opciones">
-                                                <div class="d-flex mb-1">
-                                                    <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                                    <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
-                                        `;
+                <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
+                <div class="opciones">
+                    <div class="d-flex mb-1">
+                        <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
+                        <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
+            `;
 
             container.appendChild(div);
             preguntaIndex++;
@@ -817,9 +797,9 @@
                 let optionDiv = document.createElement('div');
                 optionDiv.classList.add('d-flex', 'mb-1');
                 optionDiv.innerHTML = `
-                                                <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                                <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
-                                            `;
+                    <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
+                    <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
+                `;
                 opcionesDiv.appendChild(optionDiv);
             }
         });

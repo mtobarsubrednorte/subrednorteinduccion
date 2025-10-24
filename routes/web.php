@@ -7,6 +7,7 @@ use App\Http\Controllers\ModuleController;
 
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CertificateController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -52,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('auth')
         ->name('steps.complete');
 
-
+    Route::get('/certificado/download', [CertificateController::class, 'download'])->name('certificate.download');
 
     // Quiz
     // Route::get('/quiz/{quiz}', [QuizController::class, 'show'])->name('quiz.show');

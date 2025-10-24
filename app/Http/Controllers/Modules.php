@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Modulos;
 use Illuminate\Http\Request;
 use App\Models\Step;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Modules extends Controller
 {
@@ -13,7 +15,11 @@ class Modules extends Controller
         $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
             ->whereNull('parent_id')
             ->get();
-        return view('modules.module1', compact('modulos'));
+
+        return view('modules.module1', [
+            'modulos' => $modulos,
+        ]
+        );
     }
 
     public function responder(Request $request, Modulos $modulo)
@@ -46,7 +52,7 @@ class Modules extends Controller
         $aprobado = $calificacion >= 8;
 
         // Guardamos en la tabla
-        \DB::table('modulo_user')->updateOrInsert(
+        DB::table('modulo_user')->updateOrInsert(
             ['user_id' => auth()->id(), 'modulo_id' => $modulo->id],
             ['calificacion' => $calificacion, 'aprobado' => $aprobado, 'updated_at' => now(), 'created_at' => now()]
         );

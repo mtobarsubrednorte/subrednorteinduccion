@@ -500,3 +500,180 @@
      padding: 2%;
      margin-bottom: 2%;
  }
+
+ /* Contenedor principal */
+.cursos-panel {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* Header del panel */
+.cursos-panel-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    font-weight: 600;
+    font-size: 1.3rem;
+    padding: 1.25rem 2rem;
+    border-bottom: none;
+}
+
+/* Cuerpo del panel */
+.cursos-panel-body {
+    padding: 1.5rem;
+    background: #f8f9fa;
+}
+
+/* Grid de módulos */
+.modulos-grid-container {
+    margin: -0.5rem;
+}
+
+.modulo-item-wrapper {
+    padding: 0.5rem;
+}
+
+/* Tarjetas de módulos */
+.modulo-card {
+    border: 1px solid #e1e8ed;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: white;
+    overflow: hidden;
+    height: 100%;
+}
+
+.modulo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(116, 185, 255, 0.15);
+    border-color: #74b9ff;
+}
+
+/* Contenido del módulo */
+.modulo-content-wrapper {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden; /* importante para que el pseudo-elemento no se salga */
+}
+
+.modulo-content-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0; /* inicia desde la derecha */
+    bottom: 0;
+    left: 0;
+    background: url('../../images/fondo_modulo.jpg') no-repeat right center;
+    background-size: cover;
+    filter: blur(3px); /* ajusta el blur a tu gusto */
+    opacity: 0.6; /* ajusta la intensidad */
+    z-index: 0; /* detrás del contenido */
+}
+
+
+/* Título del módulo */
+.modulo-title {
+    color: #2d3436;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    z-index: 1;
+}
+
+/* Descripción del módulo */
+.modulo-description {
+    color: #636e72;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-bottom: 1.25rem;
+    z-index: 1;
+}
+
+/* Botones de acción */
+.modulo-actions-container {
+    margin-top: auto;
+}
+
+.btn-modulo-edit {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    color: white;
+    font-weight: 500;
+    padding: 0.6rem 1.25rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.btn-modulo-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(250, 130, 49, 0.3);
+    color: white;
+}
+
+/* Botón agregar */
+.btn-add-modulo {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-add-modulo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.3);
+}
+
+/* Paginación */
+.pagination-modulos {
+    justify-content: center;
+}
+
+.pagination-modulos .page-link {
+    border: 1px solid #dfe6e9;
+    color: #74b9ff;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 6px;
+}
+
+.pagination-modulos .page-link:hover {
+    background-color: #74b9ff;
+    color: white;
+    border-color: #74b9ff;
+}
+
+.pagination-modulos .page-item.active .page-link {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    border-color: #74b9ff;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cursos-panel-body {
+        padding: 1rem;
+    }
+    
+    .modulo-item-wrapper {
+        margin-bottom: 0.75rem;
+    }
+    
+    .modulo-content-wrapper {
+        padding: 1.25rem;
+    }
+    
+    .btn-add-modulo {
+        width: 100%;
+    }
+}
