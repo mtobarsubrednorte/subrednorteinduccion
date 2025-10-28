@@ -6,6 +6,7 @@ use App\Models\Modulos;
 use Illuminate\Http\Request;
 use App\Models\Step;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class Modules extends Controller
@@ -18,18 +19,34 @@ class Modules extends Controller
 
         return view('modules.module1', [
             'modulos' => $modulos,
-        ]
-        );
+        ]);
     }
 
     public function responder(Request $request, Modulos $modulo)
     {
+        $request->validate([
+            'respuestas' => 'sometimes|array',
+            'respuestas.*' => 'nullable|integer'
+        ]);
+
+        $user = Auth::user();
         $respuestasUsuario = $request->input('respuestas', []);
         $resultado = [];
         $correctas = 0;
 
+        // Verificar que hay preguntas
+        if ($modulo->preguntas->isEmpty()) {
+            return redirect()->back()->with('error', 'El módulo no tiene preguntas');
+        }
+
         foreach ($modulo->preguntas as $pregunta) {
             $respuestaUsuario = $respuestasUsuario[$pregunta->id] ?? null;
+            
+            // Validar que la opción seleccionada existe
+            if ($respuestaUsuario !== null && !isset($pregunta->opciones[$respuestaUsuario])) {
+                $respuestaUsuario = null;
+            }
+            
             $esCorrecta = in_array((int) $respuestaUsuario, $pregunta->respuestas_correctas);
 
             if ($esCorrecta) {
@@ -45,41 +62,44 @@ class Modules extends Controller
             ];
         }
 
-        // ✅ Calificación (ejemplo sobre 10 puntos)
+        // ✅ Calificación
         $total = max(1, $modulo->preguntas->count());
         $calificacion = round(($correctas / $total) * 10);
-
         $aprobado = $calificacion >= 8;
 
-        // Guardamos en la tabla
+        // Guardar resultado - CORREGIDO: user->id en lugar de user->id()
         DB::table('modulo_user')->updateOrInsert(
-            ['user_id' => auth()->id(), 'modulo_id' => $modulo->id],
-            ['calificacion' => $calificacion, 'aprobado' => $aprobado, 'updated_at' => now(), 'created_at' => now()]
+            ['user_id' => $user->id, 'modulo_id' => $modulo->id],
+            [
+                'calificacion' => $calificacion, 
+                'aprobado' => $aprobado, 
+                'updated_at' => now(), 
+                'created_at' => DB::raw('IFNULL(created_at, NOW())')
+            ]
         );
 
         return redirect()->back()->with([
-            'success' => "Terminaste el módulo {$modulo->title} con nota {$calificacion}/10. " . ($aprobado ? "¡Aprobaste! 🎉" : "No aprobaste 😢"),
+            'success' => "Terminaste el módulo {$modulo->title} con nota {$calificacion}/10. " . 
+                        ($aprobado ? "¡Aprobaste! 🎉" : "No aprobaste 😢"),
             'resultado' => $resultado
         ]);
     }
 
     public function markComplete(Request $request)
     {
-        $user = auth()->user();
+        $request->validate([
+            'step_id' => 'required|exists:steps,id'
+        ]);
 
+        $user = Auth::user();
         $stepId = $request->input('step_id');
-
-        // Verifica que el step exista
         $step = Step::findOrFail($stepId);
 
-        // Relación many-to-many (usuarios ↔ steps)
+        // Asegúrate de que esta relación exista en el modelo User
         $user->completedSteps()->syncWithoutDetaching([
             $step->id => ['completed_at' => now()]
         ]);
 
         return response()->json(['success' => true]);
     }
-
-
-
 }

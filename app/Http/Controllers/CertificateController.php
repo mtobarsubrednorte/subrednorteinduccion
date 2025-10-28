@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
 use Spatie\Browsershot\Browsershot;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Certificate;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class CertificateController extends Controller
 {
@@ -19,6 +19,7 @@ class CertificateController extends Controller
         // Generar un código de verificación único
         $verificationCode = 'SUBRED-' . strtoupper(Str::random(8));
 
+        // Cargar y convertir el logo a base64
         $imagePath = public_path('images/logos/Logo_entorno.jpg');
         $base64Image = base64_encode(file_get_contents($imagePath));
 
@@ -32,9 +33,17 @@ class CertificateController extends Controller
 
         $htmlContent = view('components.certificate', $data)->render();
 
-        $pdfPath = 'certificado_' . $user->id . '.pdf';
-        $fullPath = storage_path('app/public/' . $pdfPath);
+        // Definir ruta de guardado
+        $folderPath = storage_path('app/public/certificados/' . $user->id);
+        $pdfFileName = 'certificado_' . $user->id . '.pdf';
+        $fullPath = $folderPath . '/' . $pdfFileName;
 
+        // Crear carpeta si no existe
+        if (!File::exists($folderPath)) {
+            File::makeDirectory($folderPath, 0755, true);
+        }
+
+        // Generar el PDF
         Browsershot::html($htmlContent)
             ->paperSize(900, 663, 'px')
             ->save($fullPath);
@@ -42,12 +51,13 @@ class CertificateController extends Controller
         // Guardar registro en la base de datos
         Certificate::create([
             'user_id' => $user->id,
-            'file_path' => $pdfPath,
+            'file_path' => 'certificados/' . $user->id . '/' . $pdfFileName,
             'verification_code' => $verificationCode,
             'event' => $event,
             'date' => $date,
         ]);
 
+        // Descargar el archivo
         return response()->download($fullPath);
     }
 

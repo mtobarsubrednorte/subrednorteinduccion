@@ -8,6 +8,9 @@ use App\Http\Controllers\ModuleController;
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\PerfilController;  
+use App\Http\Controllers\QuizController;
+
 
 Route::get('/', function () {
     return view('auth.login');
@@ -23,9 +26,7 @@ Route::middleware(['auth'])->group(function () {
         return view('pages.home');
     })->name('pages.home');
 
-    Route::get('/pages/perfil', function () {
-        return view('pages.perfil');
-    })->name('pages.perfil');
+    Route::get('/pages/perfil', [PerfilController::class, 'index'])->name('pages.perfil');
 
     // Módulos de aprendizaje
     Route::get('modules/module1', [Modules::class, 'showModulos'])->name('modules.module1');

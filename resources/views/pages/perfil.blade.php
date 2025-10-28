@@ -20,11 +20,11 @@
         <p>Colaboradora desde: Enero 2023</p>
       </div>
     </div>
-
+|
     <div class="profile-stats">
       <div class="stat">
         <div class="stat-number">4</div>
-        <div class="stat-label">Cursos Inscritos</div>
+        <div class="stat-label">Modulos</div>
       </div>
       <div class="stat">
         <div class="stat-number">2</div>
@@ -194,8 +194,32 @@
       <div class="tab-content" id="certificates">
         <h3>Mis Certificados</h3>
         <p>Aquí puedes gestionar y descargar tus certificados obtenidos</p>
-        <!-- Contenido de certificados -->
+
+        <div class="certificates-grid">
+          @foreach ($certificates as $certificate)
+            <div class="certificate-card">
+              <div class="certificate-preview">
+                <iframe 
+                  src="{{ asset('storage/'.$certificate->file_path) }}" 
+                  title="Vista previa del certificado"
+                  loading="lazy"
+                ></iframe>
+              </div>
+
+              <div class="certificate-body">
+                <h4 class="certificate-title">{{ $certificate->event }}</h4>
+                <p class="certificate-date">Aprobado el {{ $certificate->created_at->format('d \d\e F, Y') }}</p>
+                <div class="certificate-actions">
+                  <a href="{{ asset('storage/'.$certificate->file_path) }}" class="certificate-btn" download>
+                    Descargar PDF
+                  </a>
+                </div>
+              </div>
+            </div>
+          @endforeach
+        </div>
       </div>
+
 
       <div class="tab-content" id="settings">
         <h3>Configuración de Cuenta</h3>

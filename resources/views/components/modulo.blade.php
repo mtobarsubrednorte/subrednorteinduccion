@@ -267,15 +267,17 @@
         <p>Puedes descargar tu certificado de finalización haciendo clic en el botón a continuación.</p>
       </div>
       
+      
+        <div class="certificate-preview">
 
-      <div class="certificate-preview">
-        <x-certificate
-          name="{{ auth()->user()->name }}"
-          event="Curso de Inducción Subred Norte"
-          date="{{ date('d/m/Y') }}"
-        />
+          
+          <x-certificate
+            name="{{ auth()->user()->name }}"
+            event="Curso de Inducción Subred Norte"
+            date="{{ date('d/m/Y') }}"
+          />
 
-      </div>
+        </div>
       
       <a href="{{ route('certificate.download') }}" class="btn btn-primary mt-3 btn-certifycate">
           Generar Certificado (PDF)
