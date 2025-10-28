@@ -484,14 +484,20 @@
             <p class="certificate-text">otorga el presente certificado a:</p>
             <h2 class="user-name">
                 @if (isset($name))
-                    $name
+                   {{ $name }}
                 @else
                     {{ Auth::user()->name }}
                 @endif</h2>
             <p class="certificate-text">Por haber completado satisfactoriamente el</p>
             <h3 class="module-name">Módulo de Inducción Institucional</h3>
             <p class="certificate-text">en el marco del Programa de Formación Continua 2025</p>
-            <p class="date-text">Fecha de expedición: {{ date('y/m/d') }}</p>
+            <p class="date-text">Fecha de expedición: 
+                @if (isset($date))
+                    {{ $date }}
+                @else
+                    {{ date('d/m/y') }}
+                @endif
+            </p>
         </div>
         
         <!-- Firmas -->
@@ -510,7 +516,14 @@
         
         <!-- Código de validación -->
         <div class="validation-code">
-            Código de validación: SS-BOG-SN-XXXX-2025
+            @if (isset($verification_code))
+                Código de validación: {{ $verification_code }}
+                
+            @else
+                Código de validación: SS-BOG-SN-XXXX-2025
+                
+            @endif
+            
         </div>
     </div>
 </body>

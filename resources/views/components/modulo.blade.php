@@ -278,7 +278,7 @@
       </div>
       
       <a href="{{ route('certificate.download') }}" class="btn btn-primary mt-3 btn-certifycate">
-          Descargar Certificado PDF
+          Generar Certificado (PDF)
       </a>
 
     </div>
