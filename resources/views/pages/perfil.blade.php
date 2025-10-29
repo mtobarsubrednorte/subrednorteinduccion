@@ -20,7 +20,7 @@
         <p>Colaboradora desde: Enero 2023</p>
       </div>
     </div>
-|
+
     <div class="profile-stats">
       <div class="stat">
         <div class="stat-number">4</div>

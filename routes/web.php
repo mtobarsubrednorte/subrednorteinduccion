@@ -9,7 +9,7 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\PerfilController;  
-use App\Http\Controllers\QuizController;
+use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
