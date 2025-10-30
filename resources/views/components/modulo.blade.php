@@ -348,7 +348,7 @@
     let previousText = '';
 
     function checkTextChange() {
-      console.log("verificar texto")
+      
 
       const link2 = document.getElementById("input-genialy").value;
 
@@ -367,7 +367,7 @@
       return false;
     }
 
-    setInterval(checkTextChange, 1000);
+    //setInterval(checkTextChange, 1000);
 
     // Función que se ejecuta cuando el texto cambia
     function executeFunction() {
