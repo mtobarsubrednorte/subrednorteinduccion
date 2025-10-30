@@ -8,19 +8,27 @@ use App\Models\Step;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\Certificate;
 
 class Modules extends Controller
 {
     public function showModulos()
     {
+        $user = Auth::user();
+        $certificates = Certificate::where('user_id', $user->id)->get();
+
         $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
             ->whereNull('parent_id')
             ->get();
 
+        Log::info("certificados: " . $certificates);
+
         return view('modules.module1', [
-            'modulos' => $modulos,
+            'modulos' => $modulos,  
+            'certificates' => $certificates,
         ]);
     }
+
 
     public function responder(Request $request, Modulos $modulo)
     {

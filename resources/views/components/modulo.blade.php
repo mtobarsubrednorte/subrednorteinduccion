@@ -1,4 +1,4 @@
-@props(['modulos', 'link1' => null, 'link2' => null])
+@props(['modulos', 'certificates', 'link1' => null, 'link2' => null])
 
 
 <main class="contenido-principal-modulo">
@@ -262,26 +262,21 @@
     </div>
 
     <div class="clase-info">
-      <div class="certifivado-text">
-        <p>¡Felicidades! Has completado todos los módulos del curso.</p>
-        <p>Puedes descargar tu certificado de finalización haciendo clic en el botón a continuación.</p>
-      </div>
+      @if (!empty($certificates) && count($certificates) > 0)
       
+      <p>Ya has generado un certificado previamente.</p>
       
+      @else
         <div class="certificate-preview">
-
-          
-          <x-certificate
-            name="{{ auth()->user()->name }}"
-            event="Curso de Inducción Subred Norte"
-            date="{{ date('d/m/Y') }}"
-          />
-
-        </div>
-      
-      <a href="{{ route('certificate.download') }}" class="btn btn-primary mt-3 btn-certifycate">
-          Generar Certificado (PDF)
-      </a>
+          <div class="certifivado-text">
+            <p>¡Felicidades! Has completado todos los módulos del curso.</p>
+            <p>Puedes descargar tu certificado de finalización haciendo clic en el botón a continuación.</p>
+          </div>
+          <a href="{{ route('certificate.download') }}" class="btn btn-primary mt-3 btn-certifycate">
+            Generar Certificado (PDF)
+          </a> 
+        </div>  
+      @endif
 
     </div>
   </div>

@@ -87,7 +87,7 @@
     </aside>
 
     <!-- componente: le pasamos los módulos (no hace falta pasar moduloId) -->
-    <x-modulo :modulos="$modulos" :link1="$modulo->genilay_recursos_link1" :link2="$modulo->genilay_recursos_link2" />
+    <x-modulo :modulos="$modulos" :certificates="$certificates" :link1="$modulo->genilay_recursos_link1" :link2="$modulo->genilay_recursos_link2" />
   </div>
 
   <script>
