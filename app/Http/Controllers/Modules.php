@@ -17,15 +17,15 @@ class Modules extends Controller
         $user = Auth::user();
         $certificates = Certificate::where('user_id', $user->id)->get();
 
+    
         $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
             ->whereNull('parent_id')
             ->get();
 
-        Log::info("certificados: " . $certificates);
-
         return view('modules.module1', [
             'modulos' => $modulos,  
             'certificates' => $certificates,
+
         ]);
     }
 

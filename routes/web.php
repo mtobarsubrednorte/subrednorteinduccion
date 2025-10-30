@@ -56,6 +56,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/certificado/download', [CertificateController::class, 'download'])->name('certificate.download');
 
+    Route::post('/perfil/update', [PerfilController::class, 'update'])->name('perfil.update');
+
+
     // Quiz
     // Route::get('/quiz/{quiz}', [QuizController::class, 'show'])->name('quiz.show');
     // Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
