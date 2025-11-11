@@ -16,10 +16,8 @@ class CertificateController extends Controller
         $event = 'Curso de Inducción Subred Norte';
         $date = date('Y-m-d');
 
-        // Generar un código de verificación único
         $verificationCode = 'SUBRED-' . strtoupper(Str::random(8));
 
-        // Cargar y convertir el logo a base64
         $imagePath = public_path('images/logos/Logo_entorno.jpg');
         $base64Image = base64_encode(file_get_contents($imagePath));
 
@@ -33,22 +31,25 @@ class CertificateController extends Controller
 
         $htmlContent = view('components.certificate', $data)->render();
 
-        // Definir ruta de guardado
         $folderPath = storage_path('app/public/certificados/' . $user->id);
         $pdfFileName = 'certificado_' . $user->id . '.pdf';
         $fullPath = $folderPath . '/' . $pdfFileName;
 
-        // Crear carpeta si no existe
         if (!File::exists($folderPath)) {
             File::makeDirectory($folderPath, 0755, true);
         }
 
-        // Generar el PDF
+        // 🧩 Establece el cache local de Puppeteer para Chrome
+        putenv('PUPPETEER_CACHE_DIR=' . env('PUPPETEER_CACHE_DIR'));
+
+        // ✅ Generar PDF usando Node y Puppeteer locales
         Browsershot::html($htmlContent)
+            ->setNodeBinary(env('BROWSERSHOT_NODE_PATH'))
+            ->setNpmBinary(env('BROWSERSHOT_NPM_PATH'))
             ->paperSize(900, 663, 'px')
             ->save($fullPath);
 
-        // Guardar registro en la base de datos
+        // Guardar registro del certificado
         Certificate::create([
             'user_id' => $user->id,
             'file_path' => 'certificados/' . $user->id . '/' . $pdfFileName,
@@ -57,11 +58,10 @@ class CertificateController extends Controller
             'date' => $date,
         ]);
 
-        // Descargar el archivo
         return response()->download($fullPath);
     }
 
-    // Validar un certificado por código
+    // ✅ Validar certificado por código
     public function verify($code)
     {
         $certificate = Certificate::where('verification_code', $code)->first();
