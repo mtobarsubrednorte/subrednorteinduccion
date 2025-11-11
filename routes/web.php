@@ -59,6 +59,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/perfil/update', [PerfilController::class, 'update'])->name('perfil.update');
 
 
+    Route::post('/verificar-certificado', [CertificateController::class, 'verificar'])->name('certificate.verify');
+
+
+
     // Quiz
     // Route::get('/quiz/{quiz}', [QuizController::class, 'show'])->name('quiz.show');
     // Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');

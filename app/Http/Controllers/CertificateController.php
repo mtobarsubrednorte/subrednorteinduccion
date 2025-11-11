@@ -8,6 +8,10 @@ use App\Models\Certificate;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use App\Models\Activity;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CertificateController extends Controller
 {
@@ -69,19 +73,37 @@ class CertificateController extends Controller
     }
 
     // ✅ Validar certificado por código
-    public function verify($code)
+    public function verificar(Request $request)
     {
-        $certificate = Certificate::where('verification_code', $code)->first();
+        $doc = $request->input('doc');
 
-        if (!$certificate) {
-            return response()->json(['valid' => false, 'message' => 'Certificado no encontrado']);
+        log::info($doc);
+
+        // Buscar usuario por número de documento
+        $usuario = User::where('document_number', $doc)->first();
+
+        if (!$usuario) {
+            return response()->json(['success' => false, 'message' => 'No se encontró un usuario con ese documento.']);
         }
 
-        return response()->json([
-            'valid' => true,
-            'user' => $certificate->user->name,
-            'event' => $certificate->event,
-            'date' => $certificate->date,
-        ]);
+        Log::info($usuario->id);
+
+        // Verificar si tiene certificado
+        $certificado = Certificate::where('user_id', $usuario->id)->first();
+
+        if ($certificado) {
+            return response()->json([
+                'success' => true,
+                'user' => $usuario->name,
+                'document' => $usuario->document_number,
+                'certificado' => $certificado,
+                'message' => 'Certificado válido'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Este usuario no tiene certificado registrado.'
+            ]);
+        }
     }
 }

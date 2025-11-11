@@ -5,6 +5,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Module;
 use App\Models\UserModuleProgress;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CertificateController extends Controller {
     public function generate() {
@@ -20,4 +23,6 @@ class CertificateController extends Controller {
         $pdf = Pdf::loadView('certificate', compact('user'));
         return $pdf->download('Certificado_'.$user->name.'.pdf');
     }
+
+    
 }

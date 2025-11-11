@@ -444,8 +444,8 @@
             </div>
             <div class="institution-title">
                 <h1>MAS Bienestar</h1>
-                <h2>Secretaria distrital de salud</h2>
-                <h2>Subred Norte</h2>
+                <h2>Secretaria Distrital De Salud</h2>
+                <h2>Subred Integrada De Servicios De Salud {{ Auth::user()->subred }} E.S.E.</h2>
             </div>
         </div>
         

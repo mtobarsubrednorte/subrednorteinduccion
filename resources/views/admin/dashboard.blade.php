@@ -197,66 +197,68 @@
             <div class="col-md-4">
                 <!-- Acciones rápidas -->
 
-                <div class="card ">
+                <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-certificate"></i> Verificar certificado</h3>
                     </div>
                     <div class="card-body">
                         <label for="doc">Número de documento</label>
                         <input class="form-control mb-2" type="text" id="doc" name="doc" placeholder="Ej: 12345678">
-                        <button class="btn btn-info text-white">Verificar ahora</button>
+                        <button class="btn btn-info text-white" id="btnVerificar">Verificar ahora</button>
+                    </div>
                     </div>
 
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-bolt me-2"></i>Acciones Rápidas
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-
-                            <button class="btn btn-outline-primary text-start">
-                                <i class="fas fa-chart-bar me-2"></i>Ver Reportes
-                            </button>
-                            <button class="btn btn-outline-primary text-start">
-                                <i class="fas fa-cog me-2"></i>Configuración del Sistema
-                            </button>
+                    <!-- Modal de resultado -->
+                    <div class="modal fade" id="modalResultado" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-info text-white">
+                                <h5 class="modal-title">Resultado de verificación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="resultadoContenido">
+                                <!-- Se llenará dinámicamente -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    </div>
 
+
+                
                 <!-- Actividad reciente -->
                 <div class="card mt-4">
                     <div class="card-header">
                         <i class="fas fa-history me-2"></i>Actividad Reciente
                     </div>
                     <div class="card-body">
-  @forelse($activities as $activity)
-      <div class="activity-item mb-3">
-          <div class="d-flex">
-              <div class="flex-shrink-0">
-                  @if($activity->type == 'usuario')
-                      <i class="fas fa-user-check text-success"></i>
-                  @elseif($activity->type == 'certificado')
-                      <i class="fas fa-certificate text-primary"></i>
-                  @elseif($activity->type == 'modulo')
-                      <i class="fas fa-book text-info"></i>
-                  @else
-                      <i class="fas fa-info-circle text-secondary"></i>
-                  @endif
-              </div>
-              <div class="flex-grow-1 ms-3">
-                  <h6 class="mb-0">{{ $activity->title }}</h6>
-                  <p class="small text-muted mb-0">{{ $activity->description }}</p>
-                  <span class="small text-muted">{{ $activity->created_at->diffForHumans() }}</span>
-              </div>
-          </div>
-      </div>
-  @empty
-      <p class="text-muted">No hay actividad reciente.</p>
-  @endforelse
-</div>
+                        @forelse($activities as $activity)
+                            <div class="activity-item mb-3">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        @if($activity->type == 'usuario')
+                                            <i class="fas fa-user-check text-success"></i>
+                                        @elseif($activity->type == 'certificado')
+                                            <i class="fas fa-certificate text-primary"></i>
+                                        @elseif($activity->type == 'modulo')
+                                            <i class="fas fa-book text-info"></i>
+                                        @else
+                                            <i class="fas fa-info-circle text-secondary"></i>
+                                        @endif
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-0">{{ $activity->title }}</h6>
+                                        <p class="small text-muted mb-0">{{ $activity->description }}</p>
+                                        <span class="small text-muted">{{ $activity->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-muted">No hay actividad reciente.</p>
+                        @endforelse
+                        </div>
 
                 </div>
                
@@ -803,4 +805,53 @@
             }
         });
     </script>
+
+    <script>
+        document.getElementById('btnVerificar').addEventListener('click', function() {
+            const doc = document.getElementById('doc').value.trim();
+
+            if (!doc) {
+                alert('Por favor ingresa un número de documento.');
+                return;
+            }
+
+            fetch("{{ route('certificate.verify') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ doc })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const contenido = document.getElementById('resultadoContenido');
+                if (data.success) {
+                    contenido.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                            <h5>${data.message}</h5>
+                            <p><strong>Nombre:</strong> ${data.user}</p>
+                            <p><strong>Documento:</strong> ${data.document}</p>
+                            <p><strong>Codigo Certificado:</strong> ${data.certificado.verification_code }</p>
+                            <p><strong>Emitido el:</strong> ${data.certificado.created_at}</p>
+                        </div>
+                    `;
+                } else {
+                    contenido.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-times-circle text-danger fa-3x mb-3"></i>
+                            <h5>${data.message}</h5>
+                        </div>
+                    `;
+                }
+
+                // Mostrar el modal
+                const modal = new bootstrap.Modal(document.getElementById('modalResultado'));
+                modal.show();
+            })
+            .catch(err => console.error(err));
+        });
+</script>
+
 @endsection

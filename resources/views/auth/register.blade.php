@@ -319,11 +319,11 @@
                     <div class="input-icon"><i class="fas fa-map-marker-alt"></i></div>
                     <select id="subred" name="subred" required>
                         <option value="">Seleccione subred</option>
-                        <option value="NORTE" {{ old('subred') == 'NORTE' ? 'selected' : '' }}>NORTE</option>
-                        <option value="SUR" {{ old('subred') == 'SUR' ? 'selected' : '' }}>SUR</option>
-                        <option value="SUR OCCIDENTE" {{ old('subred') == 'SUR OCCIDENTE' ? 'selected' : '' }}>SUR
+                        <option value="Norte" {{ old('subred') == 'Norte' ? 'selected' : '' }}>NORTE</option>
+                        <option value="Sur" {{ old('subred') == 'Sur' ? 'selected' : '' }}>SUR</option>
+                        <option value="Sur Occodente" {{ old('Sur Occodente') == 'SUR OCCIDENTE' ? 'selected' : '' }}>SUR
                             OCCIDENTE</option>
-                        <option value="CENTRO ORIENTE" {{ old('subred') == 'CENTRO ORIENTE' ? 'selected' : '' }}>CENTRO
+                        <option value="Centro Oriente" {{ old('subred') == 'Centro Oriente' ? 'selected' : '' }}>CENTRO
                             ORIENTE</option>
                         <option value="SDS" {{ old('subred') == 'SDS' ? 'selected' : '' }}>SDS</option>
                     </select>
