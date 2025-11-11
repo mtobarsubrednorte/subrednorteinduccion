@@ -77,7 +77,7 @@ class CertificateController extends Controller
     {
         $doc = $request->input('doc');
 
-        log::info($doc);
+
 
         // Buscar usuario por número de documento
         $usuario = User::where('document_number', $doc)->first();
@@ -86,7 +86,7 @@ class CertificateController extends Controller
             return response()->json(['success' => false, 'message' => 'No se encontró un usuario con ese documento.']);
         }
 
-        Log::info($usuario->id);
+
 
         // Verificar si tiene certificado
         $certificado = Certificate::where('user_id', $usuario->id)->first();
