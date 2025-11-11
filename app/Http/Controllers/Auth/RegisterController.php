@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Activity;
+
+
 
 class RegisterController extends Controller
 {
@@ -77,6 +80,12 @@ class RegisterController extends Controller
             'gender'          => $data['gender'],
             'subred'          => $data['subred'],
             'password'        => Hash::make($data['password']),
+        ]);
+
+        Activity::create([
+            'type' => 'usuario',
+            'title' => 'Nuevo usuario registrado',
+            'description' => $data['name'] . ' se unió al curso de Bienestar Familiar',
         ]);
     }
 }

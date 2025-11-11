@@ -325,6 +325,7 @@
                             OCCIDENTE</option>
                         <option value="CENTRO ORIENTE" {{ old('subred') == 'CENTRO ORIENTE' ? 'selected' : '' }}>CENTRO
                             ORIENTE</option>
+                        <option value="SDS" {{ old('subred') == 'SDS' ? 'selected' : '' }}>SDS</option>
                     </select>
                     @error('subred')
                         <span class="error-message">{{ $message }}</span>

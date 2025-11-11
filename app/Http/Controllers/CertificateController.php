@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Certificate;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use App\Models\Activity;
 
 class CertificateController extends Controller
 {
@@ -42,11 +43,11 @@ class CertificateController extends Controller
         // 🧩 Establece el cache local de Puppeteer para Chrome
         putenv('PUPPETEER_CACHE_DIR=' . env('PUPPETEER_CACHE_DIR'));
 
-        // ✅ Generar PDF usando Node y Puppeteer locales
+        // // ✅ Generar PDF usando Node y Puppeteer locales
         Browsershot::html($htmlContent)
             ->setNodeBinary(env('BROWSERSHOT_NODE_PATH'))
             ->setNpmBinary(env('BROWSERSHOT_NPM_PATH'))
-            ->paperSize(900, 663, 'px')
+            ->paperSize(900, 609, 'px')
             ->save($fullPath);
 
         // Guardar registro del certificado
@@ -56,6 +57,12 @@ class CertificateController extends Controller
             'verification_code' => $verificationCode,
             'event' => $event,
             'date' => $date,
+        ]);
+
+        Activity::create([
+            'type' => 'certificado',
+            'title' => 'Certificado emitido',
+            'description' => Auth::user()->name . ' completó el curso de Inducción',
         ]);
 
         return response()->download($fullPath);

@@ -75,6 +75,7 @@
         $cursoAprobado = $totalModulos > 0 && $aprobados === $totalModulos;
       @endphp
 
+    
       @if($cursoAprobado)
         <div class="modulo-item certificado">
           <div class="modulo-titulo text-success" @click.stop="moduloSeleccionado = 'certificado'">

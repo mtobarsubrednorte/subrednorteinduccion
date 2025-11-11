@@ -50,23 +50,25 @@
 
 
         
-        /* Encabezado institucional - MEJORADO */
+        /* Encabezado institucional - MODIFICADO: Un solo logo a la izquierda */
         .header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-bottom: 20px;
             position: relative;
             z-index: 3;
         }
         
-        .logo-left, .logo-right {
-            width: 190px;
+        .logo-left {
+           
             height: 100px;
             display: flex;
+            margin-right:  5px
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            
         }
         
         .logo-circle {
@@ -93,7 +95,7 @@
         }
         
         .institution-title {
-            flex-grow: 1;
+           
             padding: 0 20px;
         }
         
@@ -265,14 +267,12 @@
         
         .module-name {
             font-size: 20px;
-            margin: 7px 0;
             color: #0079A7;
             font-style: italic;
         }
         
         .certificate-text {
             font-size: 16px;
-            margin: 5px 0;
             line-height: 1.5;
             color: #343A40;
         }
@@ -428,7 +428,7 @@
 <body>
     <div class="certificate-container">
 
-        <!-- Encabezado institucional -->
+        <!-- Encabezado institucional - MODIFICADO: Solo un logo a la izquierda -->
         <div class="header">
             <div class="logo-left">
                 <div class="logo-circle">
@@ -444,20 +444,8 @@
             </div>
             <div class="institution-title">
                 <h1>MAS Bienestar</h1>
-                <h2>Subred Norte de Servicios de Salud</h2>
-                <h3>Bogotá D.C., Colombia</h3>
-            </div>
-            <div class="logo-right">
-                <div class="logo-circle">
-                    <!-- Imagen de logo - reemplazar con la ruta correcta -->
-                    <div style="width:100%;height:100%;background:#fff;display:flex;align-items:center;justify-content:center;color:#0079A7;font-size:10px;">
-                        @if (isset($logo_left))
-                            <img src="data:image/png;base64,{{ $logo_left }}" alt ="Logo norte" width = "120" style="margin-top: 10px">
-                        @else
-                            <img src="{{ asset('images/logos/Logo_entorno.jpg') }}" alt="">
-                        @endif
-                    </div>
-                </div>
+                <h2>Secretaria distrital de salud</h2>
+                <h2>Subred Norte</h2>
             </div>
         </div>
         
@@ -488,15 +476,17 @@
                 @else
                     {{ Auth::user()->name }}
                 @endif</h2>
-            <p class="certificate-text">Por haber completado satisfactoriamente el</p>
-            <h3 class="module-name">Módulo de Inducción Institucional</h3>
-            <p class="certificate-text">en el marco del Programa de Formación Continua 2025</p>
+            <p class="certificate-text">Por haber completado satisfactoriamente todos los módulos del</p>
+            <h3 class="module-name">Programa Mas Bienestar</h3>
+            <p class="certificate-text">en reconocimiento a su dedicación y compromiso.</p>
             <p class="date-text">Fecha de expedición: 
                 @if (isset($date))
                     {{ $date }}
                 @else
                     {{ date('d/m/y') }}
                 @endif
+
+                Bogotá D.C.
             </p>
         </div>
         

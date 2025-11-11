@@ -37,7 +37,7 @@
                         <div class="icon-container">
                             <i class="fas fa-certificate"></i>
                         </div>
-                        <div class="stat-number">0</div>
+                        <div class="stat-number">{{ DB::table('certificates')->count() }}</div>
                         <div class="stat-label">Certificados Emitidos</div>
                     </div>
                 </div>
@@ -48,7 +48,19 @@
                         <div class="icon-container">
                             <i class="fas fa-chart-line"></i>
                         </div>
-                        <div class="stat-number">78%</div>
+                        @php
+                            $totalUsuarios = DB::table('users')
+                                ->where('subred', Auth::user()->subred)
+                                ->count();
+
+                            $totalCertificados = DB::table('certificates')
+                                ->join('users', 'certificates.user_id', '=', 'users.id')
+                                ->where('users.subred', Auth::user()->subred)
+                                ->count();
+
+                            $porcentaje = $totalUsuarios > 0 ? ($totalCertificados / $totalUsuarios) * 100 : 0;
+                        @endphp
+                        <div class="stat-number">{{ number_format($porcentaje, 1) }}%</div>
                         <div class="stat-label">Tasa de Finalización</div>
                     </div>
                 </div>
@@ -220,45 +232,32 @@
                         <i class="fas fa-history me-2"></i>Actividad Reciente
                     </div>
                     <div class="card-body">
-                        <div class="activity-item mb-3">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-user-check text-success"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0">Nuevo usuario registrado</h6>
-                                    <p class="small text-muted mb-0">Laura Martínez se unió al curso de Bienestar
-                                        Familiar</p>
-                                    <span class="small text-muted">Hace 15 minutos</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="activity-item mb-3">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-certificate text-primary"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0">Certificado emitido</h6>
-                                    <p class="small text-muted mb-0">Carlos Ruiz completó el curso de Salud Mental</p>
-                                    <span class="small text-muted">Hace 2 horas</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="activity-item mb-3">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-book text-info"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0">Nuevo contenido agregado</h6>
-                                    <p class="small text-muted mb-0">Se añadió módulo 5 al curso de Nutrición Saludable
-                                    </p>
-                                    <span class="small text-muted">Ayer a las 14:30</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  @forelse($activities as $activity)
+      <div class="activity-item mb-3">
+          <div class="d-flex">
+              <div class="flex-shrink-0">
+                  @if($activity->type == 'usuario')
+                      <i class="fas fa-user-check text-success"></i>
+                  @elseif($activity->type == 'certificado')
+                      <i class="fas fa-certificate text-primary"></i>
+                  @elseif($activity->type == 'modulo')
+                      <i class="fas fa-book text-info"></i>
+                  @else
+                      <i class="fas fa-info-circle text-secondary"></i>
+                  @endif
+              </div>
+              <div class="flex-grow-1 ms-3">
+                  <h6 class="mb-0">{{ $activity->title }}</h6>
+                  <p class="small text-muted mb-0">{{ $activity->description }}</p>
+                  <span class="small text-muted">{{ $activity->created_at->diffForHumans() }}</span>
+              </div>
+          </div>
+      </div>
+  @empty
+      <p class="text-muted">No hay actividad reciente.</p>
+  @endforelse
+</div>
+
                 </div>
                
             </div>

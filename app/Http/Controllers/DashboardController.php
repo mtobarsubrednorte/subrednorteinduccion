@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\Activity;
 
 class DashboardController extends Controller
 {
@@ -23,6 +23,7 @@ class DashboardController extends Controller
             'usuariosActivos' => User::where('is_active', 1)->count(),
             'usuariosInactivos' => User::where('is_active', 0)->count(),
             'modulos' => Modulos::with(['recursos', 'preguntas', 'steps', 'images'])->paginate(6),
+            'activities' => Activity::latest()->take(10)->get(),
 
             'perfiles' => Profile::get(),
         ];

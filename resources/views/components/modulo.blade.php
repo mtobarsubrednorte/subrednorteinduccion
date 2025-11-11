@@ -264,7 +264,9 @@
     <div class="clase-info">
       @if (!empty($certificates) && count($certificates) > 0)
       
-      <p>Ya has generado un certificado previamente.</p>
+      <p>Ya has generado un certificado previamente.</p> 
+
+      {{-- <x-certificate /> --}}
       
       @else
         <div class="certificate-preview">
@@ -272,10 +274,14 @@
             <p>¡Felicidades! Has completado todos los módulos del curso.</p>
             <p>Puedes descargar tu certificado de finalización haciendo clic en el botón a continuación.</p>
           </div>
-          <a href="{{ route('certificate.download') }}" class="btn btn-primary mt-3 btn-certifycate">
+
+          <a href="{{ route('certificate.download') }}" 
+            id="btnCertificado"
+            class="btn btn-primary mt-3 btn-certifycate"
+            onclick="bloquearBoton(this)">
             Generar Certificado (PDF)
           </a> 
-        </div>  
+        </div>
       @endif
 
     </div>
@@ -463,4 +469,13 @@
       }
     }
   });
+</script>
+
+
+<script>
+  function bloquearBoton(boton) {
+    boton.classList.add('disabled');     // visualmente bloquea el botón
+    boton.innerText = 'Generando...';    // cambia el texto
+    boton.style.pointerEvents = 'none';  // evita clics adicionales
+  }
 </script>

@@ -1,6 +1,6 @@
 <footer>
     <div class="footer-content">
-      <div class="footer-section">
+      {{-- <div class="footer-section">
         <h3>MAS Bienestar</h3>
         <p>Transformando hogares para una vida más plena y saludable.</p>
       </div>
@@ -18,7 +18,7 @@
         <a href="#">Términos y condiciones</a>
         <a href="#">Preguntas frecuentes</a>
         <a href="#">Soporte técnico</a>
-      </div>
+      </div> --}}
     </div>
 
     <div class="copyright">
