@@ -266,11 +266,7 @@
       
       <p>Ya has generado un certificado previamente.</p> 
 
-      
-      
       @else
-
-      <x-certificate /> 
         <div class="certificate-preview">
           <div class="certifivado-text">
             <p>¡Felicidades! Has completado todos los módulos del curso.</p>

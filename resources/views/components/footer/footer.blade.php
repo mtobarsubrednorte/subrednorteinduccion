@@ -21,7 +21,12 @@
       </div> --}}
     </div>
 
-    <div class="copyright">
-      &copy; 2023 MAS Bienestar en tu hogar. Todos los derechos reservados.
+    <div class="copyright text-center mt-3" style="font-size: 14px; color: #8b8686;">
+      &copy; 2025 <strong>MAS Bienestar en tu hogar</strong>. Todos los derechos reservados. <br>
+      <span>Colaboradores: </span>
+      <span style="color: #8b8686;">Tello</span>, 
+      <span style="color: #8b8686;">Yair Fernando Chaves Montenegro</span>, 
+      <span style="font-weight: bold; color: #007bff9c;">Gabriel Monhabell Acosta (Desarrollador)</span>
     </div>
+
   </footer>

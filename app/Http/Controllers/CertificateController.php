@@ -45,7 +45,7 @@ class CertificateController extends Controller
         }
 
         // 🧩 Establece el cache local de Puppeteer para Chrome
-        putenv('PUPPETEER_CACHE_DIR=' . env('PUPPETEER_CACHE_DIR'));
+       putenv('PUPPETEER_CACHE_DIR=' . env('PUPPETEER_CACHE_DIR'));
 
         // // ✅ Generar PDF usando Node y Puppeteer locales
         Browsershot::html($htmlContent)

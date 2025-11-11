@@ -468,7 +468,7 @@
         <!-- Contenido del certificado -->
         <div class="certificate-content">
             <h1 class="certificate-title">Certificado de Participación</h1>
-            <p class="certificate-text">La Secretaría Distrital de Salud de Bogotá, Subred Norte de Servicios de Salud</p>
+            <p class="certificate-text">La Secretaría Distrital de Salud de Bogotá, Subred Integrada De Servicios De Salud {{ Auth::user()->subred }} E.S.E.</p>
             <p class="certificate-text">otorga el presente certificado a:</p>
             <h2 class="user-name">
                 @if (isset($name))
@@ -494,13 +494,13 @@
         <div class="signatures">
             <div class="signature-box">
                 <div class="signature-line"></div>
-                <p class="signature-text">Dr. Carlos Andrés Martínez</p>
-                <p class="signature-text">Director General - Subred Norte</p>
+                <p class="signature-text">Johanna Andrea Torres Ruiz </p>
+                <p class="signature-text">Asesora de Despacho</p>
             </div>
             <div class="signature-box">
                 <div class="signature-line"></div>
-                <p class="signature-text">Dra. María Fernanda López</p>
-                <p class="signature-text">Coordinadora de Formación</p>
+                <p class="signature-text">Marcela Martinez Contreras</p>
+                <p class="signature-text">Subdirectora de Acciones Colectivas</p>
             </div>
         </div>
         
