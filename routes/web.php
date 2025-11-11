@@ -61,6 +61,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/verificar-certificado', [CertificateController::class, 'verificar'])->name('certificate.verify');
 
+    // routes/web.php
+    Route::get('/activities/recent', function () {
+        $activities = \App\Models\Activity::latest()->take(5)->get();
+        return response()->json($activities);
+    })->name('activities.recent');
+
+
+    Route::get('/exportar-usuarios', [DashboardController::class, 'exportUsuarios'])->name('exportar.usuarios');
+
+
+
 
 
     // Quiz

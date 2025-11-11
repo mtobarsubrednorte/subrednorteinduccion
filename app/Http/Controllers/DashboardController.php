@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Activity;
 
+use App\Exports\UsuariosExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class DashboardController extends Controller
 {
     /**
@@ -243,6 +246,12 @@ class DashboardController extends Controller
 
         $accion = $request->has('id') ? 'actualizado' : 'creado';
         return redirect()->back()->with('success', "Módulo {$accion} exitosamente.");
+    }
+
+    public function exportUsuarios(Request $request)
+    {
+        $subred = $request->input('subred');
+        return Excel::download(new UsuariosExport($subred), 'usuarios_'.$subred.'.xlsx');
     }
 
 

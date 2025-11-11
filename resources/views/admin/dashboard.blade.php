@@ -16,7 +16,7 @@
                         </div>
                         <div class="stat-number">{{ DB::table('users')->where('subred', Auth::user()->subred)->count() }}
                         </div>
-                        <div class="stat-label">Usuarios Registrados</div>
+                        <div class="stat-label">Us. Registrados {{ Auth::user()->subred }}</div>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,9 @@
                 <!-- Gestión de usuarios -->
                 <div class="table-container">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Gestión de Usuarios</h4>
+                        <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Gestión de Usuarios {{ Auth::user()->subred }}</h4>
+                        
+
                         <div class="search-box">
                             <form method="GET" action="{{ route('usuarios.index') }}">
                                 <div class="input-group">
@@ -197,6 +199,37 @@
             <div class="col-md-4">
                 <!-- Acciones rápidas -->
 
+                        
+                <!-- Actividad reciente -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-history me-2"></i>Actividad Reciente
+                    </div>
+                    <div class="card-body" id="activity-container">
+                        <p class="text-muted">Cargando actividades...</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                         <h3><i class="fas fa-file"></i> Descargar Reporte</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('exportar.usuarios') }}" method="GET" class="align-items-center">
+                                <select name="subred" class="form-select me-2" required>
+                                    <option value="">Selecciona una Subred</option>
+                                    <option value="Norte">Norte</option>
+                                    <option value="Sur">Sur</option>
+                                    <option value="Sur Occodente">Sur Occodente</option>
+                                    <option value="Centro Oriente">Centro Oriente</option>
+                                </select>
+                                <button class="btn btn-success mt-2"><i class="fa-solid fa-file-excel"></i> Descargar Excel</button>
+                            </form>
+
+                    </div>
+
+                </div>
+
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-certificate"></i> Verificar certificado</h3>
@@ -224,43 +257,8 @@
                             </div>
                         </div>
                     </div>
-                    </div>
-
-
-                
-                <!-- Actividad reciente -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <i class="fas fa-history me-2"></i>Actividad Reciente
-                    </div>
-                    <div class="card-body">
-                        @forelse($activities as $activity)
-                            <div class="activity-item mb-3">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0">
-                                        @if($activity->type == 'usuario')
-                                            <i class="fas fa-user-check text-success"></i>
-                                        @elseif($activity->type == 'certificado')
-                                            <i class="fas fa-certificate text-primary"></i>
-                                        @elseif($activity->type == 'modulo')
-                                            <i class="fas fa-book text-info"></i>
-                                        @else
-                                            <i class="fas fa-info-circle text-secondary"></i>
-                                        @endif
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">{{ $activity->title }}</h6>
-                                        <p class="small text-muted mb-0">{{ $activity->description }}</p>
-                                        <span class="small text-muted">{{ $activity->created_at->diffForHumans() }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <p class="text-muted">No hay actividad reciente.</p>
-                        @endforelse
-                        </div>
-
                 </div>
+
                
             </div>
         </div>
@@ -852,6 +850,80 @@
             })
             .catch(err => console.error(err));
         });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('activity-container');
+
+        async function loadActivities() {
+            try {
+                const response = await fetch("{{ route('activities.recent') }}");
+                const activities = await response.json();
+
+                if (activities.length === 0) {
+                    container.innerHTML = `<p class="text-muted">No hay actividad reciente.</p>`;
+                    return;
+                }
+
+                container.innerHTML = activities.map(activity => {
+                    let icon = '';
+                    switch (activity.type) {
+                        case 'usuario':
+                            icon = '<i class="fas fa-user-check text-success"></i>';
+                            break;
+                        case 'certificado':
+                            icon = '<i class="fas fa-certificate text-primary"></i>';
+                            break;
+                        case 'modulo':
+                            icon = '<i class="fas fa-book text-info"></i>';
+                            break;
+                        default:
+                            icon = '<i class="fas fa-info-circle text-secondary"></i>';
+                    }
+
+                    const created = new Date(activity.created_at);
+                    const diff = timeSince(created);
+
+                    return `
+                        <div class="activity-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">${icon}</div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">${activity.title}</h6>
+                                    <p class="small text-muted mb-0">${activity.description}</p>
+                                    <span class="small text-muted">${diff}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                }).join('');
+            } catch (error) {
+                console.error('Error al cargar actividades:', error);
+            }
+        }
+
+        // Función para mostrar el tiempo relativo
+        function timeSince(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            const intervals = {
+                año: 31536000,
+                mes: 2592000,
+                día: 86400,
+                hora: 3600,
+                minuto: 60,
+            };
+            for (const [key, value] of Object.entries(intervals)) {
+                const interval = Math.floor(seconds / value);
+                if (interval >= 1)
+                    return `hace ${interval} ${key}${interval > 1 ? 's' : ''}`;
+            }
+            return "justo ahora";
+        }
+
+        loadActivities();
+        setInterval(loadActivities, 10000); // Actualiza cada 10 segundos
+    });
 </script>
 
 @endsection
