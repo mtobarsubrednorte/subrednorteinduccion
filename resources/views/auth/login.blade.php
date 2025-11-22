@@ -42,9 +42,9 @@
             <button type="submit" class="btn-login pulse">Ingresar al Sistema</button>
 
             <div class="login-footer">
-                <a class="forgot-password" href="{{ route('password.request') }}">
+                <!-- <a class="forgot-password" href="{{ route('password.request') }}">
                     ¿Olvidaste tu contraseña?
-                </a>
+                </a> -->
 
                 <div class="register-link">
                     ¿No tienes una cuenta? <a href="{{ route('register') }}">Registrarse</a>
