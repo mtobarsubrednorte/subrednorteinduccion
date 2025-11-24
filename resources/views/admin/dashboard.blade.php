@@ -145,11 +145,9 @@
                         </table>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>
-                            Mostrando {{ $listaUsuarios->firstItem() }} - {{ $listaUsuarios->lastItem() }}
-                            de {{ $listaUsuarios->total() }} usuarios
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3 px-2">
+                        
+
                         <div>
                             {{ $listaUsuarios->links() }}
                         </div>

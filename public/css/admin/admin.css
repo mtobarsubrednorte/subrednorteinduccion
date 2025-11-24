@@ -677,3 +677,65 @@
         width: 100%;
     }
 }
+
+
+/* Contenedor de la paginación */
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 0.25rem;
+    gap: 5px; /* Espacio entre botones */
+}
+
+/* Estilo de los items (li) */
+.page-item {
+    display: block;
+}
+
+/* Estilo de los enlaces (a) y span */
+.page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff; /* Tu color primario */
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover */
+.page-link:hover {
+    z-index: 2;
+    color: #0056b3;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+/* Elemento activo (página actual) */
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #007bff; /* Fondo azul al activo */
+    border-color: #007bff;
+}
+
+/* Elemento deshabilitado */
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Arreglar los íconos SVG gigantes de Tailwind */
+.page-link svg {
+    width: 20px;
+    height: 20px;
+}
