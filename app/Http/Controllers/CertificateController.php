@@ -66,7 +66,7 @@ class CertificateController extends Controller
         Activity::create([
             'type' => 'certificado',
             'title' => 'Certificado emitido',
-            'description' => Auth::user()->name . ' completó el curso de Inducción',
+            'description' => Auth::user()->name . 'de la subred' . Auth::user()->subred .'completó el curso de Inducción',
         ]);
 
         return response()->download($fullPath);

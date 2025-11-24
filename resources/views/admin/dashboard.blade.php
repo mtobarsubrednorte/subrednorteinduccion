@@ -865,6 +865,8 @@
                     return;
                 }
 
+                console.log(activities)
+
                 container.innerHTML = activities.map(activity => {
                     let icon = '';
                     switch (activity.type) {
