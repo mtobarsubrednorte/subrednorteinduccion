@@ -218,7 +218,7 @@
                                     <option value="">Selecciona una Subred</option>
                                     <option value="Norte">Norte</option>
                                     <option value="Sur">Sur</option>
-                                    <option value="Sur Occodente">Sur Occodente</option>
+                                    <option value="Sur Occidente">Sur Occidente</option>
                                     <option value="Centro Oriente">Centro Oriente</option>
                                 </select>
                                 <button class="btn btn-success mt-2"><i class="fa-solid fa-file-excel"></i> Descargar Excel</button>

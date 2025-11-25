@@ -285,14 +285,15 @@
                         <div class="input-icon"><i class="fas fa-user-tag"></i></div>
                         <select id="profile_id" name="profile_id" required>
                             <option value="">Seleccione perfil</option>
-                            <option value="1" {{ old('profile_id') == '1' ? 'selected' : '' }}>Gestor</option>
-                            <option value="2" {{ old('profile_id') == '2' ? 'selected' : '' }}>Psicólogo</option>
-                            <option value="3" {{ old('profile_id') == '3' ? 'selected' : '' }}>Psicólogo Clínico</option>
-                            <option value="4" {{ old('profile_id') == '4' ? 'selected' : '' }}>Médico</option>
-                            <option value="5" {{ old('profile_id') == '5' ? 'selected' : '' }}>Enfermero</option>
-                            <option value="6" {{ old('profile_id') == '6' ? 'selected' : '' }}>Nutricionista</option>
-                            <option value="7" {{ old('profile_id') == '7' ? 'selected' : '' }}>Ingeniero</option>
+
+                            @foreach ($profiles as $profile)
+                                <option value="{{ $profile->id }}"
+                                    {{ old('profile_id') == $profile->id ? 'selected' : '' }}>
+                                    {{ $profile->name }}
+                                </option>
+                            @endforeach
                         </select>
+
                         @error('profile_id')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
