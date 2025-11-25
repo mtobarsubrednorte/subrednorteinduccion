@@ -73,8 +73,9 @@
                 <!-- Gestión de usuarios -->
                 <div class="table-container">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Gestión de Usuarios {{ Auth::user()->subred }}</h4>
-                        
+                        <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Gestión de Usuarios
+                            {{ Auth::user()->subred }}</h4>
+
 
                         <div class="search-box">
                             <form method="GET" action="{{ route('usuarios.index') }}">
@@ -124,8 +125,8 @@
                                                     style="display:inline; margin-left: 12px;">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-warning"><i class="fa-solid fa-xmark"></i></button>
+                                                    <button type="submit" class="btn btn-sm btn-warning"><i
+                                                            class="fa-solid fa-xmark"></i></button>
                                                 </form>
                                             @else
                                                 <span class="status-badge status-inactive">Inactivo</span>
@@ -146,7 +147,7 @@
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-3 px-2">
-                        
+
 
                         <div>
                             {{ $listaUsuarios->links() }}
@@ -168,7 +169,8 @@
                                         <div class="modulo-content-wrapper">
                                             <h5 class="modulo-title">{{ $curso->title }}</h5>
                                             <p class="modulo-description">{{ $curso->description }}</p>
-                                            <div class="modulo-actions-container d-flex justify-content-between align-items-center">
+                                            <div
+                                                class="modulo-actions-container d-flex justify-content-between align-items-center">
                                                 <button class="btn-modulo-edit btn-editar-curso"
                                                     data-info='@json($curso)'>
                                                     Editar
@@ -197,7 +199,7 @@
             <div class="col-md-4">
                 <!-- Acciones rápidas -->
 
-                        
+
                 <!-- Actividad reciente -->
                 <div class="card">
                     <div class="card-header">
@@ -210,19 +212,20 @@
 
                 <div class="card">
                     <div class="card-header">
-                         <h3><i class="fas fa-file"></i> Descargar Reporte</h3>
+                        <h3><i class="fas fa-file"></i> Descargar Reporte</h3>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('exportar.usuarios') }}" method="GET" class="align-items-center">
-                                <select name="subred" class="form-select me-2" required>
-                                    <option value="">Selecciona una Subred</option>
-                                    <option value="Norte">Norte</option>
-                                    <option value="Sur">Sur</option>
-                                    <option value="Sur Occidente">Sur Occidente</option>
-                                    <option value="Centro Oriente">Centro Oriente</option>
-                                </select>
-                                <button class="btn btn-success mt-2"><i class="fa-solid fa-file-excel"></i> Descargar Excel</button>
-                            </form>
+                            <select name="subred" class="form-select me-2" required>
+                                <option value="">Selecciona una Subred</option>
+                                <option value="Norte">Norte</option>
+                                <option value="Sur">Sur</option>
+                                <option value="Sur Occidente">Sur Occidente</option>
+                                <option value="Centro Oriente">Centro Oriente</option>
+                            </select>
+                            <button class="btn btn-success mt-2"><i class="fa-solid fa-file-excel"></i> Descargar
+                                Excel</button>
+                        </form>
 
                     </div>
 
@@ -234,13 +237,14 @@
                     </div>
                     <div class="card-body">
                         <label for="doc">Número de documento</label>
-                        <input class="form-control mb-2" type="text" id="doc" name="doc" placeholder="Ej: 12345678">
+                        <input class="form-control mb-2" type="text" id="doc" name="doc"
+                            placeholder="Ej: 12345678">
                         <button class="btn btn-info text-white" id="btnVerificar">Verificar ahora</button>
                     </div>
-                    </div>
+                </div>
 
-                    <!-- Modal de resultado -->
-                    <div class="modal fade" id="modalResultado" tabindex="-1" aria-hidden="true">
+                <!-- Modal de resultado -->
+                <div class="modal fade" id="modalResultado" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header bg-info text-white">
@@ -257,7 +261,7 @@
                     </div>
                 </div>
 
-               
+
             </div>
         </div>
     </div>
@@ -270,11 +274,34 @@
                     <input type="hidden" name="id" id="id_modulo">
 
 
+
+
+
                     <div class="modal-header">
                         <h5 id="titulo_modal" class="modal-title">Agregar Modulo</h5>
+
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="mb-3">
+                            <label><strong>Estado del Curso</strong></label><br>
+                            <label class="switch">
+                                <input type="checkbox" name="is_active" checked>
+                                <span class="slider round"></span>
+                            </label>
+                            <span id="isactive" class="ms-2">Activo</span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label><strong>Usuarios que podrán ver este curso</strong></label>
+                            <select name="visible_users[]" class="form-control" multiple style="height: 200px;">
+                                @foreach ($listaUsuarios as $u)
+                                    <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">Mantén presionado CTRL para seleccionar varios.</small>
+                        </div>
+
                         <div class="mb-3">
                             <label>Título</label>
                             <input type="text" name="title" class="form-control" required>
@@ -447,9 +474,13 @@
 
 
         function abrirModalEditar(info) {
-            console.log(info);
+            console.log(info.active);
             const modal = new bootstrap.Modal(document.getElementById('modalAgregarCurso'));
             modal.show();
+
+            const active = info.active === 1 ? true : false;
+            const selectedUsers = JSON.parse(info.active_users ?? "[]");
+            console.log(active)
 
             // Campos básicos
             document.getElementById('id_modulo').value = info.id || '';
@@ -459,6 +490,19 @@
             document.querySelector('[name="duration"]').value = info.duration || '';
             document.querySelector('[name="genilay_recursos_link1"]').value = info.genilay_recursos_link1 || '';
             document.querySelector('[name="genilay_recursos_link2"]').value = info.genilay_recursos_link2 || '';
+
+            document.querySelector("input[name='is_active']").checked = active;
+
+            if(active){
+                document.getElementById('isactive').textContent = 'Activo';
+            } else {
+                document.getElementById('isactive').textContent = 'Inactivo';
+            }
+
+            const select = document.querySelector("select[name='visible_users[]']");
+            [...select.options].forEach(option => {
+                option.selected = selectedUsers.includes(parseInt(option.value));
+            });
 
             // Limpiar contenedores dinámicos
             const stepsContainer = document.getElementById('steps-container');
@@ -812,18 +856,20 @@
             }
 
             fetch("{{ route('certificate.verify') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ doc })
-            })
-            .then(res => res.json())
-            .then(data => {
-                const contenido = document.getElementById('resultadoContenido');
-                if (data.success) {
-                    contenido.innerHTML = `
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        doc
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const contenido = document.getElementById('resultadoContenido');
+                    if (data.success) {
+                        contenido.innerHTML = `
                         <div class="text-center">
                             <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
                             <h5>${data.message}</h5>
@@ -833,60 +879,60 @@
                             <p><strong>Emitido el:</strong> ${data.certificado.created_at}</p>
                         </div>
                     `;
-                } else {
-                    contenido.innerHTML = `
+                    } else {
+                        contenido.innerHTML = `
                         <div class="text-center">
                             <i class="fas fa-times-circle text-danger fa-3x mb-3"></i>
                             <h5>${data.message}</h5>
                         </div>
                     `;
-                }
-
-                // Mostrar el modal
-                const modal = new bootstrap.Modal(document.getElementById('modalResultado'));
-                modal.show();
-            })
-            .catch(err => console.error(err));
-        });
-</script>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const container = document.getElementById('activity-container');
-
-        async function loadActivities() {
-            try {
-                const response = await fetch("{{ route('activities.recent') }}");
-                const activities = await response.json();
-
-                if (activities.length === 0) {
-                    container.innerHTML = `<p class="text-muted">No hay actividad reciente.</p>`;
-                    return;
-                }
-
-                console.log(activities)
-
-                container.innerHTML = activities.map(activity => {
-                    let icon = '';
-                    switch (activity.type) {
-                        case 'usuario':
-                            icon = '<i class="fas fa-user-check text-success"></i>';
-                            break;
-                        case 'certificado':
-                            icon = '<i class="fas fa-certificate text-primary"></i>';
-                            break;
-                        case 'modulo':
-                            icon = '<i class="fas fa-book text-info"></i>';
-                            break;
-                        default:
-                            icon = '<i class="fas fa-info-circle text-secondary"></i>';
                     }
 
-                    const created = new Date(activity.created_at);
-                    const diff = timeSince(created);
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalResultado'));
+                    modal.show();
+                })
+                .catch(err => console.error(err));
+        });
+    </script>
 
-                    return `
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('activity-container');
+
+            async function loadActivities() {
+                try {
+                    const response = await fetch("{{ route('activities.recent') }}");
+                    const activities = await response.json();
+
+                    if (activities.length === 0) {
+                        container.innerHTML = `<p class="text-muted">No hay actividad reciente.</p>`;
+                        return;
+                    }
+
+                    console.log(activities)
+
+                    container.innerHTML = activities.map(activity => {
+                        let icon = '';
+                        switch (activity.type) {
+                            case 'usuario':
+                                icon = '<i class="fas fa-user-check text-success"></i>';
+                                break;
+                            case 'certificado':
+                                icon = '<i class="fas fa-certificate text-primary"></i>';
+                                break;
+                            case 'modulo':
+                                icon = '<i class="fas fa-book text-info"></i>';
+                                break;
+                            default:
+                                icon = '<i class="fas fa-info-circle text-secondary"></i>';
+                        }
+
+                        const created = new Date(activity.created_at);
+                        const diff = timeSince(created);
+
+                        return `
                         <div class="activity-item mb-3">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">${icon}</div>
@@ -897,33 +943,32 @@
                                 </div>
                             </div>
                         </div>`;
-                }).join('');
-            } catch (error) {
-                console.error('Error al cargar actividades:', error);
+                    }).join('');
+                } catch (error) {
+                    console.error('Error al cargar actividades:', error);
+                }
             }
-        }
 
-        // Función para mostrar el tiempo relativo
-        function timeSince(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            const intervals = {
-                año: 31536000,
-                mes: 2592000,
-                día: 86400,
-                hora: 3600,
-                minuto: 60,
-            };
-            for (const [key, value] of Object.entries(intervals)) {
-                const interval = Math.floor(seconds / value);
-                if (interval >= 1)
-                    return `hace ${interval} ${key}${interval > 1 ? 's' : ''}`;
+            // Función para mostrar el tiempo relativo
+            function timeSince(date) {
+                const seconds = Math.floor((new Date() - date) / 1000);
+                const intervals = {
+                    año: 31536000,
+                    mes: 2592000,
+                    día: 86400,
+                    hora: 3600,
+                    minuto: 60,
+                };
+                for (const [key, value] of Object.entries(intervals)) {
+                    const interval = Math.floor(seconds / value);
+                    if (interval >= 1)
+                        return `hace ${interval} ${key}${interval > 1 ? 's' : ''}`;
+                }
+                return "justo ahora";
             }
-            return "justo ahora";
-        }
 
-        loadActivities();
-        setInterval(loadActivities, 10000); // Actualiza cada 10 segundos
-    });
-</script>
-
+            loadActivities();
+            setInterval(loadActivities, 10000); // Actualiza cada 10 segundos
+        });
+    </script>
 @endsection

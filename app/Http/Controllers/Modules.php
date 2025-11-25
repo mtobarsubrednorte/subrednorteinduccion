@@ -13,21 +13,45 @@ use App\Models\Certificate;
 class Modules extends Controller
 {
     public function showModulos()
-    {
-        $user = Auth::user();
-        $certificates = Certificate::where('user_id', $user->id)->get();
+{
+    $user = Auth::user();
+    $userId = $user->id;
 
-    
-        $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
-            ->whereNull('parent_id')
-            ->get();
+    $certificates = Certificate::where('user_id', $userId)->get();
 
-        return view('modules.module1', [
-            'modulos' => $modulos,  
-            'certificates' => $certificates,
+    $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
+        ->whereNull('parent_id')
+        ->where(function ($query) use ($userId) {
 
-        ]);
-    }
+            // Mostrar módulos activos visibles para todos
+            $query->where(function ($q) {
+                $q->where('active', true)
+                  ->whereNull('active_users');
+            });
+
+            // Mostrar módulos activos SOLO para ciertos usuarios
+            $query->orWhere(function ($q) use ($userId) {
+                $q->where('active', true)
+                  ->whereRaw("JSON_CONTAINS(COALESCE(active_users, '[]'), '\"$userId\"')");
+            });
+
+            // Mostrar módulos INACTIVOS solo si el usuario está en la lista
+            $query->orWhere(function ($q) use ($userId) {
+                $q->where('active', false)
+                  ->whereRaw("JSON_CONTAINS(COALESCE(active_users, '[]'), '\"$userId\"')");
+            });
+        })
+        ->get();
+
+    Log::info('Módulos obtenidos para el usuario ' . $userId . ': ' . $modulos->count());
+
+    return view('modules.module1', [
+        'modulos' => $modulos,
+        'certificates' => $certificates,
+    ]);
+}
+
+
 
 
     public function responder(Request $request, Modulos $modulo)
@@ -49,12 +73,12 @@ class Modules extends Controller
 
         foreach ($modulo->preguntas as $pregunta) {
             $respuestaUsuario = $respuestasUsuario[$pregunta->id] ?? null;
-            
+
             // Validar que la opción seleccionada existe
             if ($respuestaUsuario !== null && !isset($pregunta->opciones[$respuestaUsuario])) {
                 $respuestaUsuario = null;
             }
-            
+
             $esCorrecta = in_array((int) $respuestaUsuario, $pregunta->respuestas_correctas);
 
             if ($esCorrecta) {
@@ -79,16 +103,16 @@ class Modules extends Controller
         DB::table('modulo_user')->updateOrInsert(
             ['user_id' => $user->id, 'modulo_id' => $modulo->id],
             [
-                'calificacion' => $calificacion, 
-                'aprobado' => $aprobado, 
-                'updated_at' => now(), 
+                'calificacion' => $calificacion,
+                'aprobado' => $aprobado,
+                'updated_at' => now(),
                 'created_at' => DB::raw('IFNULL(created_at, NOW())')
             ]
         );
 
         return redirect()->back()->with([
-            'success' => "Terminaste el módulo {$modulo->title} con nota {$calificacion}/10. " . 
-                        ($aprobado ? "¡Aprobaste! 🎉" : "No aprobaste 😢"),
+            'success' => "Terminaste el módulo {$modulo->title} con nota {$calificacion}/10. " .
+                ($aprobado ? "¡Aprobaste! 🎉" : "No aprobaste 😢"),
             'resultado' => $resultado
         ]);
     }
