@@ -393,18 +393,40 @@
                                         <option value="text">Texto</option>
                                     </select>
 
-                                    <div class="tips-container mb-2" data-step="0">
+                                    <div class="tips-container mb-3" data-step="0">
                                         <label><strong>Tips del paso</strong></label>
 
-                                        <div class="tip-item d-flex mb-2">
-                                            <input type="text" name="steps[0][tips][]" class="form-control me-2" placeholder="Agregar tip">
-                                            <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
+                                        <!-- CONTENEDOR DE LISTAS DE TIPS -->
+                                        <div class="tips-list" id="tips-list-0">
+
+                                            <!-- Un bloque de tip -->
+                                            <div class="tip-block mb-3">
+                                                <input type="text" name="steps[0][tips][0][title]" class="form-control mb-2"
+                                                    placeholder="Título del bloque (ej: Validación)">
+
+                                                <div class="subtips-container">
+
+                                                    <!-- Sub-tip -->
+                                                    <div class="d-flex mb-2">
+                                                        <input type="text" name="steps[0][tips][0][items][]" class="form-control me-2"
+                                                            placeholder="Sub-tip (ej: Identificar si...)">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                    </div>
+
+                                                </div>
+
+                                                <button type="button" class="btn btn-secondary btn-sm add-subtip" data-step="0" data-tip="0">
+                                                    + Agregar sub-tip
+                                                </button>
+                                            </div>
+
                                         </div>
 
-                                        <button type="button" class="btn btn-primary btn-sm add-tip" data-step="0">
-                                            + Agregar tip
+                                        <button type="button" class="btn btn-primary btn-sm add-tip-block" data-step="0">
+                                            + Agregar bloque de tips
                                         </button>
                                     </div>
+
                                     
                                     <input type="file" name="steps[0][file]" class="form-control mb-2">
 
@@ -574,96 +596,177 @@
                 });
             }
 
+           
             // =====================
             // 1️⃣ Pasos
             // =====================
-            // Dentro de la función abrirModalEditar, reemplaza la sección de pasos (1️⃣ Pasos) con esto:
+            if (info.steps && info.steps.length) {
+                info.steps.forEach((step, index) => {
+                    // Construir los tips existentes (si los hay)
+                    console.log(step.tips);
 
-// =====================
-// 1️⃣ Pasos
-// =====================
-if (info.steps && info.steps.length) {
-    info.steps.forEach((step, index) => {
-        // Construir los tips existentes (si los hay)
-        console.log(step.tips);
-        let tips = [];
+                    let tips = [];
 
-        try {
-            tips = step.tips ? JSON.parse(step.tips) : [];
-        } catch (e) {
-            tips = []; // Si falla el JSON, evita errores
-        }
+                    try {
+                        tips = step.tips ? JSON.parse(step.tips) : [];
+                    } catch (e) {
+                        tips = [];
+                    }
 
-        let tipsHTML = "";
+                    let tipsHTML = "";
 
-        if (tips.length) {
-            tips.forEach(tip => {
-                tipsHTML += `
-                    <div class="tip-item d-flex mb-2">
-                        <input type="text" name="steps[${index}][tips][]" class="form-control me-2" value="${tip}" placeholder="Agregar tip">
-                        <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
-                    </div>
-                `;
-            });
-        } else {
-            tipsHTML = `
-                <div class="tip-item d-flex mb-2">
-                    <input type="text" name="steps[${index}][tips][]" class="form-control me-2" placeholder="Agregar tip">
-                    <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
-                </div>
-            `;
-        }
+                    console.log(tips);
+
+                    // Si existen bloques de tips
+                    if (tips.length > 0) {
+
+                        tips.forEach((tipBlock, tipIndex) => {
+
+                            let itemsHTML = "";
+
+                            console.log(tipBlock.items)
+                            // Sub-tips
+                            if (tipBlock.items && tipBlock.items.length > 0) {
+                                tipBlock.items.forEach(item => {
+                                    itemsHTML += `
+                                        <div class="d-flex mb-2">
+                                            <input type="text"
+                                                name="steps[${index}][tips][${tipIndex}][items][]"
+                                                class="form-control me-2"
+                                                value="${item}"
+                                                placeholder="Sub-tip">
+                                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                        </div>
+                                    `;
+                                });
+                            } else {
+                                // Si no hay items, agregamos uno vacío
+                                itemsHTML = `
+                                    <div class="d-flex mb-2">
+                                        <input type="text"
+                                            name="steps[${index}][tips][${tipIndex}][items][]"
+                                            class="form-control me-2"
+                                            placeholder="Sub-tip">
+                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                    </div>
+                                `;
+                            }
+
+                            // Construimos el bloque completo
+                            tipsHTML += `
+                                <div class="tip-block mb-3">
+
+                                    <input type="text"
+                                        name="steps[${index}][tips][${tipIndex}][title]"
+                                        class="form-control mb-2"
+                                        value="${tipBlock.title ?? ''}"
+                                        placeholder="Título del bloque">
+
+                                    <div class="subtips-container">
+                                        ${itemsHTML}
+                                    </div>
+
+                                    <button type="button"
+                                            class="btn btn-secondary btn-sm add-subtip"
+                                            data-step="${index}"
+                                            data-tip="${tipIndex}">
+                                        + Agregar sub-tip
+                                    </button>
+
+                                </div>
+                            `;
+                        });
+
+                    } else {
+
+                        // Si no hay ningún tip → agregar un bloque vacío
+                        tipsHTML = `
+                            <div class="tip-block mb-3">
+
+                                <input type="text"
+                                    name="steps[${index}][tips][0][title]"
+                                    class="form-control mb-2"
+                                    placeholder="Título del bloque">
+
+                                <div class="subtips-container">
+                                    <div class="d-flex mb-2">
+                                        <input type="text"
+                                            name="steps[${index}][tips][0][items][]"
+                                            class="form-control me-2"
+                                            placeholder="Sub-tip">
+                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                    </div>
+                                </div>
+
+                                <button type="button"
+                                        class="btn btn-secondary btn-sm add-subtip"
+                                        data-step="${index}"
+                                        data-tip="0">
+                                    + Agregar sub-tip
+                                </button>
+
+                            </div>
+                        `;
+                    }
 
 
-        const stepHTML = `
-            <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
-                <input type="hidden" name="steps[${index}][id]" value="${step.id}">
 
-                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
-                <select name="steps[${index}][icon]" class="form-control mb-2">
-                    <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
-                </select>
-                <select name="steps[${index}][type]" class="form-control mb-2">
-                    <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
-                </select>
-                ${step.type == 'image' 
-                    ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
-                    : ''
-                }
-                ${step.type == 'video' 
-                    ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
-                    : ''
-                }
-                <input type="file" name="steps[${index}][file]" class="form-control mb-2">
+                    const stepHTML = `
+                        <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
+                            <input type="hidden" name="steps[${index}][id]" value="${step.id}">
 
-                <!-- Tips Container -->
-                <div class="tips-container mb-2" data-step="${index}">
-                    <label><strong>Tips del paso</strong></label>
-                    ${tipsHTML}
-                    <button type="button" class="btn btn-primary btn-sm add-tip" data-step="${index}">
-                        + Agregar tip
-                    </button>
-                </div>
-            </div>`;
-        stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
-    });
+                            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
+                            <select name="steps[${index}][icon]" class="form-control mb-2">
+                                <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
+                            </select>
+                            <select name="steps[${index}][type]" class="form-control mb-2">
+                                <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
+                            </select>
+                            ${step.type == 'image' 
+                                ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
+                                : ''
+                            }
+                            ${step.type == 'video' 
+                                ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
+                                : ''
+                            }
+                            <input type="file" name="steps[${index}][file]" class="form-control mb-2">
 
-    // 🔥 Evento eliminar paso (igual que antes)
-    stepsContainer.querySelectorAll('.btn-remove-step').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const stepId = btn.getAttribute('data-id');
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'delete_steps[]';
-            input.value = stepId;
-            stepsContainer.appendChild(input);
-            btn.closest('.step').remove();
-        });
-    });
-}
+                            <!-- Tips Container -->
+                            <div class="tips-container mb-2" data-step="${index}">
+                                <label><strong>Tips del paso</strong></label>
+
+                                <!-- CONTENEDOR QUE EL JS NECESITA -->
+                                <div class="tips-list" id="tips-list-${index}">
+                                    ${tipsHTML}
+                                </div>
+
+                                <button type="button" class="btn btn-primary btn-sm add-tip-block"
+                                        data-step="${index}">
+                                    + Agregar bloque de tips
+                                </button>
+                            </div>
+
+                        </div>`;
+                    stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
+                });
+
+                // 🔥 Evento eliminar paso (igual que antes)
+                stepsContainer.querySelectorAll('.btn-remove-step').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const stepId = btn.getAttribute('data-id');
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'delete_steps[]';
+                        input.value = stepId;
+                        stepsContainer.appendChild(input);
+                        btn.closest('.step').remove();
+                    });
+                });
+            }
 
             // =====================
             // 2️⃣ Imágenes
@@ -1032,28 +1135,89 @@ if (info.steps && info.steps.length) {
     <script>
 document.addEventListener("click", function(e) {
 
-    // Agregar Tip
-    if (e.target.classList.contains("add-tip")) {
+    /* -------------------------------------------------
+       AGREGAR BLOQUE DE TIPS
+       ------------------------------------------------- */
+    if (e.target.classList.contains("add-tip-block")) {
+
         let stepIndex = e.target.getAttribute("data-step");
-        let container = document.querySelector(`.tips-container[data-step="${stepIndex}"]`);
+        let tipsList = document.getElementById(`tips-list-${stepIndex}`);
 
-        let newTip = document.createElement("div");
-        newTip.classList.add("tip-item", "d-flex", "mb-2");
+        // Cuántos bloques existen actualmente
+        let newTipIndex = tipsList.querySelectorAll(".tip-block").length;
 
-        newTip.innerHTML = `
-            <input type="text" name="steps[${stepIndex}][tips][]" class="form-control me-2" placeholder="Agregar tip">
-            <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
+        let block = document.createElement("div");
+        block.classList.add("tip-block", "mb-3");
+
+        block.innerHTML = `
+            <input type="text" name="steps[${stepIndex}][tips][${newTipIndex}][title]"
+                   class="form-control mb-2" placeholder="Título del bloque">
+
+            <div class="subtips-container">
+
+                <div class="d-flex mb-2">
+                    <input type="text"
+                           name="steps[${stepIndex}][tips][${newTipIndex}][items][]"
+                           class="form-control me-2"
+                           placeholder="Sub-tip">
+                    <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                </div>
+
+            </div>
+
+            <button type="button" class="btn btn-secondary btn-sm add-subtip"
+                    data-step="${stepIndex}" data-tip="${newTipIndex}">
+                + Agregar sub-tip
+            </button>
+
+            <button type="button" class="btn btn-danger btn-sm remove-tip-block mt-2">
+                Eliminar bloque
+            </button>
         `;
 
-        container.insertBefore(newTip, e.target);
+        tipsList.appendChild(block);
     }
 
-    // Eliminar Tip
-    if (e.target.classList.contains("remove-tip")) {
+    /* -------------------------------------------------
+       AGREGAR SUB-TIP
+       ------------------------------------------------- */
+    if (e.target.classList.contains("add-subtip")) {
+
+        let stepIndex = e.target.getAttribute("data-step");
+        let tipIndex  = e.target.getAttribute("data-tip");
+
+        let container = e.target.closest(".tip-block").querySelector(".subtips-container");
+
+        let sub = document.createElement("div");
+        sub.classList.add("d-flex", "mb-2");
+
+        sub.innerHTML = `
+            <input type="text"
+                   name="steps[${stepIndex}][tips][${tipIndex}][items][]"
+                   class="form-control me-2"
+                   placeholder="Sub-tip">
+            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+        `;
+
+        container.appendChild(sub);
+    }
+
+    /* -------------------------------------------------
+       ELIMINAR SUB-TIP
+       ------------------------------------------------- */
+    if (e.target.classList.contains("remove-subtip")) {
         e.target.parentElement.remove();
+    }
+
+    /* -------------------------------------------------
+       ELIMINAR BLOQUE COMPLETO
+       ------------------------------------------------- */
+    if (e.target.classList.contains("remove-tip-block")) {
+        e.target.closest(".tip-block").remove();
     }
 
 });
 </script>
+
 
 @endsection
