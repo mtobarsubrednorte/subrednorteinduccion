@@ -83,8 +83,11 @@ class DashboardController extends Controller
     {
         // Normalizar valores
         $data = $request->only([
-            'title', 'description', 'duration',
-            'genilay_recursos_link1', 'genilay_recursos_link2',
+            'title',
+            'description',
+            'duration',
+            'genilay_recursos_link1',
+            'genilay_recursos_link2',
             'parent_id'
         ]);
 
@@ -147,9 +150,13 @@ class DashboardController extends Controller
         if ($request->has('steps')) {
             $stepIdsInRequest = [];
 
+            Log::info('Steps recibidos:', $request->steps);
+
             foreach ($request->steps as $stepData) {
 
+                // ACTUALIZAR STEP
                 if (!empty($stepData['id'])) {
+
                     $step = $modulo->steps()->find($stepData['id']);
                     if ($step) {
 
@@ -167,12 +174,17 @@ class DashboardController extends Controller
                             'icon' => $stepData['icon'] ?? null,
                             'type' => $stepData['type'] ?? null,
                             'file' => $stepData['file'],
+                            'tips' => $stepData['tips'] ?? [],   // ← ← AQUI
                         ]);
 
                         $stepIdsInRequest[] = $step->id;
                     }
-                } else {
+                }
+
+                // CREAR STEP NUEVO
+                else {
                     $filePath = null;
+
                     if (isset($stepData['file']) && $stepData['file']) {
                         $filePath = $stepData['file']->store('steps', 'public');
                     }
@@ -182,11 +194,13 @@ class DashboardController extends Controller
                         'icon' => $stepData['icon'] ?? null,
                         'type' => $stepData['type'] ?? null,
                         'file' => $filePath,
+                        'tips' => $stepData['tips'] ?? [],   // ← ← AQUI
                     ]);
 
                     $stepIdsInRequest[] = $newStep->id;
                 }
             }
+
 
             $modulo->steps()
                 ->whereNotIn('id', $stepIdsInRequest)
@@ -250,8 +264,7 @@ class DashboardController extends Controller
                     }
 
                     $imagen->save();
-                } 
-                else {
+                } else {
                     $uploaded = $request->file("imagenes.$index.file");
                     if ($uploaded) {
                         $path = $uploaded->store('modulos/imagenes', 'public');
@@ -272,10 +285,6 @@ class DashboardController extends Controller
     public function exportUsuarios(Request $request)
     {
         $subred = $request->input('subred');
-        return Excel::download(new UsuariosExport($subred), 'usuarios_'.$subred.'.xlsx');
+        return Excel::download(new UsuariosExport($subred), 'usuarios_' . $subred . '.xlsx');
     }
-
-
-
-
 }

@@ -273,15 +273,12 @@
                 <div class="modal-content">
                     <input type="hidden" name="id" id="id_modulo">
 
-
-
-
-
                     <div class="modal-header">
                         <h5 id="titulo_modal" class="modal-title">Agregar Modulo</h5>
 
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
+
                     <div class="modal-body">
                         <div class="mb-3">
                             <label><strong>Estado del Curso</strong></label><br>
@@ -395,11 +392,28 @@
                                         <option value="video">Video</option>
                                         <option value="text">Texto</option>
                                     </select>
+
+                                    <div class="tips-container mb-2" data-step="0">
+                                        <label><strong>Tips del paso</strong></label>
+
+                                        <div class="tip-item d-flex mb-2">
+                                            <input type="text" name="steps[0][tips][]" class="form-control me-2" placeholder="Agregar tip">
+                                            <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
+                                        </div>
+
+                                        <button type="button" class="btn btn-primary btn-sm add-tip" data-step="0">
+                                            + Agregar tip
+                                        </button>
+                                    </div>
+                                    
                                     <input type="file" name="steps[0][file]" class="form-control mb-2">
+
                                 </div>
 
 
                             </div>
+
+                            
 
                             <button type="button" class="btn btn-outline-primary btn-sm" id="addStep">+ Agregar
                                 Paso</button>
@@ -563,50 +577,93 @@
             // =====================
             // 1️⃣ Pasos
             // =====================
-            if (info.steps && info.steps.length) {
-                info.steps.forEach((step, index) => {
-                    const stepHTML = `
-                <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
-                    <input type="hidden" name="steps[${index}][id]" value="${step.id}">
+            // Dentro de la función abrirModalEditar, reemplaza la sección de pasos (1️⃣ Pasos) con esto:
 
-                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
-                        <i class="fa-solid fa-xmark"></i>
+// =====================
+// 1️⃣ Pasos
+// =====================
+if (info.steps && info.steps.length) {
+    info.steps.forEach((step, index) => {
+        // Construir los tips existentes (si los hay)
+        console.log(step.tips);
+        let tips = [];
+
+        try {
+            tips = step.tips ? JSON.parse(step.tips) : [];
+        } catch (e) {
+            tips = []; // Si falla el JSON, evita errores
+        }
+
+        let tipsHTML = "";
+
+        if (tips.length) {
+            tips.forEach(tip => {
+                tipsHTML += `
+                    <div class="tip-item d-flex mb-2">
+                        <input type="text" name="steps[${index}][tips][]" class="form-control me-2" value="${tip}" placeholder="Agregar tip">
+                        <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
+                    </div>
+                `;
+            });
+        } else {
+            tipsHTML = `
+                <div class="tip-item d-flex mb-2">
+                    <input type="text" name="steps[${index}][tips][]" class="form-control me-2" placeholder="Agregar tip">
+                    <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
+                </div>
+            `;
+        }
+
+
+        const stepHTML = `
+            <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
+                <input type="hidden" name="steps[${index}][id]" value="${step.id}">
+
+                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
+                <select name="steps[${index}][icon]" class="form-control mb-2">
+                    <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
+                </select>
+                <select name="steps[${index}][type]" class="form-control mb-2">
+                    <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
+                </select>
+                ${step.type == 'image' 
+                    ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
+                    : ''
+                }
+                ${step.type == 'video' 
+                    ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
+                    : ''
+                }
+                <input type="file" name="steps[${index}][file]" class="form-control mb-2">
+
+                <!-- Tips Container -->
+                <div class="tips-container mb-2" data-step="${index}">
+                    <label><strong>Tips del paso</strong></label>
+                    ${tipsHTML}
+                    <button type="button" class="btn btn-primary btn-sm add-tip" data-step="${index}">
+                        + Agregar tip
                     </button>
-                    <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
-                    <select name="steps[${index}][icon]" class="form-control mb-2">
-                        <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
-                    </select>
-                    <select name="steps[${index}][type]" class="form-control mb-2">
-                        <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
-                    </select>
-                    ${step.type == 'image' 
-                        ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
-                        : ''
-                        }
+                </div>
+            </div>`;
+        stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
+    });
 
-                        ${step.type == 'video' 
-                        ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
-                        : ''
-                        }
-
-
-                </div>`;
-                    stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
-                });
-
-                // 🔥 Evento eliminar paso
-                stepsContainer.querySelectorAll('.btn-remove-step').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const stepId = btn.getAttribute('data-id');
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'delete_steps[]';
-                        input.value = stepId;
-                        stepsContainer.appendChild(input);
-                        btn.closest('.step').remove();
-                    });
-                });
-            }
+    // 🔥 Evento eliminar paso (igual que antes)
+    stepsContainer.querySelectorAll('.btn-remove-step').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const stepId = btn.getAttribute('data-id');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'delete_steps[]';
+            input.value = stepId;
+            stepsContainer.appendChild(input);
+            btn.closest('.step').remove();
+        });
+    });
+}
 
             // =====================
             // 2️⃣ Imágenes
@@ -971,4 +1028,32 @@
             setInterval(loadActivities, 10000); // Actualiza cada 10 segundos
         });
     </script>
+
+    <script>
+document.addEventListener("click", function(e) {
+
+    // Agregar Tip
+    if (e.target.classList.contains("add-tip")) {
+        let stepIndex = e.target.getAttribute("data-step");
+        let container = document.querySelector(`.tips-container[data-step="${stepIndex}"]`);
+
+        let newTip = document.createElement("div");
+        newTip.classList.add("tip-item", "d-flex", "mb-2");
+
+        newTip.innerHTML = `
+            <input type="text" name="steps[${stepIndex}][tips][]" class="form-control me-2" placeholder="Agregar tip">
+            <button type="button" class="btn btn-danger btn-sm remove-tip">X</button>
+        `;
+
+        container.insertBefore(newTip, e.target);
+    }
+
+    // Eliminar Tip
+    if (e.target.classList.contains("remove-tip")) {
+        e.target.parentElement.remove();
+    }
+
+});
+</script>
+
 @endsection

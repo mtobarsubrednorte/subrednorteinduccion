@@ -243,6 +243,19 @@
             </video>
           @endif
 
+          
+          @if(!empty($step->tips))
+            <div class="tips-section">
+              <h3>Consejos:</h3>
+              <ul>
+                @foreach(json_decode($step->tips, true) as $tip)
+                  <li>{{ $tip }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+          
+
           <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeModal({{ $step->id }})">Cerrar</button>
             <button id="btn-complete-{{ $step->id }}" class="btn btn-primary" @if($step['type'] === 'video') disabled @endif
