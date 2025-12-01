@@ -38,8 +38,8 @@ class UsuariosExport implements FromView
                     ->where('user_id', $user->id)
                     ->count();
 
-                $user->document_number = $user->profile->document_number ?? 'No registrado';
-                $user->gender = $user->profile->gender ?? 'No registrado';
+                $user->document_number = $user->document_number ?? 'No registrado';
+                $user->gender = $user->gender ?? 'No registrado';
 
 
                 return $user;

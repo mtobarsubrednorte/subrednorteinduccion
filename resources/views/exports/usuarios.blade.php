@@ -2,6 +2,8 @@
     <thead>
         <tr>
             <th>Nombre</th>
+            <th>Cedula</th>
+            <th>Genero</th>
             <th>Email</th>
             <th>Rol</th>
             <th>Subred</th>
@@ -14,6 +16,8 @@
         @foreach($usuarios as $u)
         <tr>
             <td>{{ $u->name }}</td>
+            <td>{{ $u->document_number }}</td>
+            <td>{{ $u->gender }}</td>
             <td>{{ $u->email }}</td>
             <td>{{ $u->profile->name ?? 'Sin perfil' }}</td>
             <td>{{ $u->subred }}</td>
