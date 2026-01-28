@@ -8,7 +8,7 @@ use App\Http\Controllers\ModuleController;
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CertificateController;
-use App\Http\Controllers\PerfilController;  
+use App\Http\Controllers\PerfilController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -91,6 +91,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::patch('/usuarios/{id}/toggle', [DashboardController::class, 'toggleEstado'])->name('usuarios.toggle');
     Route::get('/usuarios', [DashboardController::class, 'searchUsuarios'])->name('usuarios.index');
     Route::post('/admin/modulos', [DashboardController::class, 'storeModulo'])->name('modulos.store');
+
+    Route::prefix('admin/modulos')->group(function () {
+        Route::get('/create', [Modules::class, 'create'])->name('modulos.create');
+        Route::post('/', [Modules::class, 'storeModulo'])->name('modulos.store');
+
+        Route::get('/{modulo}/edit', [Modules::class, 'edit'])->name('modulos.edit');
+        Route::put('/{modulo}', [Modules::class, 'update'])->name('modulos.update');
+    });
 
 
 

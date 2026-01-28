@@ -8,6 +8,11 @@ class Step extends Model
 {
     protected $fillable = ['modulo_id', 'text', 'icon', 'type', 'file', 'tips'];
 
+    // ESTO ES LO QUE FALTA:
+    protected $casts = [
+        'tips' => 'array',
+    ];
+
     public function modulo()
     {
         return $this->belongsTo(Modulos::class, 'modulo_id');
@@ -19,5 +24,4 @@ class Step extends Model
             ->withPivot('completed_at')
             ->withTimestamps();
     }
-
 }

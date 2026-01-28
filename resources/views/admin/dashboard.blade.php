@@ -74,14 +74,15 @@
                 <div class="table-container">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>Gestión de Usuarios
-                            {{ Auth::user()->subred }}</h4>
+                            {{ Auth::user()->subred }}
+                        </h4>
 
 
                         <div class="search-box">
                             <form method="GET" action="{{ route('usuarios.index') }}">
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Buscar usuario..." value="{{ request('search') }}">
+                                    <input type="text" name="search" class="form-control" placeholder="Buscar usuario..."
+                                        value="{{ request('search') }}">
                                     <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
@@ -171,10 +172,9 @@
                                             <p class="modulo-description">{{ $curso->description }}</p>
                                             <div
                                                 class="modulo-actions-container d-flex justify-content-between align-items-center">
-                                                <button class="btn-modulo-edit btn-editar-curso"
-                                                    data-info='@json($curso)'>
+                                                <a href="{{ route('modulos.edit', $curso->id) }}" class="btn-modulo-edit">
                                                     Editar
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -187,9 +187,11 @@
                             </div>
                         </div>
 
-                        <button class="btn-add-modulo btn mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarCurso">
+
+
+                        <a href="{{ route('modulos.create') }}" class="btn btn-primary mb-3">
                             <i class="fas fa-plus"></i> Agregar Curso
-                        </button>
+                        </a>
                     </div>
                 </div>
 
@@ -237,8 +239,7 @@
                     </div>
                     <div class="card-body">
                         <label for="doc">Número de documento</label>
-                        <input class="form-control mb-2" type="text" id="doc" name="doc"
-                            placeholder="Ej: 12345678">
+                        <input class="form-control mb-2" type="text" id="doc" name="doc" placeholder="Ej: 12345678">
                         <button class="btn btn-info text-white" id="btnVerificar">Verificar ahora</button>
                     </div>
                 </div>
@@ -408,14 +409,17 @@
 
                                                     <!-- Sub-tip -->
                                                     <div class="d-flex mb-2">
-                                                        <input type="text" name="steps[0][tips][0][items][]" class="form-control me-2"
+                                                        <input type="text" name="steps[0][tips][0][items][]"
+                                                            class="form-control me-2"
                                                             placeholder="Sub-tip (ej: Identificar si...)">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-sm remove-subtip">X</button>
                                                     </div>
 
                                                 </div>
 
-                                                <button type="button" class="btn btn-secondary btn-sm add-subtip" data-step="0" data-tip="0">
+                                                <button type="button" class="btn btn-secondary btn-sm add-subtip"
+                                                    data-step="0" data-tip="0">
                                                     + Agregar sub-tip
                                                 </button>
                                             </div>
@@ -427,7 +431,7 @@
                                         </button>
                                     </div>
 
-                                    
+
                                     <input type="file" name="steps[0][file]" class="form-control mb-2">
 
                                 </div>
@@ -435,7 +439,7 @@
 
                             </div>
 
-                            
+
 
                             <button type="button" class="btn btn-outline-primary btn-sm" id="addStep">+ Agregar
                                 Paso</button>
@@ -471,8 +475,8 @@
                                         placeholder="Pregunta">
                                     <div class="opciones">
                                         <div class="d-flex mb-1">
-                                            <input type="text" name="preguntas[0][opciones][]"
-                                                class="form-control me-2" placeholder="Opción">
+                                            <input type="text" name="preguntas[0][opciones][]" class="form-control me-2"
+                                                placeholder="Opción">
                                             <label><input type="checkbox" name="preguntas[0][respuestas_correctas][]"
                                                     value="0">
                                                 Correcta</label>
@@ -529,7 +533,7 @@
 
             document.querySelector("input[name='is_active']").checked = active;
 
-            if(active){
+            if (active) {
                 document.getElementById('isactive').textContent = 'Activo';
             } else {
                 document.getElementById('isactive').textContent = 'Inactivo';
@@ -560,25 +564,25 @@
                     const iconClass = extension === 'pdf' ?
                         'fa-file-pdf text-danger' :
                         (extension === 'doc' || extension === 'docx') ?
-                        'fa-file-word text-primary' :
-                        'fa-file text-secondary';
+                            'fa-file-word text-primary' :
+                            'fa-file text-secondary';
 
                     const recursoHTML = `
-                <div class="card shadow-sm recurso-card position-relative" style="width: 150px; border-radius: 10px;">
-                    <div class="card-body text-center p-2">
-                        <i class="fa-solid ${iconClass}" style="font-size: 2.5rem;"></i>
-                        <p class="mt-2 mb-1 small fw-semibold text-truncate" title="${recurso.original_name}">
-                            ${recurso.original_name}
-                        </p>
-                        <a href="/storage/${recurso.file_path}" target="_blank" class="btn btn-sm btn-outline-primary w-100 mb-1">
-                            Ver
-                        </a>
-                        <button type="button" class="btn btn-sm btn-outline-danger w-100 btn-remove-recurso" data-id="${recurso.id}">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                </div>
-            `;
+                                <div class="card shadow-sm recurso-card position-relative" style="width: 150px; border-radius: 10px;">
+                                    <div class="card-body text-center p-2">
+                                        <i class="fa-solid ${iconClass}" style="font-size: 2.5rem;"></i>
+                                        <p class="mt-2 mb-1 small fw-semibold text-truncate" title="${recurso.original_name}">
+                                            ${recurso.original_name}
+                                        </p>
+                                        <a href="/storage/${recurso.file_path}" target="_blank" class="btn btn-sm btn-outline-primary w-100 mb-1">
+                                            Ver
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger w-100 btn-remove-recurso" data-id="${recurso.id}">
+                                            <i class="fa-solid fa-trash"></i> Eliminar
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
                     recursosContainer.insertAdjacentHTML('beforeend', recursoHTML);
                 });
 
@@ -596,7 +600,7 @@
                 });
             }
 
-           
+
             // =====================
             // 1️⃣ Pasos
             // =====================
@@ -629,128 +633,128 @@
                             if (tipBlock.items && tipBlock.items.length > 0) {
                                 tipBlock.items.forEach(item => {
                                     itemsHTML += `
-                                        <div class="d-flex mb-2">
-                                            <input type="text"
-                                                name="steps[${index}][tips][${tipIndex}][items][]"
-                                                class="form-control me-2"
-                                                value="${item}"
-                                                placeholder="Sub-tip">
-                                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-                                        </div>
-                                    `;
+                                                        <div class="d-flex mb-2">
+                                                            <input type="text"
+                                                                name="steps[${index}][tips][${tipIndex}][items][]"
+                                                                class="form-control me-2"
+                                                                value="${item}"
+                                                                placeholder="Sub-tip">
+                                                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                        </div>
+                                                    `;
                                 });
                             } else {
                                 // Si no hay items, agregamos uno vacío
                                 itemsHTML = `
-                                    <div class="d-flex mb-2">
-                                        <input type="text"
-                                            name="steps[${index}][tips][${tipIndex}][items][]"
-                                            class="form-control me-2"
-                                            placeholder="Sub-tip">
-                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-                                    </div>
-                                `;
+                                                    <div class="d-flex mb-2">
+                                                        <input type="text"
+                                                            name="steps[${index}][tips][${tipIndex}][items][]"
+                                                            class="form-control me-2"
+                                                            placeholder="Sub-tip">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                    </div>
+                                                `;
                             }
 
                             // Construimos el bloque completo
                             tipsHTML += `
-                                <div class="tip-block mb-3">
+                                                <div class="tip-block mb-3">
 
-                                    <input type="text"
-                                        name="steps[${index}][tips][${tipIndex}][title]"
-                                        class="form-control mb-2"
-                                        value="${tipBlock.title ?? ''}"
-                                        placeholder="Título del bloque">
+                                                    <input type="text"
+                                                        name="steps[${index}][tips][${tipIndex}][title]"
+                                                        class="form-control mb-2"
+                                                        value="${tipBlock.title ?? ''}"
+                                                        placeholder="Título del bloque">
 
-                                    <div class="subtips-container">
-                                        ${itemsHTML}
-                                    </div>
+                                                    <div class="subtips-container">
+                                                        ${itemsHTML}
+                                                    </div>
 
-                                    <button type="button"
-                                            class="btn btn-secondary btn-sm add-subtip"
-                                            data-step="${index}"
-                                            data-tip="${tipIndex}">
-                                        + Agregar sub-tip
-                                    </button>
+                                                    <button type="button"
+                                                            class="btn btn-secondary btn-sm add-subtip"
+                                                            data-step="${index}"
+                                                            data-tip="${tipIndex}">
+                                                        + Agregar sub-tip
+                                                    </button>
 
-                                </div>
-                            `;
+                                                </div>
+                                            `;
                         });
 
                     } else {
 
                         // Si no hay ningún tip → agregar un bloque vacío
                         tipsHTML = `
-                            <div class="tip-block mb-3">
+                                            <div class="tip-block mb-3">
 
-                                <input type="text"
-                                    name="steps[${index}][tips][0][title]"
-                                    class="form-control mb-2"
-                                    placeholder="Título del bloque">
+                                                <input type="text"
+                                                    name="steps[${index}][tips][0][title]"
+                                                    class="form-control mb-2"
+                                                    placeholder="Título del bloque">
 
-                                <div class="subtips-container">
-                                    <div class="d-flex mb-2">
-                                        <input type="text"
-                                            name="steps[${index}][tips][0][items][]"
-                                            class="form-control me-2"
-                                            placeholder="Sub-tip">
-                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-                                    </div>
-                                </div>
+                                                <div class="subtips-container">
+                                                    <div class="d-flex mb-2">
+                                                        <input type="text"
+                                                            name="steps[${index}][tips][0][items][]"
+                                                            class="form-control me-2"
+                                                            placeholder="Sub-tip">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                    </div>
+                                                </div>
 
-                                <button type="button"
-                                        class="btn btn-secondary btn-sm add-subtip"
-                                        data-step="${index}"
-                                        data-tip="0">
-                                    + Agregar sub-tip
-                                </button>
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm add-subtip"
+                                                        data-step="${index}"
+                                                        data-tip="0">
+                                                    + Agregar sub-tip
+                                                </button>
 
-                            </div>
-                        `;
+                                            </div>
+                                        `;
                     }
 
 
 
                     const stepHTML = `
-                        <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
-                            <input type="hidden" name="steps[${index}][id]" value="${step.id}">
+                                        <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
+                                            <input type="hidden" name="steps[${index}][id]" value="${step.id}">
 
-                            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                            <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
-                            <select name="steps[${index}][icon]" class="form-control mb-2">
-                                <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
-                            </select>
-                            <select name="steps[${index}][type]" class="form-control mb-2">
-                                <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
-                            </select>
-                            ${step.type == 'image' 
-                                ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
-                                : ''
-                            }
-                            ${step.type == 'video' 
-                                ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
-                                : ''
-                            }
-                            <input type="file" name="steps[${index}][file]" class="form-control mb-2">
+                                            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                            <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
+                                            <select name="steps[${index}][icon]" class="form-control mb-2">
+                                                <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
+                                            </select>
+                                            <select name="steps[${index}][type]" class="form-control mb-2">
+                                                <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
+                                            </select>
+                                            ${step.type == 'image'
+                            ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
+                            : ''
+                        }
+                                            ${step.type == 'video'
+                            ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
+                            : ''
+                        }
+                                            <input type="file" name="steps[${index}][file]" class="form-control mb-2">
 
-                            <!-- Tips Container -->
-                            <div class="tips-container mb-2" data-step="${index}">
-                                <label><strong>Tips del paso</strong></label>
+                                            <!-- Tips Container -->
+                                            <div class="tips-container mb-2" data-step="${index}">
+                                                <label><strong>Tips del paso</strong></label>
 
-                                <!-- CONTENEDOR QUE EL JS NECESITA -->
-                                <div class="tips-list" id="tips-list-${index}">
-                                    ${tipsHTML}
-                                </div>
+                                                <!-- CONTENEDOR QUE EL JS NECESITA -->
+                                                <div class="tips-list" id="tips-list-${index}">
+                                                    ${tipsHTML}
+                                                </div>
 
-                                <button type="button" class="btn btn-primary btn-sm add-tip-block"
-                                        data-step="${index}">
-                                    + Agregar bloque de tips
-                                </button>
-                            </div>
+                                                <button type="button" class="btn btn-primary btn-sm add-tip-block"
+                                                        data-step="${index}">
+                                                    + Agregar bloque de tips
+                                                </button>
+                                            </div>
 
-                        </div>`;
+                                        </div>`;
                     stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
                 });
 
@@ -774,17 +778,17 @@
             if (info.images && info.images.length) {
                 info.images.forEach((img, index) => {
                     const imgHTML = `
-                <div class="imagen mb-3 p-2 border rounded position-relative" data-index="${index}">
-                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-img" data-id="${img.id}">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    <input type="hidden" name="imagenes[${index}][id]" value="${img.id}">
-                    <input type="text" name="imagenes[${index}][description]" class="form-control mb-2" value="${img.description || ''}">
-                    ${img.image_path ? `<img src="/storage/${img.image_path}" class="img-thumbnail mb-2" style="max-width:120px;">` : ''}
-                    <input type="file" name="imagenes[${index}][file]" class="form-control mb-2" accept="image/*" >
+                                <div class="imagen mb-3 p-2 border rounded position-relative" data-index="${index}">
+                                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-img" data-id="${img.id}">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <input type="hidden" name="imagenes[${index}][id]" value="${img.id}">
+                                    <input type="text" name="imagenes[${index}][description]" class="form-control mb-2" value="${img.description || ''}">
+                                    ${img.image_path ? `<img src="/storage/${img.image_path}" class="img-thumbnail mb-2" style="max-width:120px;">` : ''}
+                                    <input type="file" name="imagenes[${index}][file]" class="form-control mb-2" accept="image/*" >
 
 
-                </div>`;
+                                </div>`;
                     imgContainer.insertAdjacentHTML('beforeend', imgHTML);
                 });
 
@@ -814,13 +818,13 @@
                     const opcionesHTML = (p.opciones || []).map((op, i) => {
                         const checked = corrects.includes(String(i)) ? 'checked' : '';
                         return `
-                    <div class="d-flex mb-1 align-items-center">
-                        <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" value="${op}">
-                        <label class="mb-0">
-                            <input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${i}" ${checked}>
-                            Correcta
-                        </label>
-                    </div>`;
+                                    <div class="d-flex mb-1 align-items-center">
+                                        <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" value="${op}">
+                                        <label class="mb-0">
+                                            <input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${i}" ${checked}>
+                                            Correcta
+                                        </label>
+                                    </div>`;
                     }).join('');
 
                     // incluir id oculto para identificar la pregunta en el backend (si existe)
@@ -828,14 +832,14 @@
                         `<input type="hidden" name="preguntas[${index}][id]" value="${p.id}">` : '';
 
                     const preguntaHTML = `
-                <div class="pregunta mb-3 p-2 border rounded position-relative" data-index="${index}">
-                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-pregunta" data-id="${p.id}">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    ${preguntaIdHidden}
-                    <input type="text" name="preguntas[${index}][pregunta]" class="form-control mb-2" value="${p.pregunta}">
-                    <div class="opciones">${opcionesHTML}</div>
-                </div>`;
+                                <div class="pregunta mb-3 p-2 border rounded position-relative" data-index="${index}">
+                                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-pregunta" data-id="${p.id}">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    ${preguntaIdHidden}
+                                    <input type="text" name="preguntas[${index}][pregunta]" class="form-control mb-2" value="${p.pregunta}">
+                                    <div class="opciones">${opcionesHTML}</div>
+                                </div>`;
                     preguntasContainer.insertAdjacentHTML('beforeend', preguntaHTML);
                 });
 
@@ -855,7 +859,7 @@
 
         }
 
-        document.getElementById('modalAgregarCurso').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('modalAgregarCurso').addEventListener('hidden.bs.modal', function () {
             this.querySelector('form').reset();
             document.getElementById('steps-container').innerHTML = '';
             document.getElementById('imagenes-container').innerHTML = '';
@@ -868,56 +872,56 @@
     <script>
         let stepIndex = 1;
 
-        document.getElementById('addStep').addEventListener('click', function() {
+        document.getElementById('addStep').addEventListener('click', function () {
             let container = document.getElementById('steps-container');
             let div = document.createElement('div');
             div.classList.add('step', 'mb-3');
             div.setAttribute('data-index', stepIndex);
 
             div.innerHTML = `
-                <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
+                                <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
 
-                <select name="steps[${stepIndex}][icon]" class="form-control mb-2 icon-select">
-                                <option value="">Selecciona un ícono</option>
-                                <option value="fa-right-to-bracket" data-icon="fa-right-to-bracket">
-                                    🔑 Ingreso
-                                </option>
-                                <option value="fa-building" data-icon="fa-building">
-                                    🏢 Predio
-                                </option>
-                                <option value="fa-magnifying-glass" data-icon="fa-magnifying-glass">
-                                    🔍 Buscar
-                                </option>
-                                <option value="fa-house" data-icon="fa-house">
-                                    🏠 Casa
-                                </option>
-                                <option value="fa-user-plus" data-icon="fa-user-plus">
-                                    👤➕ Usuario
-                                </option>
-                                <option value="fa-people-roof" data-icon="fa-people-roof">
-                                    👨‍👩‍👧 Familia
-                                </option>
-                                <option value="fa-notes-medical" data-icon="fa-notes-medical">
-                                    📝 Salud
-                                </option>
-                                <option value="fa-handshake" data-icon="fa-handshake">
-                                    🤝 Acuerdo
-                                </option>
-                                <option value="fa-clipboard-list" data-icon="fa-clipboard-list">
-                                    📋 Lista
-                                </option>
-                                <option value="fa-id-card" data-icon="fa-id-card">
-                                    🪪 Documento
-                                </option>
-                            </select>
-                <select name="steps[${stepIndex}][type]" class="form-control mb-2">
-                    <option value="">Sin archivo</option>
-                    <option value="image">Imagen</option>
-                    <option value="video">Video</option>
-                    <option value="text">Texto</option>
-                </select>
-                <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
-            `;
+                                <select name="steps[${stepIndex}][icon]" class="form-control mb-2 icon-select">
+                                                <option value="">Selecciona un ícono</option>
+                                                <option value="fa-right-to-bracket" data-icon="fa-right-to-bracket">
+                                                    🔑 Ingreso
+                                                </option>
+                                                <option value="fa-building" data-icon="fa-building">
+                                                    🏢 Predio
+                                                </option>
+                                                <option value="fa-magnifying-glass" data-icon="fa-magnifying-glass">
+                                                    🔍 Buscar
+                                                </option>
+                                                <option value="fa-house" data-icon="fa-house">
+                                                    🏠 Casa
+                                                </option>
+                                                <option value="fa-user-plus" data-icon="fa-user-plus">
+                                                    👤➕ Usuario
+                                                </option>
+                                                <option value="fa-people-roof" data-icon="fa-people-roof">
+                                                    👨‍👩‍👧 Familia
+                                                </option>
+                                                <option value="fa-notes-medical" data-icon="fa-notes-medical">
+                                                    📝 Salud
+                                                </option>
+                                                <option value="fa-handshake" data-icon="fa-handshake">
+                                                    🤝 Acuerdo
+                                                </option>
+                                                <option value="fa-clipboard-list" data-icon="fa-clipboard-list">
+                                                    📋 Lista
+                                                </option>
+                                                <option value="fa-id-card" data-icon="fa-id-card">
+                                                    🪪 Documento
+                                                </option>
+                                            </select>
+                                <select name="steps[${stepIndex}][type]" class="form-control mb-2">
+                                    <option value="">Sin archivo</option>
+                                    <option value="image">Imagen</option>
+                                    <option value="video">Video</option>
+                                    <option value="text">Texto</option>
+                                </select>
+                                <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
+                            `;
 
             container.appendChild(div);
             stepIndex++;
@@ -927,11 +931,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Funcionalidad para los interruptores de activar/desactivar usuarios
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const toggleSwitches = document.querySelectorAll('.toggle-switch input');
 
             toggleSwitches.forEach(switchEl => {
-                switchEl.addEventListener('change', function() {
+                switchEl.addEventListener('change', function () {
                     const statusBadge = this.closest('tr').querySelector('.status-badge');
 
                     if (this.checked) {
@@ -949,16 +953,16 @@
     <script>
         let imagenIndex = 1;
 
-        document.getElementById('addImagen').addEventListener('click', function() {
+        document.getElementById('addImagen').addEventListener('click', function () {
             let container = document.getElementById('imagenes-container');
             let div = document.createElement('div');
             div.classList.add('imagen', 'mb-3');
             div.setAttribute('data-index', imagenIndex);
 
             div.innerHTML = `
-                <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
-                <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
-            `;
+                                <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
+                                <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
+                            `;
             container.appendChild(div);
             imagenIndex++;
         });
@@ -967,28 +971,28 @@
     <script>
         let preguntaIndex = 1;
 
-        document.getElementById('addPregunta').addEventListener('click', function() {
+        document.getElementById('addPregunta').addEventListener('click', function () {
             let container = document.getElementById('preguntas-container');
             let div = document.createElement('div');
             div.classList.add('pregunta', 'mb-3');
             div.setAttribute('data-index', preguntaIndex);
 
             div.innerHTML = `
-                <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
-                <div class="opciones">
-                    <div class="d-flex mb-1">
-                        <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
-                        <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
-            `;
+                                <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
+                                <div class="opciones">
+                                    <div class="d-flex mb-1">
+                                        <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                        <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
+                            `;
 
             container.appendChild(div);
             preguntaIndex++;
         });
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target && e.target.classList.contains('add-option')) {
                 let preguntaDiv = e.target.closest('.pregunta');
                 let index = preguntaDiv.getAttribute('data-index');
@@ -998,16 +1002,16 @@
                 let optionDiv = document.createElement('div');
                 optionDiv.classList.add('d-flex', 'mb-1');
                 optionDiv.innerHTML = `
-                    <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
-                    <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
-                `;
+                                    <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                    <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
+                                `;
                 opcionesDiv.appendChild(optionDiv);
             }
         });
     </script>
 
     <script>
-        document.getElementById('btnVerificar').addEventListener('click', function() {
+        document.getElementById('btnVerificar').addEventListener('click', function () {
             const doc = document.getElementById('doc').value.trim();
 
             if (!doc) {
@@ -1016,36 +1020,36 @@
             }
 
             fetch("{{ route('certificate.verify') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        doc
-                    })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    doc
                 })
+            })
                 .then(res => res.json())
                 .then(data => {
                     const contenido = document.getElementById('resultadoContenido');
                     if (data.success) {
                         contenido.innerHTML = `
-                        <div class="text-center">
-                            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
-                            <h5>${data.message}</h5>
-                            <p><strong>Nombre:</strong> ${data.user}</p>
-                            <p><strong>Documento:</strong> ${data.document}</p>
-                            <p><strong>Codigo Certificado:</strong> ${data.certificado.verification_code }</p>
-                            <p><strong>Emitido el:</strong> ${data.certificado.created_at}</p>
-                        </div>
-                    `;
+                                        <div class="text-center">
+                                            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                            <h5>${data.message}</h5>
+                                            <p><strong>Nombre:</strong> ${data.user}</p>
+                                            <p><strong>Documento:</strong> ${data.document}</p>
+                                            <p><strong>Codigo Certificado:</strong> ${data.certificado.verification_code}</p>
+                                            <p><strong>Emitido el:</strong> ${data.certificado.created_at}</p>
+                                        </div>
+                                    `;
                     } else {
                         contenido.innerHTML = `
-                        <div class="text-center">
-                            <i class="fas fa-times-circle text-danger fa-3x mb-3"></i>
-                            <h5>${data.message}</h5>
-                        </div>
-                    `;
+                                        <div class="text-center">
+                                            <i class="fas fa-times-circle text-danger fa-3x mb-3"></i>
+                                            <h5>${data.message}</h5>
+                                        </div>
+                                    `;
                     }
 
                     // Mostrar el modal
@@ -1093,16 +1097,16 @@
                         const diff = timeSince(created);
 
                         return `
-                        <div class="activity-item mb-3">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">${icon}</div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0">${activity.title}</h6>
-                                    <p class="small text-muted mb-0">${activity.description}</p>
-                                    <span class="small text-muted">${diff}</span>
-                                </div>
-                            </div>
-                        </div>`;
+                                        <div class="activity-item mb-3">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">${icon}</div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="mb-0">${activity.title}</h6>
+                                                    <p class="small text-muted mb-0">${activity.description}</p>
+                                                    <span class="small text-muted">${diff}</span>
+                                                </div>
+                                            </div>
+                                        </div>`;
                     }).join('');
                 } catch (error) {
                     console.error('Error al cargar actividades:', error);
@@ -1133,91 +1137,91 @@
     </script>
 
     <script>
-document.addEventListener("click", function(e) {
+        document.addEventListener("click", function (e) {
 
-    /* -------------------------------------------------
-       AGREGAR BLOQUE DE TIPS
-       ------------------------------------------------- */
-    if (e.target.classList.contains("add-tip-block")) {
+            /* -------------------------------------------------
+               AGREGAR BLOQUE DE TIPS
+               ------------------------------------------------- */
+            if (e.target.classList.contains("add-tip-block")) {
 
-        let stepIndex = e.target.getAttribute("data-step");
-        let tipsList = document.getElementById(`tips-list-${stepIndex}`);
+                let stepIndex = e.target.getAttribute("data-step");
+                let tipsList = document.getElementById(`tips-list-${stepIndex}`);
 
-        // Cuántos bloques existen actualmente
-        let newTipIndex = tipsList.querySelectorAll(".tip-block").length;
+                // Cuántos bloques existen actualmente
+                let newTipIndex = tipsList.querySelectorAll(".tip-block").length;
 
-        let block = document.createElement("div");
-        block.classList.add("tip-block", "mb-3");
+                let block = document.createElement("div");
+                block.classList.add("tip-block", "mb-3");
 
-        block.innerHTML = `
-            <input type="text" name="steps[${stepIndex}][tips][${newTipIndex}][title]"
-                   class="form-control mb-2" placeholder="Título del bloque">
+                block.innerHTML = `
+                            <input type="text" name="steps[${stepIndex}][tips][${newTipIndex}][title]"
+                                   class="form-control mb-2" placeholder="Título del bloque">
 
-            <div class="subtips-container">
+                            <div class="subtips-container">
 
-                <div class="d-flex mb-2">
-                    <input type="text"
-                           name="steps[${stepIndex}][tips][${newTipIndex}][items][]"
-                           class="form-control me-2"
-                           placeholder="Sub-tip">
-                    <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-                </div>
+                                <div class="d-flex mb-2">
+                                    <input type="text"
+                                           name="steps[${stepIndex}][tips][${newTipIndex}][items][]"
+                                           class="form-control me-2"
+                                           placeholder="Sub-tip">
+                                    <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                </div>
 
-            </div>
+                            </div>
 
-            <button type="button" class="btn btn-secondary btn-sm add-subtip"
-                    data-step="${stepIndex}" data-tip="${newTipIndex}">
-                + Agregar sub-tip
-            </button>
+                            <button type="button" class="btn btn-secondary btn-sm add-subtip"
+                                    data-step="${stepIndex}" data-tip="${newTipIndex}">
+                                + Agregar sub-tip
+                            </button>
 
-            <button type="button" class="btn btn-danger btn-sm remove-tip-block mt-2">
-                Eliminar bloque
-            </button>
-        `;
+                            <button type="button" class="btn btn-danger btn-sm remove-tip-block mt-2">
+                                Eliminar bloque
+                            </button>
+                        `;
 
-        tipsList.appendChild(block);
-    }
+                tipsList.appendChild(block);
+            }
 
-    /* -------------------------------------------------
-       AGREGAR SUB-TIP
-       ------------------------------------------------- */
-    if (e.target.classList.contains("add-subtip")) {
+            /* -------------------------------------------------
+               AGREGAR SUB-TIP
+               ------------------------------------------------- */
+            if (e.target.classList.contains("add-subtip")) {
 
-        let stepIndex = e.target.getAttribute("data-step");
-        let tipIndex  = e.target.getAttribute("data-tip");
+                let stepIndex = e.target.getAttribute("data-step");
+                let tipIndex = e.target.getAttribute("data-tip");
 
-        let container = e.target.closest(".tip-block").querySelector(".subtips-container");
+                let container = e.target.closest(".tip-block").querySelector(".subtips-container");
 
-        let sub = document.createElement("div");
-        sub.classList.add("d-flex", "mb-2");
+                let sub = document.createElement("div");
+                sub.classList.add("d-flex", "mb-2");
 
-        sub.innerHTML = `
-            <input type="text"
-                   name="steps[${stepIndex}][tips][${tipIndex}][items][]"
-                   class="form-control me-2"
-                   placeholder="Sub-tip">
-            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-        `;
+                sub.innerHTML = `
+                            <input type="text"
+                                   name="steps[${stepIndex}][tips][${tipIndex}][items][]"
+                                   class="form-control me-2"
+                                   placeholder="Sub-tip">
+                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                        `;
 
-        container.appendChild(sub);
-    }
+                container.appendChild(sub);
+            }
 
-    /* -------------------------------------------------
-       ELIMINAR SUB-TIP
-       ------------------------------------------------- */
-    if (e.target.classList.contains("remove-subtip")) {
-        e.target.parentElement.remove();
-    }
+            /* -------------------------------------------------
+               ELIMINAR SUB-TIP
+               ------------------------------------------------- */
+            if (e.target.classList.contains("remove-subtip")) {
+                e.target.parentElement.remove();
+            }
 
-    /* -------------------------------------------------
-       ELIMINAR BLOQUE COMPLETO
-       ------------------------------------------------- */
-    if (e.target.classList.contains("remove-tip-block")) {
-        e.target.closest(".tip-block").remove();
-    }
+            /* -------------------------------------------------
+               ELIMINAR BLOQUE COMPLETO
+               ------------------------------------------------- */
+            if (e.target.classList.contains("remove-tip-block")) {
+                e.target.closest(".tip-block").remove();
+            }
 
-});
-</script>
+        });
+    </script>
 
 
 @endsection
