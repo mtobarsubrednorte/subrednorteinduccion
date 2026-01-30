@@ -37,33 +37,55 @@
             @endif
 
             {{-- Steps --}}
-            @php
-                $completedSteps = auth()->user()->completedSteps->pluck('id')->toArray();
-                $lastCompletedIndex = -1;
 
-                foreach ($modulo->steps as $index => $step) {
+            @php
+                $perfilId = (string) auth()->user()->profile_id;
+
+                // 1. Filtramos y RE-INDEXAMOS con values() para que los índices sean 0, 1, 2, 3...
+                $stepsFiltrados = $modulo->steps
+                    ->filter(function ($step) use ($perfilId) {
+                        $perfilesStep = is_array($step->perfiles_id)
+                            ? $step->perfiles_id
+                            : json_decode($step->perfiles_id, true);
+
+                        return empty($perfilesStep) || in_array($perfilId, $perfilesStep);
+                    })
+                    ->values();
+
+                $completedSteps = auth()->user()->completedSteps->pluck('id')->toArray();
+
+                // 2. Encontramos la posición del ÚLTIMO paso completado DENTRO de la lista filtrada
+                $lastCompletedIndex = -1;
+                foreach ($stepsFiltrados as $index => $step) {
                     if (in_array($step->id, $completedSteps)) {
                         $lastCompletedIndex = $index;
                     }
                 }
             @endphp
 
+            <div class="steps-container">
+                @foreach ($stepsFiltrados as $i => $step)
+                    @php
+                        $completed = in_array($step->id, $completedSteps);
 
+                        $unlocked = $completed || $i === $lastCompletedIndex + 1;
+                    @endphp
 
-            @foreach ($modulo->steps as $i => $step)
-                @php
-                    $completed = in_array($step->id, $completedSteps);
-                    // desbloquea si ya está completado o si es el siguiente al último completado
-                    $unlocked = $completed || $i === $lastCompletedIndex + 1;
-                @endphp
+                    <div class="step {{ !$unlocked ? 'locked' : '' }} {{ $completed ? 'done' : '' }}"
+                        data-step="{{ $step->id }}">
 
-                <div class="step {{ !$unlocked ? 'locked' : '' }} {{ $completed ? 'done' : '' }}"
-                    data-step="{{ $step->id }}">
-                    <div class="step-number">{{ $i + 1 }}</div>
-                    <i class="fas {{ $step->icon }} step-icon"></i>
-                    <div class="step-desc">{{ $step->text }}</div>
-                </div>
-            @endforeach
+                        {{-- Mostramos el número correlativo (1, 2, 3...) según lo que el ve --}}
+                        <div class="step-number">{{ $i + 1 }}</div>
+
+                        <i class="fas {{ $step->icon }} step-icon"></i>
+                        <div class="step-desc">{{ $step->text }}</div>
+
+                        @if (!$unlocked)
+                            <i class="fas fa-lock lock-overlay"></i>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
 
 
             @if ($modulo->images->count())
@@ -249,7 +271,7 @@
 
                     @if (!empty($step->tips))
                         @php
-                            $tips = json_decode($step->tips, true);
+                            $tips = $step->tips;
                         @endphp
 
                         @if (is_array($tips))
