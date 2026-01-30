@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Step extends Model
 {
-    protected $fillable = ['modulo_id', 'text', 'icon', 'type', 'file', 'tips'];
+    protected $fillable = ['modulo_id', 'text', 'icon', 'type', 'file', 'tips', 'perfiles_id'];
 
     // ESTO ES LO QUE FALTA:
     protected $casts = [
+        'perfiles_id' => 'array',
         'tips' => 'array',
     ];
 

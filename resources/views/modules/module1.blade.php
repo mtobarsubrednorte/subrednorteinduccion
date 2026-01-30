@@ -80,7 +80,7 @@
                                 @click.stop="moduloSeleccionado = 'examen-{{ $modulo->id }}'"
                             >
                                 <i class="fas fa-clipboard-check"></i>
-                                Realizar Examen
+                                Realizar exámen
                             </li>
                         @endif
                     </ul>

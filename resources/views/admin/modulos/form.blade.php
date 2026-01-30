@@ -1,10 +1,5 @@
 @extends('layouts.admin.admin')
 
-
-
-
-
-
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
     <style>
@@ -104,7 +99,7 @@
                     <div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-1">
-                                <li class="breadcrumb-item"><a href="#">Cursos</a></li>
+                                <li class="breadcrumb-item"><a href="{{asset('admin/dashboard')}}">Home</a></li>
                                 <li class="breadcrumb-item active">Editor de Módulos</li>
                             </ol>
                         </nav>
@@ -179,9 +174,28 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Visibilidad Perfiles</label>
+                                        
+                                        @php
+                                           
+                                            
+                                            $oldValues = old('visible_users'); 
+                                            
+                                            if (is_array($oldValues)) {
+                                                $selectedUsers = array_map('strval', $oldValues);
+                                            } elseif (isset($modulo) && $modulo->active_users) {
+                                                $rawSelected = is_string($modulo->active_users) 
+                                                    ? json_decode($modulo->active_users, true) 
+                                                    : $modulo->active_users;
+                                                $selectedUsers = array_map('strval', is_array($rawSelected) ? $rawSelected : []);
+                                            } else {
+                                                $selectedUsers = [];
+                                            }
+                                        @endphp
+
                                         <select name="visible_users[]" class="form-control select2" multiple>
                                             @foreach ($listaUsuarios as $u)
-                                                <option value="{{ $u->id }}" {{ (isset($modulo) && in_array($u->id, $modulo->visible_users ?? [])) ? 'selected' : '' }}>
+                                                <option value="{{ $u->id }}" 
+                                                    {{ in_array((string)$u->id, $selectedUsers) ? 'selected' : '' }}>
                                                     {{ $u->name }}
                                                 </option>
                                             @endforeach
@@ -260,10 +274,16 @@
                                                                 <i class="fas fa-times-circle"></i>
                                                             </button>
 
-                                                            <input type="hidden" name="delete_recursos[]"
-                                                                id="input-delete-recurso-{{ $recurso->id }}" value="" disabled>
+
+                                                            <input type="hidden"
+                                                                name="delete_recursos[]"
+                                                                id="input-delete-recurso-{{ $recurso->id }}"
+                                                                value="{{ $recurso->id }}"
+                                                                disabled>
+
                                                         </div>
                                                     @endforeach
+
                                                 </div>
                                             </div>
                                         @endif
@@ -314,8 +334,9 @@
     <script>
         window.existingData = {
             steps: @json($modulo->steps ?? []),
-            imagenes: @json($modulo->imagenes ?? []),
-            preguntas: @json($modulo->preguntas ?? [])
+            imagenes: @json($modulo->images ?? []),
+            preguntas: @json($modulo->preguntas ?? []),
+            periles: @json($listaUsuarios),
         };
     </script>
 

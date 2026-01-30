@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\Certificate;
-use App\Models\User;
 use App\Models\Profile;
+use Illuminate\Support\Facades\Storage;
 
 
 class Modules extends Controller
@@ -23,28 +23,14 @@ class Modules extends Controller
         $certificates = Certificate::where('user_id', $userId)->get();
 
         $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
-            ->whereNull('parent_id')
-            ->where(function ($query) use ($userId) {
-
-                // Mostrar módulos activos visibles para todos
-                $query->where(function ($q) {
-                    $q->where('active', true)
-                        ->whereNull('active_users');
-                });
-
-                // Mostrar módulos activos SOLO para ciertos usuarios
-                $query->orWhere(function ($q) use ($userId) {
-                    $q->where('active', true)
-                        ->whereRaw("JSON_CONTAINS(COALESCE(active_users, '[]'), '\"$userId\"')");
-                });
-
-                // Mostrar módulos INACTIVOS solo si el usuario está en la lista
-                $query->orWhere(function ($q) use ($userId) {
-                    $q->where('active', false)
-                        ->whereRaw("JSON_CONTAINS(COALESCE(active_users, '[]'), '\"$userId\"')");
-                });
-            })
-            ->get();
+        ->where('active', 1)
+        ->where(function ($query) use ($user) {
+            $query->whereJsonContains('active_users', (string)$user->profile_id) // Si el perfil está en el JSON
+                ->orWhereNull('active_users') // O si es para todos (nulo)
+                ->orWhere('active_users', '[]') // O si es para todos (arreglo vacío)
+                ->orWhere('active_users', ''); // O si está vacío
+        })
+        ->get();
 
         Log::info('Módulos obtenidos para el usuario ' . $userId . ': ' . $modulos->count());
 
@@ -120,23 +106,7 @@ class Modules extends Controller
         ]);
     }
 
-    public function markComplete(Request $request)
-    {
-        $request->validate([
-            'step_id' => 'required|exists:steps,id'
-        ]);
-
-        $user = Auth::user();
-        $stepId = $request->input('step_id');
-        $step = Step::findOrFail($stepId);
-
-        // Asegúrate de que esta relación exista en el modelo User
-        $user->completedSteps()->syncWithoutDetaching([
-            $step->id => ['completed_at' => now()]
-        ]);
-
-        return response()->json(['success' => true]);
-    }
+  
 
     public function create()
     {
@@ -162,6 +132,8 @@ class Modules extends Controller
             'genilay_recursos_link2',
             'parent_id'
         ]);
+
+
 
         // Checkbox → si no viene, poner 0
         $data['is_active'] = $request->has('is_active') ? 1 : 0;
@@ -196,6 +168,8 @@ class Modules extends Controller
         | 2. RECURSOS: eliminar, agregar
         |--------------------------------------------------------------------------
         */
+
+         // Eliminar recursos
         if ($request->filled('delete_recursos')) {
             $idsToDelete = $request->delete_recursos;
             foreach ($modulo->recursos()->whereIn('id', $idsToDelete)->get() as $recurso) {
@@ -248,6 +222,7 @@ class Modules extends Controller
                             'type' => $stepData['type'] ?? null,
                             'file' => $stepData['file'],
                             'tips' => $stepData['tips'] ?? [],   // ← ← AQUI
+                            'perfiles_id' => $stepData['perfil_id'] ?? null,
                         ]);
 
                         $stepIdsInRequest[] = $step->id;
@@ -267,7 +242,8 @@ class Modules extends Controller
                         'icon' => $stepData['icon'] ?? null,
                         'type' => $stepData['type'] ?? null,
                         'file' => $filePath,
-                        'tips' => $stepData['tips'] ?? [],   // ← ← AQUI
+                        'tips' => $stepData['tips'] ?? [],
+                        'perfiles_id' => $stepData['perfil_id'] ?? null,   // ← ← AQUI
                     ]);
 
                     $stepIdsInRequest[] = $newStep->id;
