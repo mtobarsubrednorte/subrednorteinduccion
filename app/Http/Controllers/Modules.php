@@ -23,16 +23,16 @@ class Modules extends Controller
         $certificates = Certificate::where('user_id', $userId)->get();
 
         $modulos = Modulos::with(['submodulos', 'recursos', 'preguntas', 'steps', 'images'])
-        ->where('active', 1)
-        ->where(function ($query) use ($user) {
-            $query->whereJsonContains('active_users', (string)$user->profile_id) // Si el perfil está en el JSON
-                ->orWhereNull('active_users') // O si es para todos (nulo)
-                ->orWhere('active_users', '[]') // O si es para todos (arreglo vacío)
-                ->orWhere('active_users', ''); // O si está vacío
-        })
-        ->get();
+            ->where('active', 1)
+            ->where(function ($query) use ($user) {
+                $query->whereJsonContains('active_users', (string) $user->profile_id) // Si el perfil está en el JSON
+                    ->orWhereNull('active_users') // O si es para todos (nulo)
+                    ->orWhere('active_users', '[]') // O si es para todos (arreglo vacío)
+                    ->orWhere('active_users', ''); // O si está vacío
+            })
+            ->get();
 
-        Log::info('Módulos obtenidos para el usuario ' . $userId . ': ' . $modulos->count());
+
 
         return view('modules.module1', [
             'modulos' => $modulos,
@@ -51,24 +51,34 @@ class Modules extends Controller
         ]);
 
         $user = Auth::user();
+        $userPerfilId = $user->profile_id; // Asegúrate de que este campo existe
         $respuestasUsuario = $request->input('respuestas', []);
+
+        // 1. FILTRAR PREGUNTAS: Solo las que el usuario puede ver
+        // (Vacío = para todos, o que incluya su perfil)
+        $preguntasFiltradas = $modulo->preguntas->filter(function ($pregunta) use ($userPerfilId) {
+            $perfilesPermitidos = is_array($pregunta->perfiles_id) ? $pregunta->perfiles_id : [];
+            return empty($perfilesPermitidos) || in_array($userPerfilId, $perfilesPermitidos);
+        });
+
+        // 2. Verificar que hay preguntas visibles para este usuario
+        if ($preguntasFiltradas->isEmpty()) {
+            return redirect()->back()->with('error', 'No hay preguntas disponibles para tu perfil en este módulo.');
+        }
+
         $resultado = [];
         $correctas = 0;
 
-        // Verificar que hay preguntas
-        if ($modulo->preguntas->isEmpty()) {
-            return redirect()->back()->with('error', 'El módulo no tiene preguntas');
-        }
-
-        foreach ($modulo->preguntas as $pregunta) {
+        // 3. Procesar solo las preguntas filtradas
+        foreach ($preguntasFiltradas as $pregunta) {
             $respuestaUsuario = $respuestasUsuario[$pregunta->id] ?? null;
 
-            // Validar que la opción seleccionada existe
             if ($respuestaUsuario !== null && !isset($pregunta->opciones[$respuestaUsuario])) {
                 $respuestaUsuario = null;
             }
 
-            $esCorrecta = in_array((int) $respuestaUsuario, $pregunta->respuestas_correctas);
+            // Aseguramos que comparamos tipos de datos iguales
+            $esCorrecta = in_array((string) $respuestaUsuario, array_map('strval', $pregunta->respuestas_correctas));
 
             if ($esCorrecta) {
                 $correctas++;
@@ -83,12 +93,12 @@ class Modules extends Controller
             ];
         }
 
-        // ✅ Calificación
-        $total = max(1, $modulo->preguntas->count());
-        $calificacion = round(($correctas / $total) * 10);
+        // 4. CALIFICACIÓN basada en el total filtrado
+        $totalPreguntasVisibles = $preguntasFiltradas->count();
+        $calificacion = round(($correctas / $totalPreguntasVisibles) * 10);
         $aprobado = $calificacion >= 8;
 
-        // Guardar resultado - CORREGIDO: user->id en lugar de user->id()
+        // 5. Guardar resultado
         DB::table('modulo_user')->updateOrInsert(
             ['user_id' => $user->id, 'modulo_id' => $modulo->id],
             [
@@ -106,7 +116,7 @@ class Modules extends Controller
         ]);
     }
 
-  
+
 
     public function create()
     {
@@ -169,7 +179,7 @@ class Modules extends Controller
         |--------------------------------------------------------------------------
         */
 
-         // Eliminar recursos
+        // Eliminar recursos
         if ($request->filled('delete_recursos')) {
             $idsToDelete = $request->delete_recursos;
             foreach ($modulo->recursos()->whereIn('id', $idsToDelete)->get() as $recurso) {
@@ -197,7 +207,7 @@ class Modules extends Controller
         if ($request->has('steps')) {
             $stepIdsInRequest = [];
 
-            Log::info('Steps recibidos:', $request->steps);
+
 
             foreach ($request->steps as $stepData) {
 
@@ -266,6 +276,7 @@ class Modules extends Controller
         | 4. PREGUNTAS
         |--------------------------------------------------------------------------
         */
+
         if ($request->has('preguntas')) {
             $modulo->preguntas()->delete();
             foreach ($request->preguntas as $pregunta) {
@@ -273,6 +284,7 @@ class Modules extends Controller
                     'pregunta' => $pregunta['pregunta'],
                     'opciones' => $pregunta['opciones'] ?? [],
                     'respuestas_correctas' => $pregunta['respuestas_correctas'] ?? [],
+                    'perfiles_id' => $pregunta['perfiles_id'] ?? null,
                 ]);
             }
         }

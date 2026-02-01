@@ -267,240 +267,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalAgregarCurso" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <form action="{{ route('modulos.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <input type="hidden" name="id" id="id_modulo">
 
-                    <div class="modal-header">
-                        <h5 id="titulo_modal" class="modal-title">Agregar Modulo</h5>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label><strong>Estado del Curso</strong></label><br>
-                            <label class="switch">
-                                <input type="checkbox" name="is_active" checked>
-                                <span class="slider round"></span>
-                            </label>
-                            <span id="isactive" class="ms-2">Activo</span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label><strong>Usuarios que podrán ver este curso</strong></label>
-                            <select name="visible_users[]" class="form-control" multiple style="height: 200px;">
-                                @foreach ($listaUsuarios as $u)
-                                    <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
-                                @endforeach
-                            </select>
-                            <small class="text-muted">Mantén presionado CTRL para seleccionar varios.</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Título</label>
-                            <input type="text" name="title" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label>Descripción</label>
-                            <textarea name="description" class="form-control"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label>Duración (minutos)</label>
-                            <input type="number" name="duration" class="form-control" required>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label>Link Genially 1</label>
-                                <input type="text" name="genilay_recursos_link1" class="form-control">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label>Link Genially 2</label>
-                                <input type="text" name="genilay_recursos_link2" class="form-control">
-                            </div>
-
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="title-modal-seccion">
-                                <label>Recursos (actuales)</label>
-                            </div>
-                            <div id="recursos-container" class="d-flex flex-wrap gap-3"></div>
-                        </div>
-
-
-                        <div class="mb-3">
-                            <div class="title-modal-seccion">
-                                <label>Recursos (PDF/Word)</label>
-                            </div>
-                            <input type="file" name="recursos[]" class="form-control" multiple>
-                        </div>
-
-                        <div class="modulos-modal-seccion">
-
-                            <div class="title-modal-seccion">
-                                <label>Pasos del Módulo</label>
-                            </div>
-
-                            <div id="steps-container">
-
-                                <div class="step mb-3" data-index="0">
-                                    <input type="text" name="steps[0][text]" class="form-control mb-2"
-                                        placeholder="Descripción del paso">
-
-                                    <!-- Selector de íconos -->
-                                    <select name="steps[0][icon]" class="form-control mb-2 icon-select">
-                                        <option value="">Selecciona un ícono</option>
-                                        <option value="fa-right-to-bracket" data-icon="fa-right-to-bracket">
-                                            🔑 Ingreso
-                                        </option>
-                                        <option value="fa-building" data-icon="fa-building">
-                                            🏢 Predio
-                                        </option>
-                                        <option value="fa-magnifying-glass" data-icon="fa-magnifying-glass">
-                                            🔍 Buscar
-                                        </option>
-                                        <option value="fa-house" data-icon="fa-house">
-                                            🏠 Casa
-                                        </option>
-                                        <option value="fa-user-plus" data-icon="fa-user-plus">
-                                            👤➕ Usuario
-                                        </option>
-                                        <option value="fa-people-roof" data-icon="fa-people-roof">
-                                            👨‍👩‍👧 Familia
-                                        </option>
-                                        <option value="fa-notes-medical" data-icon="fa-notes-medical">
-                                            📝 Salud
-                                        </option>
-                                        <option value="fa-handshake" data-icon="fa-handshake">
-                                            🤝 Acuerdo
-                                        </option>
-                                        <option value="fa-clipboard-list" data-icon="fa-clipboard-list">
-                                            📋 Lista
-                                        </option>
-                                        <option value="fa-id-card" data-icon="fa-id-card">
-                                            🪪 Documento
-                                        </option>
-                                    </select>
-
-
-                                    <select name="steps[0][type]" class="form-control mb-2">
-                                        <option value="">Sin archivo</option>
-                                        <option value="image">Imagen</option>
-                                        <option value="video">Video</option>
-                                        <option value="text">Texto</option>
-                                    </select>
-
-                                    <div class="tips-container mb-3" data-step="0">
-                                        <label><strong>Tips del paso</strong></label>
-
-                                        <!-- CONTENEDOR DE LISTAS DE TIPS -->
-                                        <div class="tips-list" id="tips-list-0">
-
-                                            <!-- Un bloque de tip -->
-                                            <div class="tip-block mb-3">
-                                                <input type="text" name="steps[0][tips][0][title]" class="form-control mb-2"
-                                                    placeholder="Título del bloque (ej: Validación)">
-
-                                                <div class="subtips-container">
-
-                                                    <!-- Sub-tip -->
-                                                    <div class="d-flex mb-2">
-                                                        <input type="text" name="steps[0][tips][0][items][]"
-                                                            class="form-control me-2"
-                                                            placeholder="Sub-tip (ej: Identificar si...)">
-                                                        <button type="button"
-                                                            class="btn btn-danger btn-sm remove-subtip">X</button>
-                                                    </div>
-
-                                                </div>
-
-                                                <button type="button" class="btn btn-secondary btn-sm add-subtip"
-                                                    data-step="0" data-tip="0">
-                                                    + Agregar sub-tip
-                                                </button>
-                                            </div>
-
-                                        </div>
-
-                                        <button type="button" class="btn btn-primary btn-sm add-tip-block" data-step="0">
-                                            + Agregar bloque de tips
-                                        </button>
-                                    </div>
-
-
-                                    <input type="file" name="steps[0][file]" class="form-control mb-2">
-
-                                </div>
-
-
-                            </div>
-
-
-
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="addStep">+ Agregar
-                                Paso</button>
-
-                        </div>
-
-
-
-                        <div class="modulos-modal-seccion">
-                            <div class="title-modal-seccion">
-                                <label>Imágenes del Módulo</label>
-                            </div>
-                            <div id="imagenes-container">
-
-                                <div class="imagen mb-3" data-index="0">
-                                    <input type="file" name="imagenes[0][file]" class="form-control mb-2">
-                                    <input type="text" name="imagenes[0][description]" class="form-control mb-2"
-                                        placeholder="Descripción de la imagen">
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="addImagen">+ Agregar
-                                Imagen</button>
-                        </div>
-
-                        <div class="modulos-modal-seccion">
-
-                            <div class="title-modal-seccion">
-                                <label>Preguntas del Examen (Selección Múltiple)</label>
-                            </div>
-                            <div id="preguntas-container">
-                                <div class="pregunta mb-3" data-index="0">
-                                    <input type="text" name="preguntas[0][pregunta]" class="form-control mb-2"
-                                        placeholder="Pregunta">
-                                    <div class="opciones">
-                                        <div class="d-flex mb-1">
-                                            <input type="text" name="preguntas[0][opciones][]" class="form-control me-2"
-                                                placeholder="Opción">
-                                            <label><input type="checkbox" name="preguntas[0][respuestas_correctas][]"
-                                                    value="0">
-                                                Correcta</label>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary add-option">+
-                                        Agregar Opción</button>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="addPregunta">+
-                                Agregar Pregunta
-                            </button>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
 
 
@@ -568,21 +335,21 @@
                             'fa-file text-secondary';
 
                     const recursoHTML = `
-                                <div class="card shadow-sm recurso-card position-relative" style="width: 150px; border-radius: 10px;">
-                                    <div class="card-body text-center p-2">
-                                        <i class="fa-solid ${iconClass}" style="font-size: 2.5rem;"></i>
-                                        <p class="mt-2 mb-1 small fw-semibold text-truncate" title="${recurso.original_name}">
-                                            ${recurso.original_name}
-                                        </p>
-                                        <a href="/storage/${recurso.file_path}" target="_blank" class="btn btn-sm btn-outline-primary w-100 mb-1">
-                                            Ver
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger w-100 btn-remove-recurso" data-id="${recurso.id}">
-                                            <i class="fa-solid fa-trash"></i> Eliminar
-                                        </button>
+                                    <div class="card shadow-sm recurso-card position-relative" style="width: 150px; border-radius: 10px;">
+                                        <div class="card-body text-center p-2">
+                                            <i class="fa-solid ${iconClass}" style="font-size: 2.5rem;"></i>
+                                            <p class="mt-2 mb-1 small fw-semibold text-truncate" title="${recurso.original_name}">
+                                                ${recurso.original_name}
+                                            </p>
+                                            <a href="/storage/${recurso.file_path}" target="_blank" class="btn btn-sm btn-outline-primary w-100 mb-1">
+                                                Ver
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger w-100 btn-remove-recurso" data-id="${recurso.id}">
+                                                <i class="fa-solid fa-trash"></i> Eliminar
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
                     recursosContainer.insertAdjacentHTML('beforeend', recursoHTML);
                 });
 
@@ -633,128 +400,128 @@
                             if (tipBlock.items && tipBlock.items.length > 0) {
                                 tipBlock.items.forEach(item => {
                                     itemsHTML += `
-                                                        <div class="d-flex mb-2">
-                                                            <input type="text"
-                                                                name="steps[${index}][tips][${tipIndex}][items][]"
-                                                                class="form-control me-2"
-                                                                value="${item}"
-                                                                placeholder="Sub-tip">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-                                                        </div>
-                                                    `;
+                                                            <div class="d-flex mb-2">
+                                                                <input type="text"
+                                                                    name="steps[${index}][tips][${tipIndex}][items][]"
+                                                                    class="form-control me-2"
+                                                                    value="${item}"
+                                                                    placeholder="Sub-tip">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                            </div>
+                                                        `;
                                 });
                             } else {
                                 // Si no hay items, agregamos uno vacío
                                 itemsHTML = `
-                                                    <div class="d-flex mb-2">
-                                                        <input type="text"
-                                                            name="steps[${index}][tips][${tipIndex}][items][]"
-                                                            class="form-control me-2"
-                                                            placeholder="Sub-tip">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-                                                    </div>
-                                                `;
+                                                        <div class="d-flex mb-2">
+                                                            <input type="text"
+                                                                name="steps[${index}][tips][${tipIndex}][items][]"
+                                                                class="form-control me-2"
+                                                                placeholder="Sub-tip">
+                                                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                        </div>
+                                                    `;
                             }
 
                             // Construimos el bloque completo
                             tipsHTML += `
-                                                <div class="tip-block mb-3">
+                                                    <div class="tip-block mb-3">
 
-                                                    <input type="text"
-                                                        name="steps[${index}][tips][${tipIndex}][title]"
-                                                        class="form-control mb-2"
-                                                        value="${tipBlock.title ?? ''}"
-                                                        placeholder="Título del bloque">
+                                                        <input type="text"
+                                                            name="steps[${index}][tips][${tipIndex}][title]"
+                                                            class="form-control mb-2"
+                                                            value="${tipBlock.title ?? ''}"
+                                                            placeholder="Título del bloque">
 
-                                                    <div class="subtips-container">
-                                                        ${itemsHTML}
+                                                        <div class="subtips-container">
+                                                            ${itemsHTML}
+                                                        </div>
+
+                                                        <button type="button"
+                                                                class="btn btn-secondary btn-sm add-subtip"
+                                                                data-step="${index}"
+                                                                data-tip="${tipIndex}">
+                                                            + Agregar sub-tip
+                                                        </button>
+
                                                     </div>
-
-                                                    <button type="button"
-                                                            class="btn btn-secondary btn-sm add-subtip"
-                                                            data-step="${index}"
-                                                            data-tip="${tipIndex}">
-                                                        + Agregar sub-tip
-                                                    </button>
-
-                                                </div>
-                                            `;
+                                                `;
                         });
 
                     } else {
 
                         // Si no hay ningún tip → agregar un bloque vacío
                         tipsHTML = `
-                                            <div class="tip-block mb-3">
+                                                <div class="tip-block mb-3">
 
-                                                <input type="text"
-                                                    name="steps[${index}][tips][0][title]"
-                                                    class="form-control mb-2"
-                                                    placeholder="Título del bloque">
+                                                    <input type="text"
+                                                        name="steps[${index}][tips][0][title]"
+                                                        class="form-control mb-2"
+                                                        placeholder="Título del bloque">
 
-                                                <div class="subtips-container">
-                                                    <div class="d-flex mb-2">
-                                                        <input type="text"
-                                                            name="steps[${index}][tips][0][items][]"
-                                                            class="form-control me-2"
-                                                            placeholder="Sub-tip">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                    <div class="subtips-container">
+                                                        <div class="d-flex mb-2">
+                                                            <input type="text"
+                                                                name="steps[${index}][tips][0][items][]"
+                                                                class="form-control me-2"
+                                                                placeholder="Sub-tip">
+                                                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                                        </div>
                                                     </div>
+
+                                                    <button type="button"
+                                                            class="btn btn-secondary btn-sm add-subtip"
+                                                            data-step="${index}"
+                                                            data-tip="0">
+                                                        + Agregar sub-tip
+                                                    </button>
+
                                                 </div>
-
-                                                <button type="button"
-                                                        class="btn btn-secondary btn-sm add-subtip"
-                                                        data-step="${index}"
-                                                        data-tip="0">
-                                                    + Agregar sub-tip
-                                                </button>
-
-                                            </div>
-                                        `;
+                                            `;
                     }
 
 
 
                     const stepHTML = `
-                                        <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
-                                            <input type="hidden" name="steps[${index}][id]" value="${step.id}">
+                                            <div class="step mb-3 p-2 border rounded position-relative" data-index="${index}">
+                                                <input type="hidden" name="steps[${index}][id]" value="${step.id}">
 
-                                            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
-                                                <i class="fa-solid fa-xmark"></i>
-                                            </button>
-                                            <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
-                                            <select name="steps[${index}][icon]" class="form-control mb-2">
-                                                <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
-                                            </select>
-                                            <select name="steps[${index}][type]" class="form-control mb-2">
-                                                <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
-                                            </select>
-                                            ${step.type == 'image'
+                                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-step" data-id="${step.id}">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                </button>
+                                                <input type="text" name="steps[${index}][text]" class="form-control mb-2" value="${step.text || ''}">
+                                                <select name="steps[${index}][icon]" class="form-control mb-2">
+                                                    <option value="${step.icon}">${step.icon || 'Selecciona un ícono'}</option>
+                                                </select>
+                                                <select name="steps[${index}][type]" class="form-control mb-2">
+                                                    <option value="${step.type || ''}">${step.type || 'Sin archivo'}</option>
+                                                </select>
+                                                ${step.type == 'image'
                             ? `<img src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:120px;">`
                             : ''
                         }
-                                            ${step.type == 'video'
+                                                ${step.type == 'video'
                             ? `<video src="/storage/${step.file}" class="img-thumbnail mb-2" style="max-width:160px; height:auto;" controls></video>`
                             : ''
                         }
-                                            <input type="file" name="steps[${index}][file]" class="form-control mb-2">
+                                                <input type="file" name="steps[${index}][file]" class="form-control mb-2">
 
-                                            <!-- Tips Container -->
-                                            <div class="tips-container mb-2" data-step="${index}">
-                                                <label><strong>Tips del paso</strong></label>
+                                                <!-- Tips Container -->
+                                                <div class="tips-container mb-2" data-step="${index}">
+                                                    <label><strong>Tips del paso</strong></label>
 
-                                                <!-- CONTENEDOR QUE EL JS NECESITA -->
-                                                <div class="tips-list" id="tips-list-${index}">
-                                                    ${tipsHTML}
+                                                    <!-- CONTENEDOR QUE EL JS NECESITA -->
+                                                    <div class="tips-list" id="tips-list-${index}">
+                                                        ${tipsHTML}
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-primary btn-sm add-tip-block"
+                                                            data-step="${index}">
+                                                        + Agregar bloque de tips
+                                                    </button>
                                                 </div>
 
-                                                <button type="button" class="btn btn-primary btn-sm add-tip-block"
-                                                        data-step="${index}">
-                                                    + Agregar bloque de tips
-                                                </button>
-                                            </div>
-
-                                        </div>`;
+                                            </div>`;
                     stepsContainer.insertAdjacentHTML('beforeend', stepHTML);
                 });
 
@@ -778,17 +545,17 @@
             if (info.images && info.images.length) {
                 info.images.forEach((img, index) => {
                     const imgHTML = `
-                                <div class="imagen mb-3 p-2 border rounded position-relative" data-index="${index}">
-                                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-img" data-id="${img.id}">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                    <input type="hidden" name="imagenes[${index}][id]" value="${img.id}">
-                                    <input type="text" name="imagenes[${index}][description]" class="form-control mb-2" value="${img.description || ''}">
-                                    ${img.image_path ? `<img src="/storage/${img.image_path}" class="img-thumbnail mb-2" style="max-width:120px;">` : ''}
-                                    <input type="file" name="imagenes[${index}][file]" class="form-control mb-2" accept="image/*" >
+                                    <div class="imagen mb-3 p-2 border rounded position-relative" data-index="${index}">
+                                        <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-img" data-id="${img.id}">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                        <input type="hidden" name="imagenes[${index}][id]" value="${img.id}">
+                                        <input type="text" name="imagenes[${index}][description]" class="form-control mb-2" value="${img.description || ''}">
+                                        ${img.image_path ? `<img src="/storage/${img.image_path}" class="img-thumbnail mb-2" style="max-width:120px;">` : ''}
+                                        <input type="file" name="imagenes[${index}][file]" class="form-control mb-2" accept="image/*" >
 
 
-                                </div>`;
+                                    </div>`;
                     imgContainer.insertAdjacentHTML('beforeend', imgHTML);
                 });
 
@@ -818,13 +585,13 @@
                     const opcionesHTML = (p.opciones || []).map((op, i) => {
                         const checked = corrects.includes(String(i)) ? 'checked' : '';
                         return `
-                                    <div class="d-flex mb-1 align-items-center">
-                                        <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" value="${op}">
-                                        <label class="mb-0">
-                                            <input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${i}" ${checked}>
-                                            Correcta
-                                        </label>
-                                    </div>`;
+                                        <div class="d-flex mb-1 align-items-center">
+                                            <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" value="${op}">
+                                            <label class="mb-0">
+                                                <input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${i}" ${checked}>
+                                                Correcta
+                                            </label>
+                                        </div>`;
                     }).join('');
 
                     // incluir id oculto para identificar la pregunta en el backend (si existe)
@@ -832,14 +599,14 @@
                         `<input type="hidden" name="preguntas[${index}][id]" value="${p.id}">` : '';
 
                     const preguntaHTML = `
-                                <div class="pregunta mb-3 p-2 border rounded position-relative" data-index="${index}">
-                                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-pregunta" data-id="${p.id}">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                    ${preguntaIdHidden}
-                                    <input type="text" name="preguntas[${index}][pregunta]" class="form-control mb-2" value="${p.pregunta}">
-                                    <div class="opciones">${opcionesHTML}</div>
-                                </div>`;
+                                    <div class="pregunta mb-3 p-2 border rounded position-relative" data-index="${index}">
+                                        <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 btn-remove-pregunta" data-id="${p.id}">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                        ${preguntaIdHidden}
+                                        <input type="text" name="preguntas[${index}][pregunta]" class="form-control mb-2" value="${p.pregunta}">
+                                        <div class="opciones">${opcionesHTML}</div>
+                                    </div>`;
                     preguntasContainer.insertAdjacentHTML('beforeend', preguntaHTML);
                 });
 
@@ -879,49 +646,49 @@
             div.setAttribute('data-index', stepIndex);
 
             div.innerHTML = `
-                                <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
+                                    <input type="text" name="steps[${stepIndex}][text]" class="form-control mb-2" placeholder="Descripción del paso">
 
-                                <select name="steps[${stepIndex}][icon]" class="form-control mb-2 icon-select">
-                                                <option value="">Selecciona un ícono</option>
-                                                <option value="fa-right-to-bracket" data-icon="fa-right-to-bracket">
-                                                    🔑 Ingreso
-                                                </option>
-                                                <option value="fa-building" data-icon="fa-building">
-                                                    🏢 Predio
-                                                </option>
-                                                <option value="fa-magnifying-glass" data-icon="fa-magnifying-glass">
-                                                    🔍 Buscar
-                                                </option>
-                                                <option value="fa-house" data-icon="fa-house">
-                                                    🏠 Casa
-                                                </option>
-                                                <option value="fa-user-plus" data-icon="fa-user-plus">
-                                                    👤➕ Usuario
-                                                </option>
-                                                <option value="fa-people-roof" data-icon="fa-people-roof">
-                                                    👨‍👩‍👧 Familia
-                                                </option>
-                                                <option value="fa-notes-medical" data-icon="fa-notes-medical">
-                                                    📝 Salud
-                                                </option>
-                                                <option value="fa-handshake" data-icon="fa-handshake">
-                                                    🤝 Acuerdo
-                                                </option>
-                                                <option value="fa-clipboard-list" data-icon="fa-clipboard-list">
-                                                    📋 Lista
-                                                </option>
-                                                <option value="fa-id-card" data-icon="fa-id-card">
-                                                    🪪 Documento
-                                                </option>
-                                            </select>
-                                <select name="steps[${stepIndex}][type]" class="form-control mb-2">
-                                    <option value="">Sin archivo</option>
-                                    <option value="image">Imagen</option>
-                                    <option value="video">Video</option>
-                                    <option value="text">Texto</option>
-                                </select>
-                                <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
-                            `;
+                                    <select name="steps[${stepIndex}][icon]" class="form-control mb-2 icon-select">
+                                                    <option value="">Selecciona un ícono</option>
+                                                    <option value="fa-right-to-bracket" data-icon="fa-right-to-bracket">
+                                                        🔑 Ingreso
+                                                    </option>
+                                                    <option value="fa-building" data-icon="fa-building">
+                                                        🏢 Predio
+                                                    </option>
+                                                    <option value="fa-magnifying-glass" data-icon="fa-magnifying-glass">
+                                                        🔍 Buscar
+                                                    </option>
+                                                    <option value="fa-house" data-icon="fa-house">
+                                                        🏠 Casa
+                                                    </option>
+                                                    <option value="fa-user-plus" data-icon="fa-user-plus">
+                                                        👤➕ Usuario
+                                                    </option>
+                                                    <option value="fa-people-roof" data-icon="fa-people-roof">
+                                                        👨‍👩‍👧 Familia
+                                                    </option>
+                                                    <option value="fa-notes-medical" data-icon="fa-notes-medical">
+                                                        📝 Salud
+                                                    </option>
+                                                    <option value="fa-handshake" data-icon="fa-handshake">
+                                                        🤝 Acuerdo
+                                                    </option>
+                                                    <option value="fa-clipboard-list" data-icon="fa-clipboard-list">
+                                                        📋 Lista
+                                                    </option>
+                                                    <option value="fa-id-card" data-icon="fa-id-card">
+                                                        🪪 Documento
+                                                    </option>
+                                                </select>
+                                    <select name="steps[${stepIndex}][type]" class="form-control mb-2">
+                                        <option value="">Sin archivo</option>
+                                        <option value="image">Imagen</option>
+                                        <option value="video">Video</option>
+                                        <option value="text">Texto</option>
+                                    </select>
+                                    <input type="file" name="steps[${stepIndex}][file]" class="form-control mb-2">
+                                `;
 
             container.appendChild(div);
             stepIndex++;
@@ -960,9 +727,9 @@
             div.setAttribute('data-index', imagenIndex);
 
             div.innerHTML = `
-                                <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
-                                <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
-                            `;
+                                    <input type="file" name="imagenes[${imagenIndex}][file]" class="form-control mb-2">
+                                    <input type="text" name="imagenes[${imagenIndex}][description]" class="form-control mb-2" placeholder="Descripción de la imagen">
+                                `;
             container.appendChild(div);
             imagenIndex++;
         });
@@ -978,15 +745,15 @@
             div.setAttribute('data-index', preguntaIndex);
 
             div.innerHTML = `
-                                <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
-                                <div class="opciones">
-                                    <div class="d-flex mb-1">
-                                        <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                        <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                                    <input type="text" name="preguntas[${preguntaIndex}][pregunta]" class="form-control mb-2" placeholder="Pregunta">
+                                    <div class="opciones">
+                                        <div class="d-flex mb-1">
+                                            <input type="text" name="preguntas[${preguntaIndex}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                            <label><input type="checkbox" name="preguntas[${preguntaIndex}][respuestas_correctas][]" value="0"> Correcta</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
-                            `;
+                                    <button type="button" class="btn btn-sm btn-outline-secondary add-option">+ Agregar Opción</button>
+                                `;
 
             container.appendChild(div);
             preguntaIndex++;
@@ -1002,9 +769,9 @@
                 let optionDiv = document.createElement('div');
                 optionDiv.classList.add('d-flex', 'mb-1');
                 optionDiv.innerHTML = `
-                                    <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
-                                    <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
-                                `;
+                                        <input type="text" name="preguntas[${index}][opciones][]" class="form-control me-2" placeholder="Opción">
+                                        <label><input type="checkbox" name="preguntas[${index}][respuestas_correctas][]" value="${optionIndex}"> Correcta</label>
+                                    `;
                 opcionesDiv.appendChild(optionDiv);
             }
         });
@@ -1034,22 +801,22 @@
                     const contenido = document.getElementById('resultadoContenido');
                     if (data.success) {
                         contenido.innerHTML = `
-                                        <div class="text-center">
-                                            <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
-                                            <h5>${data.message}</h5>
-                                            <p><strong>Nombre:</strong> ${data.user}</p>
-                                            <p><strong>Documento:</strong> ${data.document}</p>
-                                            <p><strong>Codigo Certificado:</strong> ${data.certificado.verification_code}</p>
-                                            <p><strong>Emitido el:</strong> ${data.certificado.created_at}</p>
-                                        </div>
-                                    `;
+                                            <div class="text-center">
+                                                <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                                <h5>${data.message}</h5>
+                                                <p><strong>Nombre:</strong> ${data.user}</p>
+                                                <p><strong>Documento:</strong> ${data.document}</p>
+                                                <p><strong>Codigo Certificado:</strong> ${data.certificado.verification_code}</p>
+                                                <p><strong>Emitido el:</strong> ${data.certificado.created_at}</p>
+                                            </div>
+                                        `;
                     } else {
                         contenido.innerHTML = `
-                                        <div class="text-center">
-                                            <i class="fas fa-times-circle text-danger fa-3x mb-3"></i>
-                                            <h5>${data.message}</h5>
-                                        </div>
-                                    `;
+                                            <div class="text-center">
+                                                <i class="fas fa-times-circle text-danger fa-3x mb-3"></i>
+                                                <h5>${data.message}</h5>
+                                            </div>
+                                        `;
                     }
 
                     // Mostrar el modal
@@ -1097,16 +864,16 @@
                         const diff = timeSince(created);
 
                         return `
-                                        <div class="activity-item mb-3">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0">${icon}</div>
-                                                <div class="flex-grow-1 ms-3">
-                                                    <h6 class="mb-0">${activity.title}</h6>
-                                                    <p class="small text-muted mb-0">${activity.description}</p>
-                                                    <span class="small text-muted">${diff}</span>
+                                            <div class="activity-item mb-3">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0">${icon}</div>
+                                                    <div class="flex-grow-1 ms-3">
+                                                        <h6 class="mb-0">${activity.title}</h6>
+                                                        <p class="small text-muted mb-0">${activity.description}</p>
+                                                        <span class="small text-muted">${diff}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>`;
+                                            </div>`;
                     }).join('');
                 } catch (error) {
                     console.error('Error al cargar actividades:', error);
@@ -1154,30 +921,30 @@
                 block.classList.add("tip-block", "mb-3");
 
                 block.innerHTML = `
-                            <input type="text" name="steps[${stepIndex}][tips][${newTipIndex}][title]"
-                                   class="form-control mb-2" placeholder="Título del bloque">
+                                <input type="text" name="steps[${stepIndex}][tips][${newTipIndex}][title]"
+                                       class="form-control mb-2" placeholder="Título del bloque">
 
-                            <div class="subtips-container">
+                                <div class="subtips-container">
 
-                                <div class="d-flex mb-2">
-                                    <input type="text"
-                                           name="steps[${stepIndex}][tips][${newTipIndex}][items][]"
-                                           class="form-control me-2"
-                                           placeholder="Sub-tip">
-                                    <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                    <div class="d-flex mb-2">
+                                        <input type="text"
+                                               name="steps[${stepIndex}][tips][${newTipIndex}][items][]"
+                                               class="form-control me-2"
+                                               placeholder="Sub-tip">
+                                        <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                                    </div>
+
                                 </div>
 
-                            </div>
+                                <button type="button" class="btn btn-secondary btn-sm add-subtip"
+                                        data-step="${stepIndex}" data-tip="${newTipIndex}">
+                                    + Agregar sub-tip
+                                </button>
 
-                            <button type="button" class="btn btn-secondary btn-sm add-subtip"
-                                    data-step="${stepIndex}" data-tip="${newTipIndex}">
-                                + Agregar sub-tip
-                            </button>
-
-                            <button type="button" class="btn btn-danger btn-sm remove-tip-block mt-2">
-                                Eliminar bloque
-                            </button>
-                        `;
+                                <button type="button" class="btn btn-danger btn-sm remove-tip-block mt-2">
+                                    Eliminar bloque
+                                </button>
+                            `;
 
                 tipsList.appendChild(block);
             }
@@ -1196,12 +963,12 @@
                 sub.classList.add("d-flex", "mb-2");
 
                 sub.innerHTML = `
-                            <input type="text"
-                                   name="steps[${stepIndex}][tips][${tipIndex}][items][]"
-                                   class="form-control me-2"
-                                   placeholder="Sub-tip">
-                            <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
-                        `;
+                                <input type="text"
+                                       name="steps[${stepIndex}][tips][${tipIndex}][items][]"
+                                       class="form-control me-2"
+                                       placeholder="Sub-tip">
+                                <button type="button" class="btn btn-danger btn-sm remove-subtip">X</button>
+                            `;
 
                 container.appendChild(sub);
             }

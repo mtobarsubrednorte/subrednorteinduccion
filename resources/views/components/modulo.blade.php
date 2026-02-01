@@ -217,27 +217,49 @@
                     <form action="{{ route('modulo.responder', $modulo->id) }}" method="POST" id="exam-form">
                         @csrf
 
-                        @foreach ($modulo->preguntas ?? [] as $preguntaIndex => $pregunta)
-                            <div class="question-card" id="question-{{ $preguntaIndex + 1 }}">
-                                <div class="question-header">
-                                    <div class="question-number">{{ $preguntaIndex + 1 }}</div>
-                                    <h5 class="mb-0">Pregunta {{ $preguntaIndex + 1 }}</h5>
-                                </div>
-                                <div class="question-body">
-                                    <p class="question-text">{{ $pregunta->pregunta }}</p>
+                        @php
+                            // Obtenemos el ID del perfil del usuario logueado (asegúrate de que este nombre sea correcto)
+                            $userPerfilId = auth()->user()->profile_id; 
+                        @endphp
 
-                                    @foreach ($pregunta->opciones as $index => $opcion)
-                                        <div class="option-item"
-                                            onclick="selectOption(this, {{ $pregunta->id }}, {{ $index }})">
-                                            <input class="option-radio" type="radio"
-                                                name="respuestas[{{ $pregunta->id }}]" value="{{ $index }}"
-                                                id="opcion-{{ $pregunta->id }}-{{ $index }}">
-                                            <label class="option-label"
-                                                for="opcion-{{ $pregunta->id }}-{{ $index }}">{{ $opcion }}</label>
-                                        </div>
-                                    @endforeach
+                        @foreach ($modulo->preguntas ?? [] as $pregunta)
+                            @php
+                                // Convertimos a array por seguridad y limpiamos nulos
+                                $perfilesPermitidos = is_array($pregunta->perfiles_id) ? $pregunta->perfiles_id : [];
+                                $esPublica = empty($perfilesPermitidos);
+                                $perfilAutorizado = in_array($userPerfilId, $perfilesPermitidos);
+                            @endphp
+
+                            @if($esPublica || $perfilAutorizado)
+                                <div class="question-card mb-4" id="question-{{ $pregunta->id }}">
+                                    <div class="question-header d-flex align-items-center">
+                                        <div class="question-number me-2">{{ $loop->iteration }}</div>
+                                        <h5 class="mb-0">{{ $pregunta->pregunta }}</h5>
+                                        @if($esPublica)
+                                            <span class="badge bg-info ms-2 small" style="font-size: 0.7rem;">General</span>
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="question-body mt-3">
+                                        @foreach ($pregunta->opciones as $index => $opcion)
+                                            <div class="option-item p-2 border rounded mb-2"
+                                                style="cursor: pointer;"
+                                                onclick="selectOption(this, {{ $pregunta->id }}, {{ $index }})">
+                                                <div class="form-check">
+                                                    <input class="form-check-input option-radio" type="radio"
+                                                        name="respuestas[{{ $pregunta->id }}]" 
+                                                        value="{{ $index }}"
+                                                        id="opcion-{{ $pregunta->id }}-{{ $index }}">
+                                                    <label class="form-check-label w-100" 
+                                                        for="opcion-{{ $pregunta->id }}-{{ $index }}">
+                                                        {{ $opcion }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         @endforeach
 
                         <button type="submit" class="btn submit-btn">
